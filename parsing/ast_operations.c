@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:21:39 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/12 15:46:19 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/12 17:08:49 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,60 +74,86 @@ t_node	*populate_logic_tree(t_list **list)
 	return (curr_node);
 }
 
-// t_list	*ft_lstnew(t_node *content)
-// {
-// 	t_list	*node;
+t_list	*parse_pipeline(t_node *pipeline)
+{
 
-// 	node = (t_list *) malloc(sizeof(t_list));
-// 	if (node == (void *) 0)
-// 		return (node);
-// 	node->content = content;
-// 	node->next = (void *) 0;
-// 	return (node);
-// }
+}
 
-// t_list	*ft_lstlast(t_list *lst)
-// {
-// 	if (lst == (void *) 0)
-// 		return (0);
-// 	while (lst->next != (void *) 0)
-// 	{
-// 		lst = lst->next;
-// 	}
-// 	return (lst);
-// }
+void	generate_cmd_tree(t_list *pipeline, t_node *node)
+{
+	node->content.parenthesis = 'a';
+}
 
-// void	ft_lstadd_back(t_list **lst, t_list *new)
-// {
-// 	t_list	*last_node;
+void	populate_cmd_trees(t_node *node)
+{
+	t_list	*pipeline;
 
-// 	if (*lst == (void *) 0)
-// 	{
-// 		*lst = new;
-// 		return ;
-// 	}
-// 	last_node = ft_lstlast(*lst);
-// 	last_node->next = new;
-// }
+	if (node == NULL)
+		return ;
+	if (node->type == PIPELINE)
+	{
+		pipeline = parse_pipeline(node);
+		generate_cmd_tree(pipeline, node);
+	}
+	populate_cmd_trees(node->left_child);
+	populate_cmd_trees(node->right_child);
+}
 
-// int	main(void)
-// {
-// 	t_content	content;
-// 	t_list		*lst;
-// 	t_node		*tree;
+t_list	*ft_lstnew(t_node *content)
+{
+	t_list	*node;
 
-// 	lst = ft_lstnew(node_new(content, PIPELINE));
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, LOGIC)));
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PAR)));
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PIPELINE)));
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, LOGIC)));
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PAR)));
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PIPELINE)));
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, LOGIC)));
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PIPELINE)));
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PAR)));
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PAR)));
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, END)));
-// 	tree = populate_logic_tree(&lst);
-// 	return (0);
-// }
+	node = (t_list *) malloc(sizeof(t_list));
+	if (node == (void *) 0)
+		return (node);
+	node->content = content;
+	node->next = (void *) 0;
+	return (node);
+}
+
+t_list	*ft_lstlast(t_list *lst)
+{
+	if (lst == (void *) 0)
+		return (0);
+	while (lst->next != (void *) 0)
+	{
+		lst = lst->next;
+	}
+	return (lst);
+}
+
+void	ft_lstadd_back(t_list **lst, t_list *new)
+{
+	t_list	*last_node;
+
+	if (*lst == (void *) 0)
+	{
+		*lst = new;
+		return ;
+	}
+	last_node = ft_lstlast(*lst);
+	last_node->next = new;
+}
+
+int	main(void)
+{
+	t_content	content;
+	t_list		*lst;
+	t_node		*tree;
+
+	lst = ft_lstnew(node_new(content, PIPELINE));
+	ft_lstadd_back(&lst, ft_lstnew(node_new(content, LOGIC)));
+	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PAR)));
+	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PIPELINE)));
+	ft_lstadd_back(&lst, ft_lstnew(node_new(content, LOGIC)));
+	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PAR)));
+	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PIPELINE)));
+	ft_lstadd_back(&lst, ft_lstnew(node_new(content, LOGIC)));
+	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PIPELINE)));
+	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PAR)));
+	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PAR)));
+	ft_lstadd_back(&lst, ft_lstnew(node_new(content, END)));
+	tree = populate_logic_tree(&lst);
+	populate_cmd_trees(tree);
+	return (0);
+}
