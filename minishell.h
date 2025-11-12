@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/12 15:47:22 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/12 19:34:23 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,10 @@ int close_par_token(t_list **list);
 int	pipeline_token(char *str, t_list **list);
 int	and_token(t_list **list);
 int	or_token(t_list **list);
+int build_node_list(char *line, t_list **list);
+char	is_sep(char *str);
+void del_linked(t_node *lst);
+t_list	*list_error(t_list **list,char *str);
 
 #endif
 
