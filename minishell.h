@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/12 11:21:58 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:30:19 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 typedef enum e_type
 {
-	LOGIC, PIPELINE, CMD, ARGS, REDIR
+	LOGIC, PAR, PIPELINE, CMD, ARGS, REDIR, END
 }	t_type;
 
 typedef enum e_logic
@@ -54,6 +54,13 @@ typedef struct s_node
 	struct s_node	*right_child;
 	struct s_node	*parent;
 }	t_node;
+
+typedef struct s_list
+{
+	t_node			*content;
+	struct s_list	*next;
+	struct s_list	*prev;
+}	t_list;
 
 #endif
 
