@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:21:39 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/12 16:24:26 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/12 19:41:51 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@ t_node	*node_new(t_content content, t_type type)
 		new->content.str = content.str;
 	else
 		new->content.redir = content.redir;
+    new->left_child = NULL;
+	new->right_child = NULL;
+	new->parent = NULL;
 	return (new);
 }
 
