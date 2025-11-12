@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_operations.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:21:39 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/12 11:22:41 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:24:26 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ t_node	*node_new(t_content content, t_type type)
 	new = (t_node *) malloc(sizeof(t_node));
 	if (new == NULL)
 		return (NULL);
+    new->type = type;
 	if (type == LOGIC)
 		new->content.logic = content.logic;
 	else if (type == PIPELINE)
