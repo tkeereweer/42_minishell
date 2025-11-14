@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/14 13:15:18 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/14 13:36:52 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,9 @@ typedef struct s_node
 }	t_node;
 
 t_node	*node_new(t_content content, t_type type);
+t_node	*create_logic_tree(t_list *list);
 //parsing
+t_list	*clean_node_list(char *line);
 int open_par_token(t_list **list);
 int close_par_token(t_list **list);
 int	pipeline_token(char *str, t_list **list);

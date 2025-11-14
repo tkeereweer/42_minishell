@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_operations.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:21:39 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/14 13:14:28 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/14 13:48:06 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,26 +142,26 @@ t_node	*create_logic_tree(t_list *list)
 	
 // }
 
-void	generate_cmd_tree(t_list *pipeline, t_node *node)
-{
-	(void) pipeline;
-	node->content.parenthesis = 'a';
-}
+// void	generate_cmd_tree(t_list *pipeline, t_node *node)
+// {
+// 	(void) pipeline;
+// 	node->content.parenthesis = 'a';
+// }
 
-void	populate_cmd_trees(t_node *node)
-{
-	t_list	*pipeline;
+// void	populate_cmd_trees(t_node *node)
+// {
+// 	t_list	*pipeline;
 
-	if (node == NULL)
-		return ;
-	populate_cmd_trees(node->left_child);
-	if (node->type == PIPELINE)
-	{
-		// pipeline = parse_pipeline(node);
-		generate_cmd_tree(pipeline, node);
-	}
-	populate_cmd_trees(node->right_child);
-}
+// 	if (node == NULL)
+// 		return ;
+// 	populate_cmd_trees(node->left_child);
+// 	if (node->type == PIPELINE)
+// 	{
+// 		// pipeline = parse_pipeline(node);
+// 		// generate_cmd_tree(pipeline, node);
+// 	}
+// 	populate_cmd_trees(node->right_child);
+// }
 
 void	free_tree(t_node *tree)
 {

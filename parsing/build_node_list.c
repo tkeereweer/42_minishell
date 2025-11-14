@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   build_node_list.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 11:50:24 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/14 12:58:24 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/14 13:49:43 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,10 @@ int build_node_list(char *line, t_list **list)
 			continue;
 		}
 		else if (is_sep(&line[i]))
+		{
 			if (sep_logical_tokenizer(line, &i, list, &temp) == -1)
 				return (-1);
+		}
 		else
 		{
 			result = tokenize_pipeline(line, &i, list);
@@ -171,16 +173,16 @@ t_list	*clean_node_list(char *line)
 	return (list);
 }
 
-int main(void)
-{
-	t_list *list = clean_node_list("echo a && (echo b) || (echo 'this is a (test)' || echo c)");
-	t_list *temp = list;
-	int i = 0;
+// int main(void)
+// {
+// 	t_list *list = clean_node_list("echo a && (echo b) || (echo 'this is a (test)' || echo c)");
+// 	t_list *temp = list;
+// 	int i = 0;
 
-	while (temp)
-	{
-		printf("node (%d): %d\n", i, temp->content->type);
-		i++;
-		temp = temp->next;
-	}
-}
+// 	while (temp)
+// 	{
+// 		printf("node (%d): %d\n", i, temp->content->type);
+// 		i++;
+// 		temp = temp->next;
+// 	}
+// }
