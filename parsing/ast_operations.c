@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:21:39 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/14 13:48:06 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/14 15:37:06 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	clean_par(t_list **list)
 	tmp = *list;
 	// free((*list)->content);
 	*list = (*list)->next;
-	while (par_cnt != 0)
+	while (par_cnt != 0 && tmp->next != NULL)
 	{
 		tmp = tmp->next;
 		if (tmp->content->type == PAR && tmp->content->content.parenthesis == '(')
@@ -66,7 +66,7 @@ t_list	*go_to_eob(t_list *list)
 
 	par_cnt = 1;
 	list = list->next;
-	while (par_cnt != 0)
+	while (par_cnt != 0 && list != NULL)
 	{
 		if (list->content->type == PAR && list->content->content.parenthesis == '(')
 			par_cnt++;
@@ -82,11 +82,8 @@ t_node	*populate_logic_tree(t_list *list)
 	t_node	*node;
 	t_list	*start_of_block;
 
-	if (list->content->type == PAR)
-	{
+	while (list->content->type == PAR)
 		clean_par(&list);
-		populate_logic_tree(list);
-	}
 	node = list->content;
 	list = list->next;
 	while (list != NULL)
