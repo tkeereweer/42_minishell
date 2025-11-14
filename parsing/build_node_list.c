@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 11:50:24 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/14 13:49:43 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/14 14:24:52 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ static int	tokenize_pipeline(char *line, int *i, t_list **list)
 		return (-1);//free shit
 	if (!pipeline_token(pipeline, list))
 		return (free(pipeline), -1);
-	free(pipeline);
 	*i = j - 1;
 	return (1);
 }

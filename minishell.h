@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/14 13:36:52 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/14 14:00:47 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ typedef struct s_node
 
 t_node	*node_new(t_content content, t_type type);
 t_node	*create_logic_tree(t_list *list);
+void	free_tree(t_node *tree);
 //parsing
 t_list	*clean_node_list(char *line);
 int open_par_token(t_list **list);
@@ -83,5 +84,7 @@ int tokenizer_error(char *str);
 int	empty_end(char *line, int *j, int *i);
 char	*remove_redir(char *str, int start, int end);
 //parsing end
+//testing
+void	draw_tree(t_node *root);
 #endif
 
