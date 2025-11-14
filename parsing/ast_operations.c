@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:21:39 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/14 15:37:06 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/14 16:59:41 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,8 @@ void	free_tree(t_node *tree)
 		return ;
 	free_tree(tree->left_child);
 	free_tree(tree->right_child);
+	if (tree->type == PIPELINE)
+		free(tree->content.str);
 	free(tree);
 }
 

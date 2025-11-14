@@ -6,8 +6,8 @@ SRCS = parsing/ast_operations.c \
 	parsing/token_redir.c \
 	parsing/token.c \
 	parsing/token2.c \
-	main.c \
-	tree_visualiser.c
+	main.c 
+# 	tree_visualiser.c
 
 OBJS = $(SRCS:.c=.o)
 

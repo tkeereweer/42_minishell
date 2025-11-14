@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 11:50:24 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/14 14:24:52 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/14 16:42:36 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,9 +156,8 @@ static int check_unclosed_par(t_list **list)
 t_list	*clean_node_list(char *line)
 {
 	int result;
-	t_list	*list = (t_list *)malloc(sizeof(t_list));
-	if (!list)
-		return (NULL);
+	t_list	*list;
+
 	list = NULL;
 	result = build_node_list(line, &list);
 	if (result <= 0)

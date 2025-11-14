@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/14 14:00:47 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/14 17:38:27 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 typedef enum e_type
 {
-	LOGIC, PAR, PIPELINE, CMD, ARGS, REDIR
+	LOGIC, PAR, PIPELINE, CMD, ARGS, REDIR, PIPE
 }	t_type;
 
 typedef enum e_logic
@@ -30,7 +30,7 @@ typedef enum e_logic
 
 typedef enum e_redir_type
 {
-	PIPE, APPEND, READ, WRITE, HEREDOC
+	APPEND, READ, WRITE, HEREDOC
 }	t_redir_type;
 
 typedef struct s_redir
