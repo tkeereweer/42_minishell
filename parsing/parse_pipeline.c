@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 20:16:56 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/13 14:59:29 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/14 18:31:53 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,60 +93,78 @@ char	*remove_redir(char *str, int start, int end)
 	return (dest);
 }
 
-//if (lst->prev->content->type = redir | par) & is_alpha(line[i]) ->cmd
-//or if no prev token
-//check pic and diagnose wtf commands w/ mathijs
+char	**tab_realloc(char **tab, int n)
+{
+	char	**temp;
+	int		i;
+
+	temp = (char **)ft_calloc(n + 1, sizeof(char *));
+	if (!temp)
+		return (NULL);
+	temp[n] = NULL;
+	if (!tab)
+		return (temp);
+	i = 0;
+	while (tab[i])
+		i++;
+	ft_memmove(temp, tab, i * sizeof(char *));
+	free(tab);
+	tab = temp;
+	return (tab);
+}
+
+//parse and find pipes, caution quotes
 int	tokenize_pipe(char *line, t_list **lst)
 {
-	int		j;
 	int		i;
-	int		k;
-	char	**pipeline;
+	int		j;
+	int		pipe_count;
+	char	**subpipe;
 
 	i = 0;
-	while (ft_is_whitespace(line[i]))
+	pipe_count = 0;
+	subpipe = NULL;
+	while (line[i] && ft_is_whitespace(line[i]))
 		i++;
+	if (!line[i])
+		return (0);//exit code 1
 	if (line[i] == '|')
-		return (-2);//pipe syntax error
-	pipeline = ft_split(&line[i], '|');
-	if (!pipeline)
-		return (0);
-	j = 0;
-	while (pipeline[j])
+		return (-2);//"syntax error near '|'"
+	//count number of pipes
+	j = i;
+	while (line[i])
 	{
-		i = 0;
-		while (pipeline[j][i])
+		if (line[i] == '\'' || line[i] == '"')
 		{
-			if (ft_is_whitespace(line[i]))
-				i++;
-			k = i;
-			if (!redir_token(lst, line, &i))
-				return (0);
-			else
+			while (line[i] != '\'' || line[i] != '"')
 			{
-				if (!remove_redir(pipeline[j], k, i))
-					return (0);
+				if (!line[i])
+					return (-1);//unclosed quote error
+				i++;
 			}
 			i++;
 		}
-		if (!pipe_token(lst))
-			return (0);
-		j++;
+		if (line[i] == '|')
+		{
+			pipe_count++;
+			subpipe = tab_realloc(subpipe, pipe_count * 2);	
+		}
+		i++;
 	}
-	if ((*lst)->content->type == PIPELINE)
-		return (-2);
+
 	return (1);
 }
 
-// t_list	*parse_pipeline(t_node *node)
-// {
-// 	t_list *head;
-	
-// 	head = (t_list *)malloc(sizeof(t_list));
-// 	if (!head)
-// 		return (NULL);
-// 	if (!tokenize_pipe(node->content.str, &head) <= 0)
-// 	{
 
-// 	}
-// }
+
+		// if (is_redir(line[i]))
+		// {	
+		// 	j = i;	
+		// 	if (!redir_token(lst, line, &i))
+		// 		return (0);
+		// 	else
+		// 	{
+		// 		if (!remove_redir(line, j, i))
+		// 			return (0);
+		// 	}
+		// }
