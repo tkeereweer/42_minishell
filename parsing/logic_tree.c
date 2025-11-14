@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ast_operations.c                                   :+:      :+:    :+:   */
+/*   logic_tree.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:21:39 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/14 16:59:41 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/14 17:47:36 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ void	clean_par(t_list **list)
 
 	par_cnt = 1;
 	tmp = *list;
-	// free((*list)->content);
 	*list = (*list)->next;
 	while (par_cnt != 0 && tmp->next != NULL)
 	{
@@ -133,32 +132,6 @@ t_node	*create_logic_tree(t_list *list)
 	}
 	return (ret);
 }
-
-// t_list	*parse_pipeline(t_node *pipeline)
-// {
-	
-// }
-
-// void	generate_cmd_tree(t_list *pipeline, t_node *node)
-// {
-// 	(void) pipeline;
-// 	node->content.parenthesis = 'a';
-// }
-
-// void	populate_cmd_trees(t_node *node)
-// {
-// 	t_list	*pipeline;
-
-// 	if (node == NULL)
-// 		return ;
-// 	populate_cmd_trees(node->left_child);
-// 	if (node->type == PIPELINE)
-// 	{
-// 		// pipeline = parse_pipeline(node);
-// 		// generate_cmd_tree(pipeline, node);
-// 	}
-// 	populate_cmd_trees(node->right_child);
-// }
 
 void	free_tree(t_node *tree)
 {

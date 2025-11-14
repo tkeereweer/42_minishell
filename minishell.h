@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/14 17:38:27 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/14 18:13:32 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ typedef struct s_node
 
 t_node	*node_new(t_content content, t_type type);
 t_node	*create_logic_tree(t_list *list);
+void	create_cmd_trees(t_node *node);
 void	free_tree(t_node *tree);
 //parsing
 t_list	*clean_node_list(char *line);
