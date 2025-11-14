@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/14 13:16:56 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/14 13:15:18 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include "libft/src/libft.h"
 
 typedef enum e_type
 {
@@ -43,7 +44,7 @@ typedef union u_content
 	t_logic	logic;
 	char	parenthesis;
 	char	*str;
-	char	**tab;
+	char    **tab;
 	t_redir	redir;
 }	t_content;
 
@@ -56,5 +57,29 @@ typedef struct s_node
 	struct s_node	*parent;
 }	t_node;
 
+t_node	*node_new(t_content content, t_type type);
+//parsing
+int open_par_token(t_list **list);
+int close_par_token(t_list **list);
+int	pipeline_token(char *str, t_list **list);
+int	and_token(t_list **list);
+int	or_token(t_list **list);
+int build_node_list(char *line, t_list **list);
+char	is_sep(char *str);
+char	is_logic(char *str);
+char	is_redir(char *str);
+void del_linked(t_node *lst);
+t_list	*list_error(t_list **list,char *str);
+int	pipe_token(t_list **lst);
+int	write_token(t_list **lst, char *filepath);
+int	read_token(t_list **lst, char *filepath);
+int	append_token(t_list **lst, char *filepath);
+int	heredoc_token(t_list **lst, char *limiter);
+int	word_token(char *word, t_list **lst);
+int	cmd_token(char *word, t_list **lst);
+int tokenizer_error(char *str);
+int	empty_end(char *line, int *j, int *i);
+char	*remove_redir(char *str, int start, int end);
+//parsing end
 #endif
 

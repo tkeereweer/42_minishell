@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_operations.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:21:39 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/14 13:23:25 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/14 13:14:28 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
