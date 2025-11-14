@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 11:50:24 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/12 19:36:08 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/14 12:58:24 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	tokenize_pipeline(char *line, int *i, t_list **list)
 		j++;
 	}
 	if (quote % 2 == 1)
-		return (0); //unclosed quote error
+		return (0); //unclosed quote error RETURN CHARACTER WITH UNCLOSED TOKEN
 	pipeline = ft_substr(line, *i, j - *i);
 	if (!pipeline)
 		return (-1);//free shit
@@ -47,7 +47,7 @@ static int	sep_tokenizer(char *line, int *i, t_list **list)
 		if (open_par_token(list) == -1)
 			return (-1);
 	}
-			else if (line[*i] == ')')
+	else if (line[*i] == ')')
 	{
 		if (close_par_token(list) == -1)
 			return (-1);
@@ -67,12 +67,44 @@ static int	sep_tokenizer(char *line, int *i, t_list **list)
 	return (1);
 }
 
-//i is static to output a node once i find it, then go back to the parsing 
+int	sep_logical_tokenizer(char *line, int *i, t_list **list, t_list **temp)
+{
+	int j;
+
+	j = 0;
+	if (is_logic(&line[*i]))
+	{
+		if (sep_tokenizer(line, i, list) == -1)
+			return (-1);
+	}
+	else if (line[*i] == '(' && (!*temp || (*temp)->content->type == LOGIC || (*temp)->content->content.parenthesis == '('))
+	{
+		if (sep_tokenizer(line, i, list) == -1)
+			return (-1);
+	}
+	else if (line[*i] == ')')
+	{
+		j = 0;
+		while (ft_is_whitespace(line[*i] + j))
+			j++;
+		if (line[*i] + j && (is_logic(&line[*i] + j) || line[*i] + j == ')'))
+			if (sep_tokenizer(line, i, list) == -1)
+				return (-1);	
+	}
+	else
+		*i += 1;
+	return (1);
+}
+
+//i is static to output a node once i find it, then go back to the parsing
+// metachar detection
 int build_node_list(char *line, t_list **list)
 {
 	int i;
 	int result;
+	t_list	*temp;
 
+	temp = *list;
 	i = 0;
 	while (line[i])
 	{
@@ -82,10 +114,8 @@ int build_node_list(char *line, t_list **list)
 			continue;
 		}
 		else if (is_sep(&line[i]))
-		{
-			if (sep_tokenizer(line, &i, list) == -1)
+			if (sep_logical_tokenizer(line, &i, list, &temp) == -1)
 				return (-1);
-		}
 		else
 		{
 			result = tokenize_pipeline(line, &i, list);
@@ -93,11 +123,15 @@ int build_node_list(char *line, t_list **list)
 				return (result);//returns 0 means unclosed quotes
 		}
 		i++;
+		if (!temp)
+			temp = *list;
+		else
+			temp = temp->next;
 	}
 	return (1);
 }
 
-int check_unclosed_par(t_list **list)
+static int check_unclosed_par(t_list **list)
 {
 	t_list  *temp;
 	temp = *list;
@@ -139,7 +173,7 @@ t_list	*clean_node_list(char *line)
 
 int main(void)
 {
-	t_list *list = clean_node_list("echo a && (echo b || echo 'this is a (test)') || echo c");
+	t_list *list = clean_node_list("echo a && (echo b) || (echo 'this is a (test)' || echo c)");
 	t_list *temp = list;
 	int i = 0;
 

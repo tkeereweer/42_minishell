@@ -6,61 +6,91 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 20:16:56 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/12 21:32:08 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/13 14:59:29 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <linux/limits.h>
 
-static int redir_token(t_list **lst, char *line, int *i)
+//only handle quotes if at begining of filepath
+//space defines offset to start after > or >>
+static int	tokenize_word(char *line, int *i, char *str, int space)
 {
-	if (line[*i] == '|')
-		if (!pipe_token(lst))
-			return (0);
-	if (line[*i] == '>')
-		if (!write_token(lst))//call them something else like left and right
-			return (0);
-	if (line[*i] == '<')
-		if (!read_token(lst))
-			return (0);
-	if (line[*i] == '>' && line[*i + 1] && line[*i + 1] == '>')
-	{
-		if (!append_token(lst))
-			return (0);
-		*i += 1;
-	}
-	if (line[*i] == '<' && line[*i + 1] && line[*i + 1] == '<')
-	{
-		if (!heredoc_token(lst))
-			return (0);
-		*i += 1;
-	}
-	return (1);
-}
-
-char	*tokenize_word(char *line, int *i)
-{
-	char	*word;
 	int		j;
 	int		quote;
 
-	j = *i;
+	*i += space;
 	quote = 0;
+	if (empty_end(line, &j, i) == -1)
+		return (-1);
+	if (line[j] == '\'' || line[j] == '"')
+		quote++;
 	while (line[j])
 	{
-		if (is_redir_or_quote(&line[j]) && (quote % 2 == 0))
-			break;
 		if (line[j] == '\'' || line[j] == '"')
 			quote++;
-		j++;
+		if (is_redir(&line[j]) || (quote % 2 == 0))
+			break;
+		if (ft_is_whitespace(line[j]) && quote == 0)
+			break;
+		j++; 
 	}
 	if (quote % 2 == 1)
-		return (0); //unclosed quote error
-	word = ft_substr(line, *i, j - *i);
-	if (!word)
-		return (NULL);//free shit
+		return (tokenizer_error("unclosed quotes\n"));
+	str = ft_substr(&line[j], 0, j - *i);
+	if (!str)
+		return (tokenizer_error("malloc fail\n"));
 	*i = j - 1;
-	return (word);
+	return (1);
+}
+
+static int redir_token(t_list **lst, char *line, int *i)
+{
+	int		quote;
+	char	*str;
+
+	quote = 0;
+	str = NULL;
+	if (line[*i] == '>')
+		if (tokenize_word(line, i, str, 1) == -1 || !write_token(lst, str))
+			return (0);
+	if (line[*i] == '<')
+		if (tokenize_word(line, i, str, 1) == -1 || !read_token(lst, str))
+			return (0);
+	if (line[*i] == '>' && line[*i + 1] && line[*i + 1] == '>')
+		if (tokenize_word(line, i, str, 2) == -1 || !append_token(lst, str))
+			return (0);
+	if (line[*i] == '<' && line[*i + 1] && line[*i + 1] == '<')
+		if (tokenize_word(line, i, str, 2) == -1 || !heredoc_token(lst, str))
+			return (0);
+	return (1);
+}
+//deletes chars from start to end INCLUDED 
+//overwrites them with the end
+char	*remove_redir(char *str, int start, int end)
+{
+	char	*dest;
+	size_t	dest_len;
+	int		i;
+	int		j;
+
+	dest_len = ft_strlen(str) - (start - end);
+	dest = (char *)malloc(dest_len);
+	if (!dest)
+		return (NULL);
+	ft_strncpy(dest, str, start);
+	i = end;
+	j = start;
+	while (str[i])
+	{
+		dest[j] = str[i];
+		i++;
+		j++;
+	}
+	dest[j] = '\0';
+	free(str);
+	return (dest);
 }
 
 //if (lst->prev->content->type = redir | par) & is_alpha(line[i]) ->cmd
@@ -68,41 +98,55 @@ char	*tokenize_word(char *line, int *i)
 //check pic and diagnose wtf commands w/ mathijs
 int	tokenize_pipe(char *line, t_list **lst)
 {
-	int	i;
+	int		j;
+	int		i;
+	int		k;
+	char	**pipeline;
 
 	i = 0;
-	while (line[i])
-	{
-		if (ft_is_whitespace(line[i]))
-		{
-			i++;
-			continue;
-		}
-		if (/*no quotes and first after start, par or redir, then cmd*/)
-		{
-			if (!cmd_token(tokenize_word(line, &i), lst))
-				return (0);
-		}
-		if (/*prev is cmd*/)
-		{
-			if (!word_token(tokenize_word(line, &i), lst))
-				return (0);
-		}
-		if (!redir_token(lst, line, &i))
-			return (0);
+	while (ft_is_whitespace(line[i]))
 		i++;
-	}
-}
-
-t_list	*parse_pipeline(t_node *node)
-{
-	t_list *head;
-	
-	head = (t_list *)malloc(sizeof(t_list));
-	if (!head)
-		return (NULL);
-	if (!tokenize_pipe(node->content.str, &head) <= 0)
+	if (line[i] == '|')
+		return (-2);//pipe syntax error
+	pipeline = ft_split(&line[i], '|');
+	if (!pipeline)
+		return (0);
+	j = 0;
+	while (pipeline[j])
 	{
-
+		i = 0;
+		while (pipeline[j][i])
+		{
+			if (ft_is_whitespace(line[i]))
+				i++;
+			k = i;
+			if (!redir_token(lst, line, &i))
+				return (0);
+			else
+			{
+				if (!remove_redir(pipeline[j], k, i))
+					return (0);
+			}
+			i++;
+		}
+		if (!pipe_token(lst))
+			return (0);
+		j++;
 	}
+	if ((*lst)->content->type == PIPELINE)
+		return (-2);
+	return (1);
 }
+
+// t_list	*parse_pipeline(t_node *node)
+// {
+// 	t_list *head;
+	
+// 	head = (t_list *)malloc(sizeof(t_list));
+// 	if (!head)
+// 		return (NULL);
+// 	if (!tokenize_pipe(node->content.str, &head) <= 0)
+// 	{
+
+// 	}
+// }
