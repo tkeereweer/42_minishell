@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/14 18:13:32 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/15 15:01:24 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef union u_content
 	char	*str;
 	char    **tab;
 	t_redir	redir;
+	void	*empty;
 }	t_content;
 
 typedef struct s_node

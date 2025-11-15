@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:21:39 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/15 11:28:03 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/15 14:56:02 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,21 +59,25 @@ void	clean_par(t_list **list)
 	free(tmp);
 }
 
-t_list	*go_to_eob(t_list *list)
+void	cut_at_eob(t_list **list)
 {
 	int	par_cnt;
 
 	par_cnt = 1;
-	list = list->next;
+	*list = (*list)->next;
 	while (par_cnt != 0 && list != NULL)
 	{
-		if (list->content->type == PAR && list->content->content.parenthesis == '(')
+		if ((*list)->content->type == PAR && (*list)->content->content.parenthesis == '(')
 			par_cnt++;
-		else if (list->content->type == PAR && list->content->content.parenthesis == ')')
+		else if ((*list)->content->type == PAR && (*list)->content->content.parenthesis == ')')
 			par_cnt--;
-		list = list->next;
+		*list = (*list)->next;
 	}
-	return (list);
+	if (*list != NULL)
+	{
+		(*list)->prev->next = NULL;
+		(*list)->prev = NULL;
+	}
 }
 
 t_node	*populate_logic_tree(t_list *list)
@@ -94,12 +98,7 @@ t_node	*populate_logic_tree(t_list *list)
 		if (list->content->type == PAR)
 		{
 			start_of_block = list;
-			list = go_to_eob(list);
-			if (list != NULL)
-			{
-				list->prev->next = NULL;
-				list->prev = NULL;
-			}
+			cut_at_eob(&list);
 			node->right_child = populate_logic_tree(start_of_block);
 		}
 		else if (list->content->type == PIPELINE)
@@ -107,6 +106,7 @@ t_node	*populate_logic_tree(t_list *list)
 			node->right_child = list->content;
 			list = list->next;
 		}
+		node->right_child->parent = node;
 	}
 	return (node);
 }

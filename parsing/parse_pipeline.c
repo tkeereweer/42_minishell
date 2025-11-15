@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_pipeline.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 20:16:56 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/13 14:59:29 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/15 15:29:08 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,10 @@ static int	tokenize_word(char *line, int *i, char *str, int space)
 
 static int redir_token(t_list **lst, char *line, int *i)
 {
-	int		quote;
+	// int		quote;
 	char	*str;
 
-	quote = 0;
+	// quote = 0;
 	str = NULL;
 	if (line[*i] == '>')
 		if (tokenize_word(line, i, str, 1) == -1 || !write_token(lst, str))
