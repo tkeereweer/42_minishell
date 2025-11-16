@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:21:39 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/15 14:56:02 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/16 11:35:22 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ t_node	*create_logic_tree(t_list *list)
 	{
 		tmp = list;
 		list = list->next;
+		// check if all PAR nodes are freed correctly
 		if (tmp->content->type == PAR && first_par == 0)
 		{
 			free(tmp->content);

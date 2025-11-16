@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 17:46:51 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/15 15:28:59 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/16 12:10:27 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,18 @@ void	add_cmd_children(t_node *cmd, t_list **pipeline)
 		*pipeline = (*pipeline)->next;
 }
 
-void	populate_cmd_tree(t_list **pipeline, t_node *node)
+int	is_last_pipe(t_list *pipeline)
+{
+	while (pipeline != NULL)
+	{
+		if (pipeline->content->type == PIPE)
+			return (0);
+		pipeline = pipeline->next;
+	}
+	return (1);
+}
+
+int	populate_cmd_tree(t_list **pipeline, t_node *node)
 {
 	t_content	cont;
 
@@ -34,16 +45,33 @@ void	populate_cmd_tree(t_list **pipeline, t_node *node)
 	while (*pipeline != NULL)
 	{
 		node->left_child = node_new(cont, CMD);
+		if (node->left_child == NULL)
+			return (1);
 		node->left_child->parent = node;
 		add_cmd_children(node->left_child, pipeline);
 		if (*pipeline != NULL)
 		{
-			node->right_child = node_new(cont, PIPELINE);
-			node->right_child->parent = node;
-			node = node->right_child;
-			populate_cmd_tree(pipeline, node);
+			if (is_last_pipe(*pipeline) == 0)
+			{
+				node->right_child = node_new(cont, PIPELINE);
+				if (node->right_child == NULL)
+					return (1);
+				node->right_child->parent = node;
+				node = node->right_child;
+				if (populate_cmd_tree(pipeline, node) == 1)
+					return (1);
+			}
+			else
+			{
+				node->right_child = node_new(cont, CMD);
+				if (node->right_child == NULL)
+					return (1);
+				node->right_child->parent = node;
+				add_cmd_children(node->right_child, pipeline);
+			}
 		}
 	}
+	return (0);
 }
 
 void	free_pipeline_list(t_list *pipeline)
@@ -57,21 +85,23 @@ void	free_pipeline_list(t_list *pipeline)
 	}
 }
 
-void	create_cmd_trees(t_node *node)
+int	create_cmd_trees(t_node *node)
 {
 	t_list	*pipeline;
 
 	if (node == NULL)
-		return ;
+		return (0);
 	create_cmd_trees(node->left_child);
 	if (node->type == PIPELINE)
 	{
 		// pipeline = parse_pipeline(node);
 		free(node->content.str);
-		populate_cmd_tree(&pipeline, node);
+		if (populate_cmd_tree(&pipeline, node) == 1)
+			return (1);
 		free_pipeline_list(pipeline);
 	}
 	create_cmd_trees(node->right_child);
+	return (0);
 }
 
 // int	main(void)
@@ -87,6 +117,9 @@ void	create_cmd_trees(t_node *node)
 // 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, ARGS)));
 // 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, PIPE)));
 // 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, ARGS)));
+// 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, PIPE)));
+// 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, ARGS)));
+// 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, REDIR)));
 // 	tree = node_new(cont, PIPELINE);
 // 	populate_cmd_tree(&lst, tree);
 // 	free_tree(tree);
