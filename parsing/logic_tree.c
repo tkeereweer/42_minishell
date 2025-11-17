@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:21:39 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/16 11:35:22 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/17 09:03:19 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,20 +115,14 @@ t_node	*create_logic_tree(t_list *list)
 {
 	t_node	*ret;
 	t_list	*tmp;
-	int		first_par;
 
 	ret = populate_logic_tree(list);
-	first_par = 0;
 	while (list != NULL)
 	{
 		tmp = list;
 		list = list->next;
-		// check if all PAR nodes are freed correctly
-		if (tmp->content->type == PAR && first_par == 0)
-		{
+		if (tmp->content->type == PAR && tmp->content->content.parenthesis == '(')
 			free(tmp->content);
-			first_par = 1;
-		}
 		free(tmp);
 	}
 	return (ret);
@@ -142,7 +136,7 @@ void	free_tree(t_node *tree)
 	free_tree(tree->right_child);
 	// if (tree->type == PIPELINE)
 	// 	free(tree->content.str);
-	// free malloced pointers in tee->content
+	// free malloced pointers in tree->content
 	free(tree);
 }
 
@@ -190,7 +184,7 @@ void	free_tree(t_node *tree)
 // 	content.parenthesis = ')';
 // 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PAR)));
 // 	tree = create_logic_tree(lst);
-// 	populate_cmd_trees(tree);
+// 	// populate_cmd_trees(tree);
 // 	free_tree(tree);
 // 	return (0);
 // }

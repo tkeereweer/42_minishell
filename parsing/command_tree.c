@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 17:46:51 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/16 12:10:27 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/17 08:59:40 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,18 +76,22 @@ int	populate_cmd_tree(t_list **pipeline, t_node *node)
 
 void	free_pipeline_list(t_list *pipeline)
 {
+	t_list	*next;
+
 	while (pipeline != NULL)
 	{
+		next = pipeline->next;
 		if (pipeline->content->type == PIPE)
 			free(pipeline->content);
 		free(pipeline);
-		pipeline = pipeline->next;
+		pipeline = next;
 	}
 }
 
 int	create_cmd_trees(t_node *node)
 {
 	t_list	*pipeline;
+	t_list	*start_list;
 
 	if (node == NULL)
 		return (0);
@@ -95,10 +99,11 @@ int	create_cmd_trees(t_node *node)
 	if (node->type == PIPELINE)
 	{
 		// pipeline = parse_pipeline(node);
+		start_list = pipeline;
 		free(node->content.str);
 		if (populate_cmd_tree(&pipeline, node) == 1)
 			return (1);
-		free_pipeline_list(pipeline);
+		free_pipeline_list(start_list);
 	}
 	create_cmd_trees(node->right_child);
 	return (0);
@@ -107,6 +112,7 @@ int	create_cmd_trees(t_node *node)
 // int	main(void)
 // {
 // 	t_list		*lst;
+// 	t_list		*start_list;
 // 	t_node		*tree;
 // 	t_content	cont;
 
@@ -121,7 +127,9 @@ int	create_cmd_trees(t_node *node)
 // 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, ARGS)));
 // 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, REDIR)));
 // 	tree = node_new(cont, PIPELINE);
+// 	start_list = lst;
 // 	populate_cmd_tree(&lst, tree);
+// 	free_pipeline_list(start_list);
 // 	free_tree(tree);
 // 	return (0);
 // }
