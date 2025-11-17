@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_pipeline.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 20:16:56 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/17 16:09:28 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/17 16:19:15 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,25 +227,18 @@ t_list *pipeline_list(char *line)
 	return (head);
 }
 
+int main(void)
+{
+	t_list *list;
+	t_list *temp;
 
-
-// int main(void)
-// {
-// 	t_list *list;
-// 	t_list *temp;
-
-// 	list = NULL;
-// 	if (!tokenize_pipe("cat '< file1\" | wc -c | grep e > file2 | echo out", &list))
-// 	{
-// 		printf("shit went worng");
-// 		return (1);
-// 	}
-// 	temp = list;
-// 	int i =0;
-// 	while (temp)
-// 	{
-// 		printf("node (%d): %d\n", i, temp->content->type);
-// 		i++;
-// 		temp = temp->next;
-// 	}
-// }
+	list = pipeline_list("echo fail > file2");
+	temp = list;
+	int i = 0;
+	while (temp)
+	{
+		printf("node (%d): %d\n", i, temp->content->type);
+		i++;
+		temp = temp->next;
+	}
+}

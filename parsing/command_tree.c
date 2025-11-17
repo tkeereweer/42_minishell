@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_tree.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 17:46:51 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/17 15:34:33 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/17 16:21:58 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,10 @@ void	free_pipeline_list(t_list *pipeline)
 	}
 }
 
-int	create_cmd_trees(t_node *node)
-{
-	t_list	*pipeline;
-	t_list	*start_list;
+// int	create_cmd_trees(t_node *node)
+// {
+// 	t_list	*pipeline;
+// 	t_list	*start_list;
 
 	if (node == NULL)
 		return (0);

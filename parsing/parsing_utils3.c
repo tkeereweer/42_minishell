@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils3.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:39:11 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/17 16:07:13 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/17 16:20:35 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,9 @@ char	**args_tab(char *str)
 	int	word_count;
 	char **tab;
 
+    tab = NULL;
 	quote_count = 0;
-	word_count = 0;
+    word_count = 0;
 	i = 0;
 	j = 0;
 	tab = NULL;
@@ -59,28 +60,28 @@ char	**args_tab(char *str)
 				return (free_split(tab), NULL);
 			while (ft_is_whitespace(str[i]))
 				i++;
-			j = i;
-			continue ;
+            j = i;
+            continue;
 		}
-		i++;
+        i++;
 	}
-	if (!tab)
+    if (!tab)
     {
         tab = tab_realloc(tab, 1);
         if (!tab)
-            return (free(str), NULL);
+            return (NULL);
         tab[0] = ft_strdup(str);
         tab[1] = NULL;
         return (tab);
     }
-	if (j != i - 1)
+    if (j != i - 1)
     {
         tab = tab_realloc(tab, word_count + 1);
         if (!tab)
             return(free_split(tab), NULL);
         tab[word_count] = ft_substr(str, j, i);
-        if (!tab[word_count])
-            return (free_split(tab), NULL);
+		if (!tab[word_count])
+			return (free_split(tab), NULL);
     }
 	return (tab);
 }
