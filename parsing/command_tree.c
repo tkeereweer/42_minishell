@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 17:46:51 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/17 08:59:40 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/17 10:33:36 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ int	create_cmd_trees(t_node *node)
 
 	if (node == NULL)
 		return (0);
+	pipeline = NULL;
 	create_cmd_trees(node->left_child);
 	if (node->type == PIPELINE)
 	{

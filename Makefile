@@ -7,8 +7,8 @@ SRCS = parsing/logic_tree.c \
 	parsing/token_redir.c \
 	parsing/token.c \
 	parsing/token2.c \
-	main.c
-# 	tree_visualiser.c
+	main.c \
+	tree_visualiser.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -20,10 +20,12 @@ CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
+LINKS = $(LIBFT) -lreadline
+
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LINKS) -o $(NAME)
 
 $(LIBFT):
 	make -C $(LIBFT_DIR)

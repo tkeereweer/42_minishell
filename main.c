@@ -1,15 +1,29 @@
 #include "minishell.h"
+#include <readline/readline.h>
+#include <readline/history.h>
 
-int	main(int argc, char *argv[])
+int	main(void)
 {
 	t_list	*list;
 	t_node	*tree;
+	char	*line;
 
-	if (argc != 2)
-		return (1);
-	list = clean_node_list(argv[1]);
-	tree = create_logic_tree(list);
-	// draw_tree(tree);
-	free_tree(tree);
+	while (1)
+	{
+		line = readline("enter prompt: ");
+		if (line != NULL)
+		{
+			add_history(line);
+			list = clean_node_list(line);
+			if (list != NULL)
+			{
+				tree = create_logic_tree(list);
+				draw_tree(tree);
+				free_tree(tree);
+			}
+			free(line);
+		}
+	}
+	clear_history();
 	return (0);
 }
