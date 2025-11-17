@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/17 13:50:41 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/17 13:56:24 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ int	arg_token(char *word, t_list **lst);
 int tokenizer_error(char *str);
 int	empty_end(char *line, int *j, int *i);
 char	*remove_redir(char *str, int start, int end);
+t_list *pipeline_list(char *line);
 //parsing end
 //testing
 void	draw_tree(t_node *root);

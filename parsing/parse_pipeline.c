@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_pipeline.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 20:16:56 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/17 13:50:55 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/17 14:00:32 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,47 +186,7 @@ int	tokenize_pipe(char *line, t_list **lst)
 	return (1);
 }
 
-char	**args_tab(char *str)
-{
-	int	i;
-	int j;
-	int	quote_count;
-	int	word_count;
-	char **tab;
-
-	quote_count = 0;
-	i = 0;
-	j = 0;
-	while(str[i])
-	{
-		if (str[i] == '\'' || str[i] == '"')
-		{
-			quote_count++;
-			while (quote_count != 0)
-			{
-				i++;
-				if (str[i] == '\'' || str[i] == '"')
-					quote_count--;
-			}
-			i++;
-		}
-		if (ft_is_whitespace(str[i]))
-		{
-			word_count++;
-			tab = tab_realloc(tab, word_count);
-			if (!tab)
-				return (free_split(tab), NULL);
-			tab[word_count - 1] = ft_substr(str, j, i);
-			if (!tab[word_count - 1])
-				return (free_split(tab), NULL);
-			while (ft_is_whitespace(str[i]))
-				i++;
-		}
-	}
-	return (tab);
-}
-
-t_list *pipeline_list(char **line)
+t_list *pipeline_list(char *line)
 {
 	t_list	*head;
 	int		result;
@@ -243,7 +203,7 @@ t_list *pipeline_list(char **line)
 	temp = head;
 	while (temp)
 	{
-		if (temp->content->type = ARGS)
+		if (temp->content->type == ARGS)
 		{
 			temp_tab = args_tab(temp->content->content.str);
 			if (!temp_tab)
@@ -251,30 +211,30 @@ t_list *pipeline_list(char **line)
 			temp->content->content.tab = temp_tab;
 			free_split(temp_tab);
 		}
-		temp->next;
+		temp = temp->next;
 	}	
 	return (head);
 }
 
 
 
-int main(void)
-{
-	t_list *list;
-	t_list *temp;
+// int main(void)
+// {
+// 	t_list *list;
+// 	t_list *temp;
 
-	list = NULL;
-	if (!tokenize_pipe("cat '< file1\" | wc -c | grep e > file2 | echo out", &list))
-	{
-		printf("shit went worng");
-		return (1);
-	}
-	temp = list;
-	int i =0;
-	while (temp)
-	{
-		printf("node (%d): %d\n", i, temp->content->type);
-		i++;
-		temp = temp->next;
-	}
-}
+// 	list = NULL;
+// 	if (!tokenize_pipe("cat '< file1\" | wc -c | grep e > file2 | echo out", &list))
+// 	{
+// 		printf("shit went worng");
+// 		return (1);
+// 	}
+// 	temp = list;
+// 	int i =0;
+// 	while (temp)
+// 	{
+// 		printf("node (%d): %d\n", i, temp->content->type);
+// 		i++;
+// 		temp = temp->next;
+// 	}
+// }

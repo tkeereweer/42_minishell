@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 14:36:14 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/17 13:40:20 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/17 13:58:29 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	free_split(char **tab)
 
 	i = 0;
     if (!tab)
-        return ;
+		return ;
 	while (tab[i])
 	{
 		free(tab[i]);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils3.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:39:11 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/17 13:43:17 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/17 13:58:41 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ char	**args_tab(char *str)
 	char **tab;
 
 	quote_count = 0;
+	word_count = 0;
 	i = 0;
 	j = 0;
 	while(str[i])
