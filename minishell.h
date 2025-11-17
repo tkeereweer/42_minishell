@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/17 13:43:29 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/17 13:50:41 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,19 +60,20 @@ typedef struct s_node
 
 t_node	*node_new(t_content content, t_type type);
 t_node	*create_logic_tree(t_list *list);
+int		create_cmd_trees(t_node *node);
 void	free_tree(t_node *tree);
 //parsing
 t_list	*clean_node_list(char *line);
-int open_par_token(t_list **list);
-int close_par_token(t_list **list);
-int	pipeline_token(char *str, t_list **list);
-int	and_token(t_list **list);
-int	or_token(t_list **list);
-int build_node_list(char *line, t_list **list);
+int 	open_par_token(t_list **list);
+int 	close_par_token(t_list **list);
+int		pipeline_token(char *str, t_list **list);
+int		and_token(t_list **list);
+int		or_token(t_list **list);
+int 	build_node_list(char *line, t_list **list);
 char	is_sep(char *str);
 char	is_logic(char *str);
 char	is_redir(char *str);
-void del_linked(t_node *lst);
+void 	del_linked(t_node *lst);
 t_list	*list_error(t_list **list,char *str);
 int	pipe_token(t_list **lst);
 int	write_token(t_list **lst, char *filepath);

@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 20:16:56 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/17 13:44:42 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/17 13:50:55 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 
 static int redir_token(t_list **lst, char *line, int *i)
 {
-	int		quote;
+	// int		quote;
 	char	*str;
 
-	quote = 0;
+	// quote = 0;
 	str = NULL;
 	if (line[*i] == '>' && line[*i + 1] && line[*i + 1] == '>')
 		if (tokenize_word(line, i, str, 2) == -1 || !append_token(lst, str))
