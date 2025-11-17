@@ -3,6 +3,7 @@ SRCS = parsing/ast_operations.c \
 	parsing/parse_pipeline.c \
 	parsing/parsing_utils.c \
 	parsing/parsing_utils2.c \
+	parsing/parsing_utils3.c \
 	parsing/token_redir.c \
 	parsing/token.c \
 	parsing/token2.c \

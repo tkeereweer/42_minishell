@@ -6,44 +6,12 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 20:16:56 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/14 18:31:53 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/17 13:44:42 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 #include <linux/limits.h>
-
-//only handle quotes if at begining of filepath
-//space defines offset to start after > or >>
-static int	tokenize_word(char *line, int *i, char *str, int space)
-{
-	int		j;
-	int		quote;
-
-	*i += space;
-	quote = 0;
-	if (empty_end(line, &j, i) == -1)
-		return (-1);
-	if (line[j] == '\'' || line[j] == '"')
-		quote++;
-	while (line[j])
-	{
-		if (line[j] == '\'' || line[j] == '"')
-			quote++;
-		if (is_redir(&line[j]) || (quote % 2 == 0))
-			break;
-		if (ft_is_whitespace(line[j]) && quote == 0)
-			break;
-		j++; 
-	}
-	if (quote % 2 == 1)
-		return (tokenizer_error("unclosed quotes\n"));
-	str = ft_substr(&line[j], 0, j - *i);
-	if (!str)
-		return (tokenizer_error("malloc fail\n"));
-	*i = j - 1;
-	return (1);
-}
 
 static int redir_token(t_list **lst, char *line, int *i)
 {
@@ -52,77 +20,156 @@ static int redir_token(t_list **lst, char *line, int *i)
 
 	quote = 0;
 	str = NULL;
-	if (line[*i] == '>')
-		if (tokenize_word(line, i, str, 1) == -1 || !write_token(lst, str))
-			return (0);
-	if (line[*i] == '<')
-		if (tokenize_word(line, i, str, 1) == -1 || !read_token(lst, str))
-			return (0);
 	if (line[*i] == '>' && line[*i + 1] && line[*i + 1] == '>')
 		if (tokenize_word(line, i, str, 2) == -1 || !append_token(lst, str))
 			return (0);
 	if (line[*i] == '<' && line[*i + 1] && line[*i + 1] == '<')
 		if (tokenize_word(line, i, str, 2) == -1 || !heredoc_token(lst, str))
 			return (0);
+	if (line[*i] == '>')
+		if (tokenize_word(line, i, str, 1) == -1 || !write_token(lst, str))
+			return (0);
+	if (line[*i] == '<')
+		if (tokenize_word(line, i, str, 1) == -1 || !read_token(lst, str))
+			return (0);
+	return (*i);
+}
+
+
+static int increment_subpipe(char ***subpipe, char *line, int *i, int *j)
+{
+	static int	pipe_count = 0;
+	int len;
+
+	pipe_count++;
+	*subpipe = tab_realloc(*subpipe, pipe_count * 2 + 1);
+	if (!*subpipe)
+		return (0);
+	len = tab_len(*subpipe);
+	(*subpipe)[len] = ft_substr(line, *j, *i - *j - 1);
+	if (!(*subpipe)[len])
+		return (subpipe_error(-1, *subpipe));
+	(*subpipe)[len + 1] = "|";
+	*i += 1;
+	while (line[*i] && ft_is_whitespace(line[*i]))
+		*i += 1;
+	if (!line[*i])
+		return (subpipe_error(-3, *subpipe));//no cmd after pipe
+	if (line[*i] == '|')
+		return (subpipe_error(-2, *subpipe));
+	*j = *i;
+	return (len);
+}
+
+static int	build_subpipe(char ***subpipe, char *line, int *i)
+{
+	int	j;
+	int	k;
+	int	count;
+	int	quote_count;
+
+	j = *i;
+	k = 0;
+	quote_count = 0;
+	while (line[*i])
+	{
+		if (line[*i] == '\'' || line[*i] == '"')
+		{
+			quote_count++;
+			while (quote_count != 0)
+			{
+				*i += 1;
+				if (!line[*i])
+					return (subpipe_error(-1, *subpipe));
+				if (line[*i] == '\'' || line[*i] == '"')
+					quote_count--;
+			}
+			*i += 1;
+		}
+		if (line[*i] == '|')
+		{
+			count = increment_subpipe(subpipe, line, i, &j);
+			if (count < 0)
+				return (count);
+			k = *i;
+		}
+		*i += 1;
+	}
+	(*subpipe)[count + 2] = ft_substr(line, k, *i - k + 1);
+	if (!(*subpipe)[count + 2])
+		return (subpipe_error(0, *subpipe));
 	return (1);
 }
-//deletes chars from start to end INCLUDED 
-//overwrites them with the end
-char	*remove_redir(char *str, int start, int end)
+
+static int	tokenize_subpipe(char **subpipe, t_list **lst)
 {
-	char	*dest;
-	size_t	dest_len;
-	int		i;
-	int		j;
+	int	i;
+	int	j;
+	int	k;
+	int	redir_count;
+	int	quote_count;
 
-	dest_len = ft_strlen(str) - (start - end);
-	dest = (char *)malloc(dest_len);
-	if (!dest)
-		return (NULL);
-	ft_strncpy(dest, str, start);
-	i = end;
-	j = start;
-	while (str[i])
-	{
-		dest[j] = str[i];
-		i++;
-		j++;
-	}
-	dest[j] = '\0';
-	free(str);
-	return (dest);
-}
-
-char	**tab_realloc(char **tab, int n)
-{
-	char	**temp;
-	int		i;
-
-	temp = (char **)ft_calloc(n + 1, sizeof(char *));
-	if (!temp)
-		return (NULL);
-	temp[n] = NULL;
-	if (!tab)
-		return (temp);
+	redir_count = 0;
+	quote_count = 0;
 	i = 0;
-	while (tab[i])
+	j = 0;
+	k = 0;
+	while (subpipe[i])
+	{
+		j = 0;
+		if (subpipe[i][0] == '|')
+		{
+			if (!pipe_token(lst))
+				return (-1);
+			i++;
+			continue;
+		}
+		while (subpipe[i][j])
+		{
+			if (subpipe[i][j] == '\'' || subpipe[i][j] == '"')
+			{
+				quote_count++;
+				while (quote_count != 0)
+				{
+					j++;
+					if (subpipe[i][j] == '\'' || subpipe[i][j] == '"')
+						quote_count--;
+				}
+				j++;
+			}
+			redir_count = 0;
+			if (is_redir(&subpipe[i][j]))
+			{
+				redir_count = 1;
+				k = j;
+				j = redir_token(lst, subpipe[i], &j);
+				if (!j)
+					return (-1);
+				subpipe[i] = remove_redir(subpipe[i], k, j);
+				if (!subpipe[i])
+					return (subpipe_error(0, subpipe));
+				if (!arg_token(subpipe[i], lst))
+					return (subpipe_error(0, subpipe));
+				break;
+			}
+			j++;
+		}
+		if (!redir_count)
+			if (!arg_token(subpipe[i], lst))
+				return (subpipe_error(0, subpipe));
 		i++;
-	ft_memmove(temp, tab, i * sizeof(char *));
-	free(tab);
-	tab = temp;
-	return (tab);
+	}
+	return (1);
 }
 
 //parse and find pipes, caution quotes
 int	tokenize_pipe(char *line, t_list **lst)
 {
 	int		i;
-	int		j;
-	int		pipe_count;
+	int		result;
 	char	**subpipe;
 
 	i = 0;
-	pipe_count = 0;
 	subpipe = NULL;
 	while (line[i] && ft_is_whitespace(line[i]))
 		i++;
@@ -130,41 +177,104 @@ int	tokenize_pipe(char *line, t_list **lst)
 		return (0);//exit code 1
 	if (line[i] == '|')
 		return (-2);//"syntax error near '|'"
-	//count number of pipes
-	j = i;
-	while (line[i])
+	result = build_subpipe(&subpipe, line, &i);
+	if (result <= 0)
+		return (result);
+	result = tokenize_subpipe(subpipe, lst);
+	if (result <= 0)
+		return (result);
+	return (1);
+}
+
+char	**args_tab(char *str)
+{
+	int	i;
+	int j;
+	int	quote_count;
+	int	word_count;
+	char **tab;
+
+	quote_count = 0;
+	i = 0;
+	j = 0;
+	while(str[i])
 	{
-		if (line[i] == '\'' || line[i] == '"')
+		if (str[i] == '\'' || str[i] == '"')
 		{
-			while (line[i] != '\'' || line[i] != '"')
+			quote_count++;
+			while (quote_count != 0)
 			{
-				if (!line[i])
-					return (-1);//unclosed quote error
 				i++;
+				if (str[i] == '\'' || str[i] == '"')
+					quote_count--;
 			}
 			i++;
 		}
-		if (line[i] == '|')
+		if (ft_is_whitespace(str[i]))
 		{
-			pipe_count++;
-			subpipe = tab_realloc(subpipe, pipe_count * 2);	
+			word_count++;
+			tab = tab_realloc(tab, word_count);
+			if (!tab)
+				return (free_split(tab), NULL);
+			tab[word_count - 1] = ft_substr(str, j, i);
+			if (!tab[word_count - 1])
+				return (free_split(tab), NULL);
+			while (ft_is_whitespace(str[i]))
+				i++;
 		}
-		i++;
 	}
+	return (tab);
+}
 
-	return (1);
+t_list *pipeline_list(char **line)
+{
+	t_list	*head;
+	int		result;
+	t_list	*temp;
+	char 	**temp_tab;
+
+	result = tokenize_pipe(line, &head);
+	if (result == 0)
+		list_error(&head, "malloc fail");
+	if (result == -2)
+		list_error(&head, "syntax error near '|'");
+	if (result == -1)
+		list_error(&head, NULL);
+	temp = head;
+	while (temp)
+	{
+		if (temp->content->type = ARGS)
+		{
+			temp_tab = args_tab(temp->content->content.str);
+			if (!temp_tab)
+				return (NULL);
+			temp->content->content.tab = temp_tab;
+			free_split(temp_tab);
+		}
+		temp->next;
+	}	
+	return (head);
 }
 
 
 
-		// if (is_redir(line[i]))
-		// {	
-		// 	j = i;	
-		// 	if (!redir_token(lst, line, &i))
-		// 		return (0);
-		// 	else
-		// 	{
-		// 		if (!remove_redir(line, j, i))
-		// 			return (0);
-		// 	}
-		// }
+int main(void)
+{
+	t_list *list;
+	t_list *temp;
+
+	list = NULL;
+	if (!tokenize_pipe("cat '< file1\" | wc -c | grep e > file2 | echo out", &list))
+	{
+		printf("shit went worng");
+		return (1);
+	}
+	temp = list;
+	int i =0;
+	while (temp)
+	{
+		printf("node (%d): %d\n", i, temp->content->type);
+		i++;
+		temp = temp->next;
+	}
+}

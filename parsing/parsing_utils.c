@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 18:38:12 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/14 11:27:20 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/17 13:29:57 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,8 @@ void del_linked(t_node *lst)
 t_list	*list_error(t_list **list,char *str)
 {
 	ft_lstclear(list, del_linked);
-	write(STDERR_FILENO, str, ft_strlen(str));
+	if (str)
+		write(STDERR_FILENO, str, ft_strlen(str));
 	return (NULL);
 }
 
