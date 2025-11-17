@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 20:16:56 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/17 14:00:32 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/17 16:09:28 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,15 @@ static int	build_subpipe(char ***subpipe, char *line, int *i)
 			k = *i;
 		}
 		*i += 1;
+	}
+	if (!*subpipe)
+	{
+		*subpipe = tab_realloc(*subpipe, 1);
+		if (!*subpipe)
+			return (-1);
+		(*subpipe)[0] = line;
+		(*subpipe)[1] = NULL;
+		return (1);
 	}
 	(*subpipe)[count + 2] = ft_substr(line, k, *i - k + 1);
 	if (!(*subpipe)[count + 2])
@@ -192,7 +201,9 @@ t_list *pipeline_list(char *line)
 	int		result;
 	t_list	*temp;
 	char 	**temp_tab;
+	char	*temp_str;
 
+	head = NULL;
 	result = tokenize_pipe(line, &head);
 	if (result == 0)
 		list_error(&head, "malloc fail");
@@ -205,11 +216,11 @@ t_list *pipeline_list(char *line)
 	{
 		if (temp->content->type == ARGS)
 		{
-			temp_tab = args_tab(temp->content->content.str);
+			temp_str = temp->content->content.str;
+			temp_tab = args_tab(temp_str);
 			if (!temp_tab)
 				return (NULL);
 			temp->content->content.tab = temp_tab;
-			free_split(temp_tab);
 		}
 		temp = temp->next;
 	}	

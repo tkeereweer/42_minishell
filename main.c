@@ -18,6 +18,7 @@ int	main(void)
 			if (list != NULL)
 			{
 				tree = create_logic_tree(list);
+				create_cmd_trees(tree);
 				draw_tree(tree);
 				free_tree(tree);
 			}

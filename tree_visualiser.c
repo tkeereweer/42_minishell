@@ -28,17 +28,17 @@ char	*get_node_label(t_node *node)
 		return "CMD";
 	else if (node->type == ARGS)
 	{
-		// str = (char *) realloc(str, 7);
-		// strcpy(str, "ARGS: ");
-		// while (node->content.tab[i] != NULL)
-		// {
-		// 	str = (char *) realloc(str, strlen(str) + strlen(node->content.tab[i]) + 3);
-		// 	strcat(str, node->content.tab[i]);
-		// 	strcat(str, "; ");
-		// 	i++;
-		// }
-		// return str;
-		return "ARGS";
+		str = (char *) realloc(str, 7);
+		strcpy(str, "ARGS: ");
+		while (node->content.tab[i] != NULL)
+		{
+			str = (char *) realloc(str, strlen(str) + strlen(node->content.tab[i]) + 3);
+			strcat(str, node->content.tab[i]);
+			strcat(str, "; ");
+			i++;
+		}
+		return str;
+		// return "ARGS";
 	}
 	else if (node->type == REDIR)
 		return "REDIR";
