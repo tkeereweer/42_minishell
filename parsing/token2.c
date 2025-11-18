@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 21:04:31 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/17 15:40:56 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/18 10:54:27 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,16 @@ int	arg_token(char *word, t_list **lst)
 
 //only handle quotes if at begining of filepath
 //space defines offset to start after > or >>
-int	tokenize_word(char *line, int *i, char *str, int space)
+int	tokenize_word(char *line, int *i, char **str, int space)
 {
 	int		j;
 	int		quote;
+	char	*temp;
 
 	*i += space;
 	quote = 0;
 	if (empty_end(line, &j, i) == -1)
-		return (-1);
+		return (-1);//eol after redir --> syntax error near >
 	if (line[j] == '\'' || line[j] == '"')
 		quote++;
 	while (line[j])
@@ -58,9 +59,14 @@ int	tokenize_word(char *line, int *i, char *str, int space)
 	}
 	if (quote % 2 == 1)
 		return (tokenizer_error("unclosed quotes\n"));
-	str = ft_substr(&line[*i], 1, j - *i - 1);
-	if (!str)
+	*str = ft_substr(&line[*i], 0, j - *i);
+	if (!*str)
 		return (tokenizer_error("malloc fail\n"));
+	temp = ft_strtrim(*str, " \t\n\v\f\r");
+	if (!temp)
+		return (free(str), tokenizer_error("malloc fail\n"));
+	free(str);
+	*str = temp;
 	*i = j;
 	return (1);
 }

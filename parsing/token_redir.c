@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_redir.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 20:38:45 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/17 13:20:29 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/18 10:17:56 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	write_token(t_list **lst, char *filepath)
 
 	temp_cont.redir.kind = WRITE;
     temp_cont.redir.path = filepath;
+	printf("before node nw: %s\n", temp_cont.redir.path);
 	temp_type = REDIR;
 	temp_node = node_new(temp_cont, temp_type);
 	if (!temp_node)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_tree.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 17:46:51 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/17 16:21:58 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/18 10:36:39 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,10 @@ void	free_pipeline_list(t_list *pipeline)
 	}
 }
 
-// int	create_cmd_trees(t_node *node)
-// {
-// 	t_list	*pipeline;
-// 	t_list	*start_list;
+int	create_cmd_trees(t_node *node)
+{
+	t_list	*pipeline;
+	t_list	*start_list;
 
 	if (node == NULL)
 		return (0);
@@ -100,6 +100,15 @@ void	free_pipeline_list(t_list *pipeline)
 	if (node->type == PIPELINE)
 	{
 		pipeline = pipeline_list(node->content.str);
+		//visualise here
+		t_list *temp = pipeline;
+		int i = 0;
+		while (temp)
+		{
+			printf("node (%d): %d\n", i, temp->content->type);
+			i++;
+			temp = temp->next;
+		}
 		start_list = pipeline;
 		free(node->content.str);
 		if (populate_cmd_tree(&pipeline, node) == 1)

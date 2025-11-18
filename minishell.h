@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/17 13:56:24 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/18 10:16:25 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void	free_split(char **tab);
 int	subpipe_error(int code, char **subpipe);
 char	**tab_realloc(char **tab, int n);
 char	*remove_redir(char *str, int start, int end);
-int	tokenize_word(char *line, int *i, char *str, int space);
+int	tokenize_word(char *line, int *i, char **str, int space);
 int	tab_len(char **tab);
 char	**args_tab(char *str);
 #endif

@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   parse_pipeline.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 20:16:56 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/17 16:19:15 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/18 10:18:31 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-#include <linux/limits.h>
+#include <limits.h>
 
 static int redir_token(t_list **lst, char *line, int *i)
 {
@@ -21,16 +21,16 @@ static int redir_token(t_list **lst, char *line, int *i)
 	// quote = 0;
 	str = NULL;
 	if (line[*i] == '>' && line[*i + 1] && line[*i + 1] == '>')
-		if (tokenize_word(line, i, str, 2) == -1 || !append_token(lst, str))
+		if (tokenize_word(line, i, &str, 2) == -1 || !append_token(lst, str))
 			return (0);
 	if (line[*i] == '<' && line[*i + 1] && line[*i + 1] == '<')
-		if (tokenize_word(line, i, str, 2) == -1 || !heredoc_token(lst, str))
+		if (tokenize_word(line, i, &str, 2) == -1 || !heredoc_token(lst, str))
 			return (0);
 	if (line[*i] == '>')
-		if (tokenize_word(line, i, str, 1) == -1 || !write_token(lst, str))
+		if (tokenize_word(line, i, &str, 1) == -1 || !write_token(lst, str))
 			return (0);
 	if (line[*i] == '<')
-		if (tokenize_word(line, i, str, 1) == -1 || !read_token(lst, str))
+		if (tokenize_word(line, i, &str, 1) == -1 || !read_token(lst, str))
 			return (0);
 	return (*i);
 }
@@ -227,18 +227,18 @@ t_list *pipeline_list(char *line)
 	return (head);
 }
 
-int main(void)
-{
-	t_list *list;
-	t_list *temp;
+// int main(void)
+// {
+// 	t_list *list;
+// 	t_list *temp;
 
-	list = pipeline_list("echo fail > file2");
-	temp = list;
-	int i = 0;
-	while (temp)
-	{
-		printf("node (%d): %d\n", i, temp->content->type);
-		i++;
-		temp = temp->next;
-	}
-}
+// 	list = pipeline_list("echo fail > file2");
+// 	temp = list;
+// 	int i = 0;
+// 	while (temp)
+// 	{
+// 		printf("node (%d): %d\n", i, temp->content->type);
+// 		i++;
+// 		temp = temp->next;
+// 	}
+// }

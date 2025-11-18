@@ -30,7 +30,7 @@ char	*get_node_label(t_node *node)
 	{
 		str = (char *) realloc(str, 7);
 		strcpy(str, "ARGS: ");
-		while (node->content.tab[i] != NULL)
+		while (node->content.tab[i])
 		{
 			str = (char *) realloc(str, strlen(str) + strlen(node->content.tab[i]) + 3);
 			strcat(str, node->content.tab[i]);
@@ -41,7 +41,14 @@ char	*get_node_label(t_node *node)
 		// return "ARGS";
 	}
 	else if (node->type == REDIR)
-		return "REDIR";
+	{
+		str = malloc (256);
+		str = strcat(str, "REDIR: **kind**");
+		str = strcat(str, ", ");
+		str = strcat(str, node->content.redir.path);
+		str = strcat(str, ";");
+		return str;
+	}
 	return "?";
 }
 
@@ -74,7 +81,7 @@ void	print_tree_recursive(t_node *node, char *prefix, int is_left)
 		if (node->right_child)
 			print_tree_recursive(node->right_child, new_prefix, 0);
 	}
-	free(new_prefix);
+	// free(new_prefix);
 }
 
 // Main drawing function
