@@ -6,19 +6,16 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 20:16:56 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/17 16:09:28 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/18 17:13:09 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-#include <linux/limits.h>
 
 static int redir_token(t_list **lst, char *line, int *i)
 {
-	// int		quote;
 	char	*str;
 
-	// quote = 0;
 	str = NULL;
 	if (line[*i] == '>' && line[*i + 1] && line[*i + 1] == '>')
 		if (tokenize_word(line, i, str, 2) == -1 || !append_token(lst, str))

@@ -37,7 +37,7 @@ char	*get_node_label(t_node *node)
 			strcat(str, "; ");
 			i++;
 		}
-		return str;
+		return (str);
 		// return "ARGS";
 	}
 	else if (node->type == REDIR)
