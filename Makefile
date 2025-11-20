@@ -9,6 +9,7 @@ SRCS = parsing/logic_tree.c \
 	parsing/token.c \
 	parsing/token2.c \
 	parsing/variable_expansion/env_vars.c \
+	parsing/variable_expansion/wildcards.c \
 	execution/builtins/ft_export.c \
 	execution/builtins/ft_unset.c \
 	execution/builtins/ft_env.c \

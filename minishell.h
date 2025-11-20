@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/20 09:33:15 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/20 13:58:32 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ t_list *pipeline_list(char *line);
 //parsing end
 // variable expansion
 int 	expand_envvars(char **str, t_data *data);
+int		expand_wildcards(char ***tab, int i, char *pat);
+int		expand_vars(char ***tab, t_data *data);
 //testing
 void	draw_tree(t_node *root);
 void	free_split(char **tab);
@@ -116,6 +118,7 @@ int		ft_export(char *key_val, t_data *data);
 void	ft_unset(char **tab, t_data *data);
 void	ft_env(t_data *data);
 //utils
+char	*ft_strcat(char *dst, char *src);
 char	*ft_getenv(char *var, char **env);
 #endif
 

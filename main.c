@@ -71,22 +71,19 @@ int	main(int argc, char *argv[], char **envp)
 	t_node	*tree;
 	char	*line;
 	t_data	data;
-	char	*str1;
-	char	*str2;
-	char	*tab[2];
+	char	**tab;
 
 	(void) argc;
 	(void) argv;
-	str1 = ft_strdup("hey=hello");
-	str2 = ft_strdup("test=bye");
-	tab[0] = ft_strdup("hey");
-	tab[1] = NULL;
+	tab = malloc(5 *sizeof(char *));
+	tab[0] = ft_strdup("cmd");
+	tab[1] = ft_strdup("*.c");
+	tab[2] = ft_strdup("last");
+	tab[3] = ft_strdup("\"$test\"");
+	tab[4] = NULL;
 	if (copy_env(&data, envp) == 1)
 		return (1);
-	ft_export(str1, &data);
-	ft_export(str2, &data);
-	ft_unset(tab, &data);
-	ft_env(&data);
+	expand_vars(&tab, &data);
 	while (1)
 	{
 		line = readline("enter prompt: ");
