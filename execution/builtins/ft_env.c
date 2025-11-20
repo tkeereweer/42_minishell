@@ -1,45 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/18 11:42:17 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/18 12:06:34 by mkeerewe         ###   ########.fr       */
+/*   Created: 2025/11/20 09:28:08 by mkeerewe          #+#    #+#             */
+/*   Updated: 2025/11/20 09:32:42 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-void	echo(char **args)
+void	ft_env(t_data *data)
 {
-	int	i;
-	int	mode;
+	int i;
 
-	i = 1;
-	mode = 0;
-	if (ft_strncmp(args[1], "-n", 3) == 0)
-	{
-		i = 2;
-		mode = 1;
-	}
-	while (args[i] != NULL)
-	{
-		ft_printf("%s", args[i]);
-		if (args[i + 1] != NULL)
-			ft_printf("%c", ' ');
-		i++;
-	}
-	if (mode != 1)
-		ft_printf("%c", '\n');
-}
-
-int	main(int argc, char *argv[])
-{
-	if (argc < 2)
-		return (1);
-	echo(argv);
-	perror("echo");
-	return (0);
+    i = 0;
+    while (data->env[i] != NULL)
+    {
+        ft_printf("%s\n", data->env[i]);
+        i++;
+    }
 }

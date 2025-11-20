@@ -40,12 +40,53 @@ void	print_tree(t_node *node)
 	print_tree(node->right_child);
 }
 
-int	main(void)
+int	copy_env(t_data *data, char **envp)
+{
+	int	i;
+
+	i = 0;
+	while (envp[i] != NULL)
+		i++;
+	data->env = (char **) malloc((i + 2) * sizeof(char *));
+	if (data->env == NULL)
+		return (1);
+	i = 0;
+	while (envp[i] != NULL)
+	{
+		data->env[i] = ft_strdup(envp[i]);
+		if (data->env[i] == NULL)
+		{
+			free_split(data->env);
+			return (1);
+		}
+		i++;
+	}
+	data->env[i] = NULL;
+	return (0);
+}
+
+int	main(int argc, char *argv[], char **envp)
 {
 	t_list	*list;
 	t_node	*tree;
 	char	*line;
+	t_data	data;
+	char	*str1;
+	char	*str2;
+	char	*tab[2];
 
+	(void) argc;
+	(void) argv;
+	str1 = ft_strdup("hey=hello");
+	str2 = ft_strdup("test=bye");
+	tab[0] = ft_strdup("hey");
+	tab[1] = NULL;
+	if (copy_env(&data, envp) == 1)
+		return (1);
+	ft_export(str1, &data);
+	ft_export(str2, &data);
+	ft_unset(tab, &data);
+	ft_env(&data);
 	while (1)
 	{
 		line = readline("enter prompt: ");

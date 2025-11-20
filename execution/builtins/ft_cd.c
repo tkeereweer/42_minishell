@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 09:21:20 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/18 11:40:52 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/20 09:30:46 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*str_realloc(char *ptr, size_t size)
 	return (out);
 }
 
-int cd(char *path)
+int ft_cd(char *path)
 {
 	int 	ret;
 	char	*home;
