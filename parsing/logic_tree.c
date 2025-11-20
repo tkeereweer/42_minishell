@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:21:39 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/17 09:03:19 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/20 16:59:08 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,8 +134,10 @@ void	free_tree(t_node *tree)
 		return ;
 	free_tree(tree->left_child);
 	free_tree(tree->right_child);
-	// if (tree->type == PIPELINE)
-	// 	free(tree->content.str);
+	if (tree->type == ARGS)
+		free_split(tree->content.tab);
+	else if (tree->type == REDIR)
+		free(tree->content.redir.path);
 	// free malloced pointers in tree->content
 	free(tree);
 }
