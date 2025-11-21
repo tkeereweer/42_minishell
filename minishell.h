@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/19 14:43:27 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/21 11:31:11 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <fcntl.h>
 # include "libft/src/libft.h"
 
 typedef enum e_type
@@ -74,28 +75,30 @@ char	is_sep(char *str);
 char	is_logic(char *str);
 char	is_redir(char *str);
 void 	del_linked(t_node *lst);
-t_list	*list_error(t_list **list, char *str, t_list **temp);
-int	pipe_token(t_list **lst);
-int	write_token(t_list **lst, char *filepath);
-int	read_token(t_list **lst, char *filepath);
-int	append_token(t_list **lst, char *filepath);
-int	heredoc_token(t_list **lst, char *limiter);
-int	word_token(char *word, t_list **lst);
-int	cmd_token(char *word, t_list **lst);
-int	arg_token(char *word, t_list **lst);
-int tokenizer_error(char *str);
-int	empty_end(char *line, int *j, int *i);
+t_list	*list_error(t_list **list,char *str);
+int		pipe_token(t_list **lst);
+int		write_token(t_list **lst, char *filepath);
+int		read_token(t_list **lst, char *filepath);
+int		append_token(t_list **lst, char *filepath);
+int		heredoc_token(t_list **lst, char *limiter);
+int		word_token(char *word, t_list **lst);
+int		cmd_token(char *word, t_list **lst);
+int		arg_token(char *word, t_list **lst);
+int		tokenizer_error(char *str);
+int		empty_end(char *line, int *j, int *i);
 char	*remove_redir(char *str, int start, int end);
-t_list *pipeline_list(char *line);
-//parsing end
+t_list	*pipeline_list(char *line);
+
 //testing
 void	draw_tree(t_node *root);
 void	free_split(char **tab);
-int	subpipe_error(int code, char **subpipe);
+int		subpipe_error(int code, char **subpipe);
 char	**tab_realloc(char **tab, int n);
 char	*remove_redir(char *str, int start, int end);
-int	tokenize_word(char *line, int *i, char **str, int space);
-int	tab_len(char **tab);
+int		tokenize_word(char *line, int *i, char *str, int space);
+int		tab_len(char **tab);
 char	**args_tab(char *str);
+//heredoc
+char	**heredoc(char **path_tab, char *limiter);
 #endif
 
