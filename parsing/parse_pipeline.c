@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 20:16:56 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/21 11:30:58 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/21 12:04:12 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,13 +227,13 @@ t_list *pipeline_list(char *line)
 	head = NULL;
 	result = tokenize_pipe(line, &head);
 	if (result == 0)
-		return (list_error(&head, "malloc fail\n"));
+		return (list_error(&head, "malloc fail\n", NULL));
 	if (result == -2)
-		return (list_error(&head, "syntax error near '|'\n"));
+		return (list_error(&head, "syntax error near '|'\n", NULL));
 	if (result == -1)
-		return (list_error(&head, NULL));
+		return (list_error(&head, NULL, NULL));
 	if (result == -3)
-		return (list_error(&head, "no command after pipe\n"));
+		return (list_error(&head, "no command after pipe\n", NULL));
 	temp = head;
 	while (temp)
 	{

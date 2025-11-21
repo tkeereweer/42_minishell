@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 08:25:50 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/21 11:10:30 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/21 11:53:11 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ static int	write_heredoc(char *limiter, int fd)
 	tmp_lim = set_temp_limiter(limiter);
 	if (!tmp_lim)
 		return (0);
+	write(STDIN_FILENO, "heredoc> ", 9);
 	line = get_next_line(STDIN_FILENO);
 	if (!line)
 		return (free(tmp_lim), -1);
@@ -75,6 +76,7 @@ static int	write_heredoc(char *limiter, int fd)
 	{
 		ft_putstr_fd(line, fd);
 		free(line);
+		write(STDIN_FILENO, "heredoc> ", 9);
 		line = get_next_line(STDIN_FILENO);
 	}
 	if (line)
@@ -90,7 +92,7 @@ char	**heredoc(char **path_tab, char *limiter)
 {
 	static int	count = 0;
 	int			fd;
-
+//add heredoc prompt
 	if (!limiter)
 		return (NULL);
 	count++;
