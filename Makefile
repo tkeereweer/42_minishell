@@ -9,14 +9,15 @@ SRCS = parsing/logic_tree.c \
 	parsing/token.c \
 	parsing/token2.c \
 	main.c \
-	tree_visualiser.c
+	tree_visualiser.c \
+	parsing/heredoc.c
 
 OBJS = $(SRCS:.c=.o)
 
 NAME = minishell
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a

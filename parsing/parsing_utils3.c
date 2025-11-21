@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils3.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:39:11 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/17 16:07:13 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/21 11:18:30 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -4,27 +4,33 @@
 
 int	main(void)
 {
-	t_list	*list;
-	t_node	*tree;
-	char	*line;
+	// t_list	*list;
+	// t_node	*tree;
+	// char	*line;
 
-	while (1)
-	{
-		line = readline("enter prompt: ");
-		if (line != NULL)
-		{
-			add_history(line);
-			list = clean_node_list(line);
-			if (list != NULL)
-			{
-				tree = create_logic_tree(list);
-				create_cmd_trees(tree);
-				draw_tree(tree);
-				free_tree(tree);
-			}
-			free(line);
-		}
-	}
-	clear_history();
-	return (0);
+	// while (1)
+	// {
+	// 	line = readline("enter prompt: ");
+	// 	if (line != NULL)
+	// 	{
+	// 		add_history(line);
+	// 		list = clean_node_list(line);
+	// 		if (list != NULL)
+	// 		{
+	// 			tree = create_logic_tree(list);
+	// 			create_cmd_trees(tree);
+	// 			draw_tree(tree);
+	// 			free_tree(tree);
+	// 		}
+	// 		free(line);
+	// 	}
+	// }
+	// clear_history();
+	// return (0);
+
+    char **tmp = NULL;
+    tmp = heredoc(tmp, "test");
+    printf("path: %s\n", tmp[0]);
+    free_split(tmp);
+    
 }
