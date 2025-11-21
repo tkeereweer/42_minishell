@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/18 10:16:25 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/19 14:43:27 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ char	is_sep(char *str);
 char	is_logic(char *str);
 char	is_redir(char *str);
 void 	del_linked(t_node *lst);
-t_list	*list_error(t_list **list,char *str);
+t_list	*list_error(t_list **list, char *str, t_list **temp);
 int	pipe_token(t_list **lst);
 int	write_token(t_list **lst, char *filepath);
 int	read_token(t_list **lst, char *filepath);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 21:04:31 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/18 10:54:27 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/18 16:14:15 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,20 @@
 
 int	arg_token(char *word, t_list **lst)
 {
+    t_node      *temp_node;
 	t_content	temp_cont;
 	t_type		temp_type;
 	t_list		*temp;
 
-	temp = (t_list *)malloc(sizeof(t_list));
-	if (!temp)
-		return (0);
 	temp_cont.str = word;
 	temp_type = ARGS;
-	temp->content = node_new(temp_cont, temp_type);
-	if (!temp->content)
+	temp_node = node_new(temp_cont, temp_type);
+	if (!temp_node)
+		return (0);
+	temp = ft_lstnew(temp_node);
+	if (!temp)
 	{
-		free(temp);
+		free(temp_node);
 		return (0);
 	}
 	ft_lstadd_back(lst, temp);
@@ -65,7 +66,7 @@ int	tokenize_word(char *line, int *i, char **str, int space)
 	temp = ft_strtrim(*str, " \t\n\v\f\r");
 	if (!temp)
 		return (free(str), tokenizer_error("malloc fail\n"));
-	free(str);
+	free(*str);
 	*str = temp;
 	*i = j;
 	return (1);

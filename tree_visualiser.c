@@ -34,7 +34,7 @@ char	*get_node_label(t_node *node)
 		{
 			str = (char *) realloc(str, strlen(str) + strlen(node->content.tab[i]) + 3);
 			strcat(str, node->content.tab[i]);
-			strcat(str, "; ");
+			strcat(str, ";");
 			i++;
 		}
 		return str;
@@ -44,7 +44,7 @@ char	*get_node_label(t_node *node)
 	{
 		str = malloc (256);
 		str = strcat(str, "REDIR: **kind**");
-		str = strcat(str, ", ");
+		str = strcat(str, ";");
 		str = strcat(str, node->content.redir.path);
 		str = strcat(str, ";");
 		return str;

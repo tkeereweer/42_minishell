@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_pipeline.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 20:16:56 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/18 10:18:31 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/19 13:31:10 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,8 @@
 
 static int redir_token(t_list **lst, char *line, int *i)
 {
-	// int		quote;
 	char	*str;
 
-	// quote = 0;
 	str = NULL;
 	if (line[*i] == '>' && line[*i + 1] && line[*i + 1] == '>')
 		if (tokenize_word(line, i, &str, 2) == -1 || !append_token(lst, str))
@@ -46,15 +44,17 @@ static int increment_subpipe(char ***subpipe, char *line, int *i, int *j)
 	if (!*subpipe)
 		return (0);
 	len = tab_len(*subpipe);
-	(*subpipe)[len] = ft_substr(line, *j, *i - *j - 1);
+	(*subpipe)[len] = ft_substr(line, *j, *i - *j);
 	if (!(*subpipe)[len])
 		return (subpipe_error(-1, *subpipe));
-	(*subpipe)[len + 1] = "|";
+	(*subpipe)[len + 1] = ft_strdup("|");
+	if (!(*subpipe)[len + 1])
+		return (subpipe_error(-1, *subpipe));
 	*i += 1;
 	while (line[*i] && ft_is_whitespace(line[*i]))
 		*i += 1;
 	if (!line[*i])
-		return (subpipe_error(-3, *subpipe));//no cmd after pipe
+		return (subpipe_error(-3, *subpipe));
 	if (line[*i] == '|')
 		return (subpipe_error(-2, *subpipe));
 	*j = *i;
@@ -66,25 +66,36 @@ static int	build_subpipe(char ***subpipe, char *line, int *i)
 	int	j;
 	int	k;
 	int	count;
-	int	quote_count;
+	int	small_quote;
+	int big_quote;
 
 	j = *i;
 	k = 0;
-	quote_count = 0;
+	small_quote = 0;
+	big_quote = 0;
 	while (line[*i])
 	{
+		//build quote balance for both types independently
 		if (line[*i] == '\'' || line[*i] == '"')
 		{
-			quote_count++;
-			while (quote_count != 0)
+			if (line[*i] == '\'')
+				small_quote++;
+			if (line[*i] == '"')
+				big_quote++;
+			while ((small_quote % 2 != 0) || (big_quote % 2 != 0))
 			{
 				*i += 1;
 				if (!line[*i])
 					return (subpipe_error(-1, *subpipe));
 				if (line[*i] == '\'' || line[*i] == '"')
-					quote_count--;
+				{
+					if (line[*i] == '\'' && (big_quote % 2 == 0))
+						small_quote++;
+					if (line[*i] == '"' && (small_quote % 2 == 0))
+						big_quote++;
+				}
 			}
-			*i += 1;
+			// *i += 1;
 		}
 		if (line[*i] == '|')
 		{
@@ -93,7 +104,8 @@ static int	build_subpipe(char ***subpipe, char *line, int *i)
 				return (count);
 			k = *i;
 		}
-		*i += 1;
+		else
+			*i += 1;
 	}
 	if (!*subpipe)
 	{
@@ -116,10 +128,12 @@ static int	tokenize_subpipe(char **subpipe, t_list **lst)
 	int	j;
 	int	k;
 	int	redir_count;
-	int	quote_count;
+	int	small_quote;
+	int	big_quote;
 
 	redir_count = 0;
-	quote_count = 0;
+	small_quote = 0;
+	big_quote = 0;
 	i = 0;
 	j = 0;
 	k = 0;
@@ -137,14 +151,21 @@ static int	tokenize_subpipe(char **subpipe, t_list **lst)
 		{
 			if (subpipe[i][j] == '\'' || subpipe[i][j] == '"')
 			{
-				quote_count++;
-				while (quote_count != 0)
+				if (subpipe[i][j] == '\'')
+					small_quote++;
+				if (subpipe[i][j] == '"')
+					big_quote++;
+				while ((small_quote % 2 != 0) || (big_quote % 2 != 0))
 				{
 					j++;
-					if (subpipe[i][j] == '\'' || subpipe[i][j] == '"')
-						quote_count--;
+					if (!subpipe[i][j])
+						return (subpipe_error(-1, subpipe));
+					if (subpipe[i][j] == '\'' && (big_quote % 2 == 0))
+						small_quote++;
+					if (subpipe[i][j] == '"' && (small_quote % 2 == 0))
+						big_quote++;
 				}
-				j++;
+				// j++;
 			}
 			redir_count = 0;
 			if (is_redir(&subpipe[i][j]))
@@ -206,11 +227,13 @@ t_list *pipeline_list(char *line)
 	head = NULL;
 	result = tokenize_pipe(line, &head);
 	if (result == 0)
-		list_error(&head, "malloc fail");
+		return (list_error(&head, "malloc fail\n"));
 	if (result == -2)
-		list_error(&head, "syntax error near '|'");
+		return (list_error(&head, "syntax error near '|'\n"));
 	if (result == -1)
-		list_error(&head, NULL);
+		return (list_error(&head, NULL));
+	if (result == -3)
+		return (list_error(&head, "no command after pipe\n"));
 	temp = head;
 	while (temp)
 	{
