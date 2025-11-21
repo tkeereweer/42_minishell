@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/21 15:39:47 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/21 16:21:26 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,13 @@ t_node	*create_logic_tree(t_list *list);
 int		create_cmd_trees(t_node *node);
 void	free_tree(t_node *tree);
 //parsing
-t_list	*clean_node_list(char *line);
+t_list	*clean_node_list(char *line, char **path_tab);
 int 	open_par_token(t_list **list);
 int 	close_par_token(t_list **list);
 int		pipeline_token(char *str, t_list **list);
 int		and_token(t_list **list);
 int		or_token(t_list **list);
-int 	build_node_list(char *line, t_list **list);
+int 	build_node_list(char *line, t_list **list, char **path_tab);
 char	is_sep(char *str);
 char	is_logic(char *str);
 char	is_redir(char *str);

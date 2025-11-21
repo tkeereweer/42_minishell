@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 21:04:31 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/18 16:14:15 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/21 16:24:19 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ int	tokenize_word(char *line, int *i, char **str, int space)
 	quote = 0;
 	if (empty_end(line, &j, i) == -1)
 		return (-1);//eol after redir --> syntax error near >
+    //modify quote logic
 	if (line[j] == '\'' || line[j] == '"')
 		quote++;
 	while (line[j])

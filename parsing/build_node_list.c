@@ -6,14 +6,14 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 11:50:24 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/21 14:29:56 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/21 17:15:35 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 
-static int	tokenize_pipeline(char *line, int *i, t_list **list)
+static int	tokenize_pipeline(char *line, int *i, t_list **list, char **tab)
 {
 	char	*pipeline;
 	int		j;
@@ -36,7 +36,6 @@ static int	tokenize_pipeline(char *line, int *i, t_list **list)
 		}
 		if (line[j] == '<' && line[j +  1] && line[j + 1] == '<')
 		{
-			char **tab = NULL;
 			if (!set_heredoc(&line, &j, tab))
 				return (-1);
 		}
@@ -98,7 +97,7 @@ static int	sep_logical_tokenizer(char *line, int *i, t_list **list/*, t_list **t
 	else if (line[*i] == ')')
 	{
 		j = 0;
-		while (ft_is_whitespace(line[*i] + j))
+		while (ft_is_whitespace(line[*i + j]))
 			j++;
 		if (line[*i] + j && (is_logic(&line[*i] + j) || line[*i] + j == ')'))
 			if (sep_tokenizer(line, i, list) == -1)
@@ -114,7 +113,7 @@ static int	sep_logical_tokenizer(char *line, int *i, t_list **list/*, t_list **t
 //l.122: catching two logicals next to e.o. AFTER second one is tokenized
 //this helps w/ finding the right syntax error
 //temp hasnt been moved so points to "previous" logical
-int build_node_list(char *line, t_list **list)
+int build_node_list(char *line, t_list **list, char **path_tab)
 {
 	int i;
 	int result;
@@ -143,10 +142,9 @@ int build_node_list(char *line, t_list **list)
 		}
 		else
 		{
-			result = tokenize_pipeline(line, &i, list);
+			result = tokenize_pipeline(line, &i, list, path_tab);
 			if (result <= 0)
 				return (result);//returns 0 means unclosed quotes
-			//implement heredoc here
 		}
 		i++;
 		if (!temp)
@@ -214,14 +212,14 @@ t_list	*syntax_error(t_list **lst)
 	return (NULL);
 }
 
-t_list	*clean_node_list(char *line)
+t_list	*clean_node_list(char *line, char **path_tab)
 {
 	int result;
 	t_list	*list;
 	t_list	*temp;
 
 	list = NULL;
-	result = build_node_list(line, &list);
+	result = build_node_list(line, &list, path_tab);
 	if (result == 0)
 		return (list_error(&list, "unclosed quotes\n", NULL));
 	if (result == -1)

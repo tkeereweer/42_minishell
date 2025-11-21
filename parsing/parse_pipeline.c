@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 20:16:56 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/21 12:04:12 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/21 16:23:04 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,37 +66,13 @@ static int	build_subpipe(char ***subpipe, char *line, int *i)
 	int	j;
 	int	k;
 	int	count;
-	int	small_quote;
-	int big_quote;
 
 	j = *i;
 	k = 0;
-	small_quote = 0;
-	big_quote = 0;
 	while (line[*i])
 	{
-		//build quote balance for both types independently
-		if (line[*i] == '\'' || line[*i] == '"')
-		{
-			if (line[*i] == '\'')
-				small_quote++;
-			if (line[*i] == '"')
-				big_quote++;
-			while ((small_quote % 2 != 0) || (big_quote % 2 != 0))
-			{
-				*i += 1;
-				if (!line[*i])
-					return (subpipe_error(-1, *subpipe));
-				if (line[*i] == '\'' || line[*i] == '"')
-				{
-					if (line[*i] == '\'' && (big_quote % 2 == 0))
-						small_quote++;
-					if (line[*i] == '"' && (small_quote % 2 == 0))
-						big_quote++;
-				}
-			}
-			// *i += 1;
-		}
+        if (!iterate_over_quotes(line, i))
+            return (subpipe_error(-1, *subpipe));
 		if (line[*i] == '|')
 		{
 			count = increment_subpipe(subpipe, line, i, &j);
