@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 15:24:33 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/20 16:52:56 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/20 17:52:03 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,7 @@ int	expand_vars(char ***tab, t_data *data)
 	i = 1;
 	while ((*tab)[i] != NULL)
 	{
+		mode = 0;
 		if ((*tab)[i][0] == '\'')
 			mode = 2;
 		else if ((*tab)[i][0] == '"')

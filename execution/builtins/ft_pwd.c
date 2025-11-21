@@ -22,8 +22,10 @@ int ft_pwd(void)
 	return (0);
 }
 
+#ifndef TESTING
 int	main(void)
 {
-	pwd();
+	ft_pwd();
 	return (0);
 }
+#endif

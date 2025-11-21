@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/20 13:58:32 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/20 17:14:00 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <dirent.h>
-# include <linux/limits.h>
+// # include <linux/limits.h>
+# include <sys/syslimits.h>
 # include "libft/src/libft.h"
 
 typedef enum e_type

@@ -66,6 +66,7 @@ int ft_cd(char *path)
 	return (ret);
 }
 
+#ifndef TESTING
 // int main(int argc, char *argv[])
 // {
 // 	char    buf[1000];
@@ -99,7 +100,7 @@ void run_test(const char *test_name, char *path, int should_succeed)
     int     ret;
     
     getcwd(original_dir, 1000);
-    ret = cd(path);
+    ret = ft_cd(path);
     
     if (should_succeed)
     {
@@ -252,6 +253,7 @@ int main(int argc, char *argv[])
     // Restore to original directory
     getcwd(buf, 1000);
     printf("Final directory: %s\n", buf);
-    
+
     return (0);
 }
+#endif
