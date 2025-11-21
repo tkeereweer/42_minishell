@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 17:46:51 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/17 15:34:33 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/21 16:05:18 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,19 @@
 
 void	add_cmd_children(t_node *cmd, t_list **pipeline)
 {
+	t_node	*tmp;
+
 	while (*pipeline != NULL && (*pipeline)->content->type != PIPE)
 	{
 		if ((*pipeline)->content->type == ARGS)
 			cmd->left_child = (*pipeline)->content;
 		else if ((*pipeline)->content->type == REDIR)
-			cmd->right_child = (*pipeline)->content;
+		{
+			tmp = cmd;
+			while (tmp->right_child != NULL)
+				tmp = tmp->right_child;
+			tmp->right_child = (*pipeline)->content;
+		}
 		*pipeline = (*pipeline)->next;
 	}
 	if (*pipeline != NULL)
@@ -122,6 +129,9 @@ int	create_cmd_trees(t_node *node)
 // 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, PIPE)));
 // 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, REDIR)));
 // 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, ARGS)));
+// 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, REDIR)));
+// 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, REDIR)));
+// 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, REDIR)));
 // 	// ft_lstadd_back(&lst, ft_lstnew(node_new(cont, PIPE)));
 // 	// ft_lstadd_back(&lst, ft_lstnew(node_new(cont, ARGS)));
 // 	// ft_lstadd_back(&lst, ft_lstnew(node_new(cont, PIPE)));

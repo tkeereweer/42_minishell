@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 10:14:03 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/19 14:57:53 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/21 10:53:56 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,26 +30,14 @@ char	*ft_getenv(char *var, char **env)
 int has_envvar(char *str)
 {
 	int	i;
-	int	idx;
 
 	i = 0;
-	idx = -1;
-	while (str[i] != '\0' && str[i + 1] != '\0')
+	while (str[i] != '\0')
 	{
-		if (str[i] == ' ' && str[i + 1] == '$')
-		{
-			idx = i + 1;
-			break ;
-		}
-		if (i == 0 && str[i] == '$')
-		{
-			idx = i;
-			break ;
-		}
+		if (str[i] == '$')
+			return (i);
 		i++;
 	}
-	if (idx > -1 && str[idx + 1] != ' ' && str[idx + 1] != '\0')
-		return (idx);
 	return (-1);
 }
 
@@ -58,7 +46,7 @@ int envvar_len(char *str)
 	int	i;
 
 	i = 1;
-	while (str[i] != '\0' && str[i] != ' ' && str[i] != '$')
+	while (ft_isalnum(str[i]) == 1 || str[i] == '_')
 		i++;
 	return (i);
 }

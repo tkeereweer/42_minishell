@@ -1,6 +1,4 @@
 #include "minishell.h"
-#include <readline/readline.h>
-#include <readline/history.h>
 
 void	print_tree(t_node *node)
 {
@@ -75,14 +73,17 @@ int	main(int argc, char *argv[], char **envp)
 
 	(void) argc;
 	(void) argv;
+	if (handle_signals_parent() == 1)
+		return (1);
 	tab = malloc(5 *sizeof(char *));
 	tab[0] = ft_strdup("cmd");
-	tab[1] = ft_strdup("*.c");
+	tab[1] = ft_strdup("t***.**");
 	tab[2] = ft_strdup("last");
 	tab[3] = ft_strdup("\"$test\"");
 	tab[4] = NULL;
 	if (copy_env(&data, envp) == 1)
 		return (1);
+	ft_env(&data);
 	expand_vars(&tab, &data);
 	while (1)
 	{

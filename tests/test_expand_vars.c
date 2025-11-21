@@ -193,7 +193,7 @@ void test_variable_in_text(void)
 
     printf("\n--- Test 3: Variable within text ---\n");
     data = create_test_data();
-    tab = create_tab(2, "echo", "hello$USERworld");
+    tab = create_tab(2, "echo", "hello$USER");
 
     printf("Before:\n");
     print_tab(tab);
@@ -203,7 +203,7 @@ void test_variable_in_text(void)
     printf("After:\n");
     print_tab(tab);
 
-    if (ret == 0 && tab[1] && ft_strncmp(tab[1], "hellotestuserworld", 19) == 0)
+    if (ret == 0 && tab[1] && ft_strncmp(tab[1], "hellotestuser", 14) == 0)
         print_test_result("expand variable in text", 1);
     else
         print_test_result("expand variable in text", 0);

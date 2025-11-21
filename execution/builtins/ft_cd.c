@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 09:21:20 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/20 09:30:46 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/21 10:12:52 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int ft_cd(char *path)
 			ft_strlcpy(new_str, home, ft_strlen(home) + ft_strlen(&path[1]) + 1);
 			ft_strlcat(new_str, &path[1], ft_strlen(home) + ft_strlen(&path[1]) + 1);
 			ret = chdir(new_str);
+            free(new_str);
 		}
 		else
 			ret = chdir(&path[1]);

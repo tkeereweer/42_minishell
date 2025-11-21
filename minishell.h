@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/20 17:14:00 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/21 16:35:44 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,15 @@
 
 # include <unistd.h>
 # include <stdlib.h>
+# include <signal.h>
 # include <stdio.h>
+# include <fcntl.h>
+# include <termios.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 # include <dirent.h>
-// # include <linux/limits.h>
-# include <sys/syslimits.h>
+# include <linux/limits.h>
+// # include <sys/syslimits.h>
 # include "libft/src/libft.h"
 
 typedef enum e_type
@@ -121,5 +126,6 @@ void	ft_env(t_data *data);
 //utils
 char	*ft_strcat(char *dst, char *src);
 char	*ft_getenv(char *var, char **env);
+int		handle_signals_parent(void);
 #endif
 
