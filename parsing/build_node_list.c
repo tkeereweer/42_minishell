@@ -6,11 +6,12 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 11:50:24 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/19 15:08:12 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/21 14:29:56 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
 
 static int	tokenize_pipeline(char *line, int *i, t_list **list)
 {
@@ -32,6 +33,12 @@ static int	tokenize_pipeline(char *line, int *i, t_list **list)
 				quote_small++;
 			if (line[j] == '"' && (quote_small % 2 == 0))
 				quote_big++;
+		}
+		if (line[j] == '<' && line[j +  1] && line[j + 1] == '<')
+		{
+			char **tab = NULL;
+			if (!set_heredoc(&line, &j, tab))
+				return (-1);
 		}
 		j++;
 	}

@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/21 12:04:30 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/21 15:39:47 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,8 @@ int		tokenizer_error(char *str);
 int		empty_end(char *line, int *j, int *i);
 char	*remove_redir(char *str, int start, int end);
 t_list	*pipeline_list(char *line);
-int	tokenize_word(char *line, int *i, char **str, int space);
+int		tokenize_word(char *line, int *i, char **str, int space);
+int		iterate_over_quotes(char *line, int *j);
 
 //testing
 void	draw_tree(t_node *root);
@@ -100,5 +101,6 @@ int		tab_len(char **tab);
 char	**args_tab(char *str);
 //heredoc
 char	**heredoc(char **path_tab, char *limiter);
+int		set_heredoc(char **line, int *j, char **tab);
 #endif
 

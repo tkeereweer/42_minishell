@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 08:25:50 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/21 11:53:11 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/21 15:30:07 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,6 @@ char	**heredoc(char **path_tab, char *limiter)
 {
 	static int	count = 0;
 	int			fd;
-//add heredoc prompt
 	if (!limiter)
 		return (NULL);
 	count++;

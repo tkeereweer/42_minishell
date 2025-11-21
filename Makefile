@@ -10,7 +10,8 @@ SRCS = parsing/logic_tree.c \
 	parsing/token2.c \
 	main.c \
 	tree_visualiser.c \
-	parsing/heredoc.c
+	parsing/heredoc_function.c \
+	parsing/heredoc_command.c
 
 OBJS = $(SRCS:.c=.o)
 

@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:39:11 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/21 11:31:45 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/21 15:39:25 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,46 @@ int	tab_len(char **tab)
 	return (i);
 }
 
+int	iterate_over_quotes(char *line, int *j)
+{
+	int	small_quote;
+	int	big_quote;
+
+	small_quote = 0;
+	big_quote = 0;
+	if (line[*j] == '\'' || line[*j] == '"')
+	{
+		if (line[*j] == '\'')
+			small_quote++;
+		if (line[*j] == '"')
+			big_quote++;
+		while ((small_quote % 2 != 0) || (big_quote % 2 != 0))
+		{
+			*j += 1;
+			if (!line[*j])
+				return (0);
+			if (line[*j] == '\'' && (big_quote % 2 == 0))
+				small_quote++;
+			if (line[*j] == '"' && (small_quote % 2 == 0))
+				big_quote++;
+		}
+	}
+	return (1);
+}
+
 char	**args_tab(char *str)
 {
 	int	i;
 	int j;
 	int small_quote;
-    int big_quote;
+	int big_quote;
 	int	word_count;
 	char **tab;
 	char    *temp;
 
 	tab = NULL;
 	small_quote = 0;
-    big_quote = 0;
+	big_quote = 0;
 	word_count = 0;
 	i = 0;
 	j = 0;
@@ -57,7 +84,7 @@ char	**args_tab(char *str)
 					if (str[i] == '"' && (small_quote % 2 == 0))
 						big_quote++;
 				}
-            }
+			}
 			// i++;
 		}
 		if (ft_is_whitespace(str[i]))
