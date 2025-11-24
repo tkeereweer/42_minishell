@@ -3,84 +3,158 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils3.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:39:11 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/17 16:07:13 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/24 18:17:07 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	tab_len(char **tab)
+int	iterate_over_quotes(char *line, int *j)
 {
-    int i;
+	int	small_quote;
+	int	big_quote;
 
-    i = 0;
-	while (tab[i])
-        i++;
-    return (i);
+	small_quote = 0;
+	big_quote = 0;
+	if (line[*j] == '\'' || line[*j] == '"')
+	{
+		if (line[*j] == '\'')
+			small_quote++;
+		if (line[*j] == '"')
+			big_quote++;
+		while ((small_quote % 2 != 0) || (big_quote % 2 != 0))
+		{
+			*j += 1;
+			if (!line[*j])
+				return (0);
+			if (line[*j] == '\'' && (big_quote % 2 == 0))
+				small_quote++;
+			if (line[*j] == '"' && (small_quote % 2 == 0))
+				big_quote++;
+		}
+	}
+	return (1);
+}
+//for redir small and big, i != 1 bc there must be a non empty filename behind
+// we can use it as check for if we exec'd inside the function or not
+static int  redir_big(t_list **lst, char *line, int *i)
+{
+	char	*str;
+    int     res;
+
+	str = NULL;
+	if (line[*i] == '>' && line[*i + 1] && line[*i + 1] == '>')
+    {
+		res = tokenize_word(line, i, &str, 2);
+        if (res <= 0)
+            return (res);
+        if (!append_token(lst, str))
+			return (0);
+        return (*i);
+    }
+	if (line[*i] == '<' && line[*i + 1] && line[*i + 1] == '<')
+    {
+		res = tokenize_word(line, i, &str, 2);
+        if (res <= 0)
+            return (res);
+        if (!heredoc_token(lst, str))
+			return (0);
+        return (*i);
+    }
+    return (1);
 }
 
-char	**args_tab(char *str)
+static int  redir_small(t_list **lst, char *line, int *i)
 {
-	int	i;
-	int j;
-	int	quote_count;
-	int	word_count;
-	char **tab;
+ 	char	*str;
+    int     res;
 
-	quote_count = 0;
-	word_count = 0;
-	i = 0;
-	j = 0;
-	tab = NULL;
-	while(str[i])
+	str = NULL;
+	if (line[*i] == '>')
+    {
+		res = tokenize_word(line, i, &str, 1);
+        if (res <= 0)
+            return (res);
+        if (!write_token(lst, str))
+			return (0);
+        return(*i);
+    }
+	if (line[*i] == '<')
+    {
+		res = tokenize_word(line, i, &str, 1);
+        if (res <= 0)
+            return (res);
+        if (!read_token(lst, str))
+			return (0);
+        return (*i);
+    }
+	return (1);   
+}
+
+//returns error code or value of *i
+int redir_token(t_list **lst, char *line, int *i)
+{
+    int res;
+
+    res = redir_big(lst, line, i);
+    if (res <= 0 || res > 1)
+        return (res);
+    res = redir_small(lst, line, i);
+    if (res <= 0 || res > 1)
+        return (res);
+    return (*i);
+}
+
+int return_1_subpipe(char ***subpipe, char *line)
+{
+	*subpipe = tab_realloc(*subpipe, 1);
+	if (!*subpipe)
+		return (-1);
+	(*subpipe)[0] = line;
+	(*subpipe)[1] = NULL;
+	return (1);
+}
+
+static int	isolate_pipes(char ***subpipe, char *line, int *i, int *k)
+{
+	int count;
+	int	j;
+
+	j = *i;
+    count = 1;
+	while (line[*i])
 	{
-		if (str[i] == '\'' || str[i] == '"')
+		if (!iterate_over_quotes(line, i))
+			return (subpipe_error(-1, *subpipe));
+		if (line[*i] == '|')
 		{
-			quote_count++;
-			while (quote_count != 0)
-			{
-				i++;
-				if (str[i] == '\'' || str[i] == '"')
-					quote_count--;
-			}
-			i++;
+			count = increment_subpipe(subpipe, line, i, &j);
+			if (count < 0)
+				return (count);
+			*k = *i;
 		}
-		if (ft_is_whitespace(str[i]))
-		{
-			word_count++;
-			tab = tab_realloc(tab, word_count);
-			if (!tab)
-				return (free_split(tab), NULL);
-			tab[word_count - 1] = ft_substr(str, j, i);
-			if (!tab[word_count - 1])
-				return (free_split(tab), NULL);
-			while (ft_is_whitespace(str[i]))
-				i++;
-			j = i;
-			continue ;
-		}
-		i++;
+		else
+			*i += 1;
 	}
-	if (!tab)
-    {
-        tab = tab_realloc(tab, 1);
-        if (!tab)
-            return (free(str), NULL);
-        tab[0] = ft_strdup(str);
-        tab[1] = NULL;
-        return (tab);
-    }
-	if (j != i - 1)
-    {
-        tab = tab_realloc(tab, word_count + 1);
-        if (!tab)
-            return(free_split(tab), NULL);
-        tab[word_count] = ft_substr(str, j, i);
-        if (!tab[word_count])
-            return (free_split(tab), NULL);
-    }
-	return (tab);
+	return (count);
+}
+
+int	build_subpipe(char ***subpipe, char *line, int *i)
+{
+	int	k;
+	int	count;
+
+	k = 0;
+	count = isolate_pipes(subpipe, line, i, &k);
+	if (count < 0)
+		return (count);
+	if (!*subpipe)
+		return (return_1_subpipe(subpipe, line));
+	(*subpipe)[count + 2] = ft_substr(line, k, *i - k + 1);
+	if (!(*subpipe)[count + 2])
+		return (subpipe_error(0, *subpipe));
+	return (1);
 }

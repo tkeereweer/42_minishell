@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 14:36:14 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/17 13:58:29 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/24 13:50:43 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 int	empty_end(char *line, int *j, int *i)
 {
-	*j = *i;
-	while (line[*j] && ft_is_whitespace(line[*j]))
-		*j += 1;
-	if (!line[*j])
+	while (line[*i] && ft_is_whitespace(line[*i]))
+		*i += 1;
+	if (!line[*i])
 		return (-1);//syntax error
+    *j = *i;
 	return (1);
 }
 
@@ -27,7 +27,7 @@ void	free_split(char **tab)
 	int	i;
 
 	i = 0;
-    if (!tab)
+	if (!tab)
 		return ;
 	while (tab[i])
 	{
@@ -35,13 +35,6 @@ void	free_split(char **tab)
 		i++;
 	}
 	free(tab);
-}
-
-int	subpipe_error(int code, char **subpipe)
-{
-	if (subpipe)
-		free_split(subpipe);
-	return (code);
 }
 
 char	**tab_realloc(char **tab, int n)
@@ -66,6 +59,9 @@ char	**tab_realloc(char **tab, int n)
 
 //deletes chars from start to end INCLUDED 
 //overwrites them with the end
+//start and end are relative to the position of the redir in the original string
+//strncpy is for beginning of string until removed part
+//while loop is for after removed part until end of line
 char	*remove_redir(char *str, int start, int end)
 {
 	char	*dest;
@@ -73,13 +69,15 @@ char	*remove_redir(char *str, int start, int end)
 	int		i;
 	int		j;
 
-	dest_len = ft_strlen(str) - (start - end);
-	dest = (char *)malloc(dest_len);
+	dest_len = ft_strlen(str) - (end - start);
+	dest = (char *)malloc(dest_len * sizeof(char));
 	if (!dest)
 		return (NULL);
-	ft_strncpy(dest, str, start);
-	i = end;
+	ft_strncpy(dest, str, start - 1);
+	i = end + 1;
 	j = start;
+	while (ft_is_whitespace(str[i]))
+		i++;
 	while (str[i])
 	{
 		dest[j] = str[i];
@@ -87,6 +85,21 @@ char	*remove_redir(char *str, int start, int end)
 		j++;
 	}
 	dest[j] = '\0';
-	free(str);
 	return (dest);
+}
+
+t_list	*syntax_error(t_list **lst)
+{
+	int		temp;
+	t_list *last;
+
+	last = ft_lstlast(*lst);
+	temp = last->content->content.logic;
+	write(STDERR_FILENO, "syntax error near: ", ft_strlen("syntax error near: "));
+	if (temp == 0)
+		write(STDERR_FILENO, "'&&'\n", ft_strlen("'&&'\n"));
+	else
+		write(STDERR_FILENO, "'||'\n", ft_strlen("'||'\n"));
+	ft_lstclear(lst, del_linked);
+	return (NULL);
 }

@@ -6,48 +6,28 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 21:04:31 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/17 11:19:01 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/24 13:58:08 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	cmd_token(char *word, t_list **lst)
-{
-	t_content	temp_cont;
-	t_type		temp_type;
-	t_list		*temp;
-
-	temp = (t_list *)malloc(sizeof(t_list));
-	if (!temp)
-		return (0);
-	temp_cont.str = word;
-	temp_type = CMD;
-	temp->content = node_new(temp_cont, temp_type);
-	if (!temp->content)
-	{
-		free(temp);
-		return (0);
-	}
-	ft_lstadd_back(lst, temp);
-	return (1);	
-}
-
 int	arg_token(char *word, t_list **lst)
 {
+	t_node      *temp_node;
 	t_content	temp_cont;
 	t_type		temp_type;
 	t_list		*temp;
 
-	temp = (t_list *)malloc(sizeof(t_list));
-	if (!temp)
-		return (0);
 	temp_cont.str = word;
 	temp_type = ARGS;
-	temp->content = node_new(temp_cont, temp_type);
-	if (!temp->content)
+	temp_node = node_new(temp_cont, temp_type);
+	if (!temp_node)
+		return (0);
+	temp = ft_lstnew(temp_node);
+	if (!temp)
 	{
-		free(temp);
+		free(temp_node);
 		return (0);
 	}
 	ft_lstadd_back(lst, temp);
@@ -56,32 +36,34 @@ int	arg_token(char *word, t_list **lst)
 
 //only handle quotes if at begining of filepath
 //space defines offset to start after > or >>
-int	tokenize_word(char *line, int *i, char *str, int space)
+//spaces or redir in file names are accepted if in quotes
+//after empty_end, i and j point to first non whitespace char of filepath
+//i++ to offset start by 1 when starting w/ quotes
+int	tokenize_word(char *line, int *i, char **str, int space)
 {
 	int		j;
-	int		quote;
+	char	*temp;
 
 	*i += space;
-	quote = 0;
 	if (empty_end(line, &j, i) == -1)
-		return (-1);
+		return (-1);//eol after redir --> syntax error near NEXT TOKEN !! ie newline or |, etc
 	if (line[j] == '\'' || line[j] == '"')
-		quote++;
-	while (line[j])
 	{
-		if (line[j] == '\'' || line[j] == '"')
-			quote++;
-		if (is_redir(&line[j]) && (quote % 2 == 0))
-			break;
-		if (ft_is_whitespace(line[j]) && quote == 0)
-			break;
-		j++; 
+		if (!iterate_over_quotes(line, &j))
+			return (tokenizer_error("unclosed quotes\n"));
+		*i += 1;
 	}
-	if (quote % 2 == 1)
-		return (tokenizer_error("unclosed quotes\n"));
-	str = ft_substr(&line[*i], 1, j - *i - 1);
-	if (!str)
+	else
+		while (line[j] && !ft_is_whitespace(line[j]))    
+			j++;
+	*str = ft_substr(&line[*i], 0, j - *i);
+	if (!*str)
 		return (tokenizer_error("malloc fail\n"));
+	temp = ft_strtrim(*str, " \t\n\v\f\r");
+	if (!temp)
+		return (free(str), tokenizer_error("malloc fail\n"));
+	free(*str);
+	*str = temp;
 	*i = j;
 	return (1);
 }
