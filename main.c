@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/24 18:21:33 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/24 18:43:46 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,8 @@ int	run_line(char *line)
 	if (line != NULL && ft_strlen_gnl(line) != 0)
 	{
 		add_history(line);
-		list = clean_node_list(line);
+        char **path_tab = NULL; //replace with struct
+		list = clean_node_list(line, path_tab);
 		if (list != NULL)
 		{
 			tree = create_logic_tree(list);
@@ -159,8 +160,8 @@ int	main(int argc, char *argv[], char **envp)
 		clean_exit(&data, NULL);
 	line = readline(prompt);
 	free(prompt);
-	// if (run_line(line) == 1)
-	// 	clean_exit(&data, line);
+	if (run_line(line) == 1)
+		clean_exit(&data, line);
 	while (line != NULL)
 	{
 		free(line);
@@ -169,8 +170,8 @@ int	main(int argc, char *argv[], char **envp)
 			clean_exit(&data, NULL);
 		line = readline(prompt);
 		free(prompt);
-		// if (run_line(line) == 1)
-		// 	clean_exit(&data, line);
+		if (run_line(line) == 1)
+			clean_exit(&data, line);
 	}
 	free_split(data.env);
 	free_split(tab);
