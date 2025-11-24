@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/24 14:47:11 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/24 18:28:07 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,18 @@
 
 # include <unistd.h>
 # include <stdlib.h>
+# include <signal.h>
 # include <stdio.h>
 # include <fcntl.h>
+# include <termios.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <dirent.h>
+# include <linux/limits.h>
+// # include <sys/syslimits.h>
 # include "libft/src/libft.h"
+
+extern volatile sig_atomic_t	g_signum;
 
 typedef enum e_type
 {
@@ -58,6 +67,12 @@ typedef struct s_node
 	struct s_node	*right_child;
 	struct s_node	*parent;
 }	t_node;
+
+typedef struct s_data
+{
+	char			**env;
+	t_node			*tree;
+}	t_data;
 
 t_node	*node_new(t_content content, t_type type);
 t_node	*create_logic_tree(t_list *list);
@@ -102,15 +117,33 @@ t_list	*set_temp(t_list **list, t_list *temp);
 int     separator_logic(char *line, int *i, t_list *temp, t_list **list);
 t_list	*syntax_error(t_list **lst);
 int     check_unclosed_par(t_list **list);
-
+int		tab_len(char **tab);
+char	**args_tab(char *str);
+//parsing end
+// variable expansion
+int 	expand_envvars(char **str, t_data *data);
+int		expand_wildcards(char ***tab, int i, char *pat);
+int		expand_vars(char ***tab, t_data *data);
 //testing
 void	draw_tree(t_node *root);
 void	free_split(char **tab);
 int		subpipe_error(int code, char **subpipe);
 char	**tab_realloc(char **tab, int n);
 char	*remove_redir(char *str, int start, int end);
-int		tab_len(char **tab);
-char	**args_tab(char *str);
+//builtins
+int 	ft_cd(char *path, t_data *data);
+int 	ft_pwd(void);
+void	ft_echo(char **args);
+void	ft_exit(unsigned int n);
+int		ft_export(char *key_val, t_data *data);
+void	ft_unset(char **tab, t_data *data);
+void	ft_env(t_data *data);
+//utils
+char	*ft_strcat(char *dst, char *src);
+char	*ft_getenv(char *var, char **env);
+int		handle_signals_parent(void);
+int		handle_signals_child(void);
+char	**get_envvar_pointer(char *var, char **env);
 //heredoc
 char	**heredoc(char **path_tab, char *limiter);
 int		set_heredoc(char **line, int *j, char **tab);
