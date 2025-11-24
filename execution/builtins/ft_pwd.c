@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 12:07:54 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/20 09:30:35 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/21 17:35:54 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-int ft_pwd(void)
+int	ft_pwd(void)
 {
-	char buf[PATH_MAX];
+	char	buf[PATH_MAX];
 
 	if (getcwd(buf, PATH_MAX) == NULL)
 		return (-1);
@@ -23,6 +23,7 @@ int ft_pwd(void)
 }
 
 #ifndef TESTING
+
 int	main(void)
 {
 	ft_pwd();

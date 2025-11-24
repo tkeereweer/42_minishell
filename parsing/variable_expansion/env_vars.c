@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 10:14:03 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/21 10:53:56 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/21 17:37:02 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*ft_getenv(char *var, char **env)
 	return (NULL);
 }
 
-int has_envvar(char *str)
+int	has_envvar(char *str)
 {
 	int	i;
 
@@ -41,7 +41,7 @@ int has_envvar(char *str)
 	return (-1);
 }
 
-int envvar_len(char *str)
+int	envvar_len(char *str)
 {
 	int	i;
 
@@ -69,7 +69,7 @@ char	*ft_strcat(char *dst, char *src)
 	return (dst);
 }
 
-int expand_envvars(char **str, t_data *data)
+int	expand_envvars(char **str, t_data *data)
 {
 	int		env_pos;
 	char	*envvar;

@@ -15,6 +15,7 @@ SRCS = parsing/logic_tree.c \
 	execution/builtins/ft_env.c \
 	execution/builtins/ft_exit.c \
 	execution/signals_parent.c \
+	execution/signals_child.c \
 	main.c \
 	tree_visualiser.c
 

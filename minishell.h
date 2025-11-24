@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/21 16:35:44 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/24 12:01:05 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # include <linux/limits.h>
 // # include <sys/syslimits.h>
 # include "libft/src/libft.h"
+
+extern volatile sig_atomic_t	g_signum;
 
 typedef enum e_type
 {
@@ -68,8 +70,8 @@ typedef struct s_node
 
 typedef struct s_data
 {
-	char	**env;
-	t_node	*tree;
+	char			**env;
+	t_node			*tree;
 }	t_data;
 
 t_node	*node_new(t_content content, t_type type);
@@ -127,5 +129,6 @@ void	ft_env(t_data *data);
 char	*ft_strcat(char *dst, char *src);
 char	*ft_getenv(char *var, char **env);
 int		handle_signals_parent(void);
+int		handle_signals_child(void);
 #endif
 

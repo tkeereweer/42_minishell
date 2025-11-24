@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 11:56:55 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/21 17:18:44 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/24 11:35:38 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,16 @@ void	sigexit_child(int signal)
 int	set_signal_child(void)
 {
 	struct sigaction	sigint;
+	struct sigaction	sigquit;
 	struct sigaction	sigexit;
 
 	ft_bzero(&sigint, sizeof(struct sigaction));
 	sigint.sa_handler = SIG_DFL;
 	if (sigaction(SIGINT, &sigint, NULL) == -1)
+		return (perror("sigaction"), 1);
+	ft_bzero(&sigquit, sizeof(struct sigaction));
+	sigquit.sa_handler = SIG_DFL;
+	if (sigaction(SIGQUIT, &sigquit, NULL) == -1)
 		return (perror("sigaction"), 1);
 	ft_bzero(&sigexit, sizeof(struct sigaction));
 	sigexit.sa_handler = &sigexit_child;
@@ -34,33 +39,9 @@ int	set_signal_child(void)
 	return (0);
 }
 
-int	handle_termios_child(void)
-{
-	char			*tty;
-	int				fd;
-	struct termios	termios_p;
-
-	tty = ttyname(0);
-	ft_printf("%s\n", tty);
-	fd = open(tty, O_RDWR | O_NOCTTY | O_NDELAY);
-	if (fd == -1)
-		return (perror("open"), 1);
-	if (!isatty(fd))
-		return (perror("isatty"), 1);
-	if (tcgetattr(fd, &termios_p) < 0)
-		return (perror("tcgetattr"), 1);
-	termios_p.c_cc[VSUSP] = 4;
-	termios_p.c_cc[VQUIT] = 31;
-	if (tcsetattr(fd, TCSANOW, &termios_p))
-		return (perror("tcsetattr"), 1);
-	close(fd);
-	return (0);
-}
-
 int	handle_signals_child(void)
 {
-	if (handle_termios_child() == 1)
-		return (1);
+	// check if ctrl-D works as expected in child process
 	if (set_signal_child() == 1)
 		return (1);
 	return (0);

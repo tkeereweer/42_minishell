@@ -63,10 +63,30 @@ int	copy_env(t_data *data, char **envp)
 	return (0);
 }
 
-int	main(int argc, char *argv[], char **envp)
+int	run_line(char *line)
 {
 	t_list	*list;
 	t_node	*tree;
+
+	if (line != NULL)
+	{
+		add_history(line);
+		list = clean_node_list(line);
+		if (list != NULL)
+		{
+			tree = create_logic_tree(list);
+			if (create_cmd_trees(tree) == 1)
+				return (1);
+			// draw_tree(tree);
+			print_tree(tree);
+			free_tree(tree);
+		}
+	}
+	return (0);
+}
+
+int	main(int argc, char *argv[], char **envp)
+{
 	char	*line;
 	t_data	data;
 	char	**tab;
@@ -85,25 +105,18 @@ int	main(int argc, char *argv[], char **envp)
 		return (1);
 	ft_env(&data);
 	expand_vars(&tab, &data);
-	while (1)
+	line = readline("enter prompt: ");
+	if (run_line(line) == 1)
+		return (1);
+	while (line != NULL)
 	{
+		free(line);
 		line = readline("enter prompt: ");
-		if (line != NULL)
-		{
-			add_history(line);
-			list = clean_node_list(line);
-			if (list != NULL)
-			{
-				tree = create_logic_tree(list);
-				if (create_cmd_trees(tree) == 1)
-					return (1);
-				// draw_tree(tree);
-				print_tree(tree);
-				free_tree(tree);
-			}
-			free(line);
-		}
+		if (run_line(line) == 1)
+			return (1);
 	}
-	clear_history();
+	free_split(data.env);
+	free_split(tab);
+	rl_clear_history();
 	return (0);
 }

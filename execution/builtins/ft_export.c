@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export.c                                           :+:      :+:    :+:   */
+/*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 12:16:15 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/20 09:29:31 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/21 17:35:04 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	add_key(char *key_val, t_data *data)
 	if (data->env[i] == NULL)
 		return (1); // also free tab??
 	data->env[i + 1] = NULL;
-	return(0);
+	return (0);
 }
 
 int	ft_export(char *key_val, t_data *data)

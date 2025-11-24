@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 15:24:33 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/20 17:52:03 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/21 17:37:51 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ int	match_pat(char *str, char *pat)
 {
 	size_t	i;
 	size_t	j;
-	int	start_i;
-	int	match;
+	int		start_i;
+	int		match;
 
 	i = 0;
 	j = 0;
@@ -116,7 +116,6 @@ int	expand_wildcards(char ***tab, int i, char *pat)
 		}
 		dir_entry = readdir(dir_stream);
 	}
-
 	return (closedir(dir_stream));
 }
 

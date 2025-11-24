@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 09:28:08 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/20 09:32:42 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/21 17:33:23 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 void	ft_env(t_data *data)
 {
-	int i;
+	int	i;
 
-    i = 0;
-    while (data->env[i] != NULL)
-    {
-        ft_printf("%s\n", data->env[i]);
-        i++;
-    }
+	i = 0;
+	while (data->env[i] != NULL)
+	{
+		ft_printf("%s\n", data->env[i]);
+		i++;
+	}
 }
