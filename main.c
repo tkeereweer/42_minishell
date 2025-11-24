@@ -25,8 +25,8 @@ int	main(void)
 			{
 				tree = create_logic_tree(list);
 				create_cmd_trees(tree);
-				draw_tree(tree);
-				free_tree(tree);
+				// draw_tree(tree);
+				// free_tree(tree);
 			}
 			free(line);
 		}

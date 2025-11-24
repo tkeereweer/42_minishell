@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 17:46:51 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/21 16:16:28 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/24 15:01:07 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ int	create_cmd_trees(t_node *node)
 {
 	t_list	*pipeline;
 	t_list	*start_list;
+    int res;
 
 	if (node == NULL)
 		return (0);
@@ -100,8 +101,8 @@ int	create_cmd_trees(t_node *node)
 	create_cmd_trees(node->right_child);
 	if (node->type == PIPELINE)
 	{
-		pipeline = pipeline_list(node->content.str);
-		if (!pipeline)
+		res = pipeline_list(node->content.str, &pipeline);
+		if (res <= 0)
 			printf("pipeline list error\n");
 		start_list = pipeline;
 		free(node->content.str);

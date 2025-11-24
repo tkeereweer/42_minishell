@@ -5,6 +5,8 @@ SRCS = parsing/logic_tree.c \
 	parsing/parsing_utils.c \
 	parsing/parsing_utils2.c \
 	parsing/parsing_utils3.c \
+	parsing/parsing_utils4.c \
+	parsing/parsing_utils5.c \
 	parsing/token_redir.c \
 	parsing/token.c \
 	parsing/token2.c \

@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 21:04:31 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/21 16:24:19 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/24 13:58:08 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	arg_token(char *word, t_list **lst)
 {
-    t_node      *temp_node;
+	t_node      *temp_node;
 	t_content	temp_cont;
 	t_type		temp_type;
 	t_list		*temp;
@@ -36,31 +36,26 @@ int	arg_token(char *word, t_list **lst)
 
 //only handle quotes if at begining of filepath
 //space defines offset to start after > or >>
+//spaces or redir in file names are accepted if in quotes
+//after empty_end, i and j point to first non whitespace char of filepath
+//i++ to offset start by 1 when starting w/ quotes
 int	tokenize_word(char *line, int *i, char **str, int space)
 {
 	int		j;
-	int		quote;
 	char	*temp;
 
 	*i += space;
-	quote = 0;
 	if (empty_end(line, &j, i) == -1)
-		return (-1);//eol after redir --> syntax error near >
-    //modify quote logic
+		return (-1);//eol after redir --> syntax error near NEXT TOKEN !! ie newline or |, etc
 	if (line[j] == '\'' || line[j] == '"')
-		quote++;
-	while (line[j])
 	{
-		if (line[j] == '\'' || line[j] == '"')
-			quote++;
-		if (is_redir(&line[j]) && (quote % 2 == 0))
-			break;
-		if (ft_is_whitespace(line[j]) && quote == 0)
-			break;
-		j++; 
+		if (!iterate_over_quotes(line, &j))
+			return (tokenizer_error("unclosed quotes\n"));
+		*i += 1;
 	}
-	if (quote % 2 == 1)
-		return (tokenizer_error("unclosed quotes\n"));
+	else
+		while (line[j] && !ft_is_whitespace(line[j]))    
+			j++;
 	*str = ft_substr(&line[*i], 0, j - *i);
 	if (!*str)
 		return (tokenizer_error("malloc fail\n"));

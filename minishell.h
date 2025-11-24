@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/21 16:21:26 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/24 14:47:11 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,21 @@ int		arg_token(char *word, t_list **lst);
 int		tokenizer_error(char *str);
 int		empty_end(char *line, int *j, int *i);
 char	*remove_redir(char *str, int start, int end);
-t_list	*pipeline_list(char *line);
+int     pipeline_list(char *line, t_list **head);
+int     pipeline_list_error(char *str, t_list **temp, int result);
 int		tokenize_word(char *line, int *i, char **str, int space);
 int		iterate_over_quotes(char *line, int *j);
+int     redir_token(t_list **lst, char *line, int *i);
+int     return_1_subpipe(char ***subpipe, char *line);
+int     build_subpipe(char ***subpipe, char *line, int *i);
+int     clean_args_nodes(t_list **head);
+int     increment_subpipe(char ***subpipe, char *line, int *i, int *j);
+int     check_quote_balance(char *line, int *j, char **tab);
+int     sep_tokenizer(char *line, int *i, t_list **list);
+t_list	*set_temp(t_list **list, t_list *temp);
+int     separator_logic(char *line, int *i, t_list *temp, t_list **list);
+t_list	*syntax_error(t_list **lst);
+int     check_unclosed_par(t_list **list);
 
 //testing
 void	draw_tree(t_node *root);
