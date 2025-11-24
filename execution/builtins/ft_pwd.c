@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 12:07:54 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/21 17:35:54 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/24 15:37:35 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ int	ft_pwd(void)
 	return (0);
 }
 
-#ifndef TESTING
+// #ifndef TESTING
 
-int	main(void)
-{
-	ft_pwd();
-	return (0);
-}
-#endif
+// int	main(void)
+// {
+// 	ft_pwd();
+// 	return (0);
+// }
+// #endif

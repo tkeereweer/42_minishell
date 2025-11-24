@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 17:46:51 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/21 16:05:18 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/24 18:26:32 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,25 +95,52 @@ void	free_pipeline_list(t_list *pipeline)
 	}
 }
 
+void	handle_error_pipeline_list(t_node *node)
+{
+	if (node->parent == NULL || node->parent->right_child == node)
+		ft_putstr_fd("syntax errro near unexpected token: 'newline'\n", STDERR_FILENO);
+	else
+	{
+		ft_putstr_fd("syntax errro near unexpected token: '", STDERR_FILENO);
+		if (node->parent->content.logic == AND)
+			ft_putstr_fd("&&'\n", STDERR_FILENO);
+		else
+			ft_putstr_fd("||'\n", STDERR_FILENO);
+	}
+}
+
 int	create_cmd_trees(t_node *node)
 {
 	t_list	*pipeline;
 	t_list	*start_list;
+	int		res;
 
+	// res = 0; // remove if not testing
 	if (node == NULL)
 		return (0);
 	pipeline = NULL;
-	create_cmd_trees(node->left_child);
+	create_cmd_trees(node->left_child); // check if function returns 1 ??
 	if (node->type == PIPELINE)
 	{
-		pipeline = pipeline_list(node->content.str);
+		res = pipeline_list(node->content.str, &pipeline);
+		if (res <= 0)
+		{
+			if (res == -1)
+				handle_error_pipeline_list(node);
+			free_pipeline_list(pipeline);
+			return (1);
+		}
 		start_list = pipeline;
 		free(node->content.str);
 		if (populate_cmd_tree(&pipeline, node) == 1)
+		{
+			free_pipeline_list(start_list);
 			return (1);
+		}
 		free_pipeline_list(start_list);
 	}
-	create_cmd_trees(node->right_child);
+	if (create_cmd_trees(node->right_child) == 1)
+		return (1);
 	return (0);
 }
 

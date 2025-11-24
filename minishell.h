@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/24 12:01:05 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/24 18:28:07 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int		arg_token(char *word, t_list **lst);
 int 	tokenizer_error(char *str);
 int		empty_end(char *line, int *j, int *i);
 char	*remove_redir(char *str, int start, int end);
-t_list *pipeline_list(char *line);
+int		pipeline_list(char *line, t_list **head);
 //parsing end
 // variable expansion
 int 	expand_envvars(char **str, t_data *data);
@@ -118,7 +118,7 @@ int		tokenize_word(char *line, int *i, char *str, int space);
 int		tab_len(char **tab);
 char	**args_tab(char *str);
 //builtins
-int 	ft_cd(char *path);
+int 	ft_cd(char *path, t_data *data);
 int 	ft_pwd(void);
 void	ft_echo(char **args);
 void	ft_exit(unsigned int n);
@@ -130,5 +130,6 @@ char	*ft_strcat(char *dst, char *src);
 char	*ft_getenv(char *var, char **env);
 int		handle_signals_parent(void);
 int		handle_signals_child(void);
+char	**get_envvar_pointer(char *var, char **env);
 #endif
 

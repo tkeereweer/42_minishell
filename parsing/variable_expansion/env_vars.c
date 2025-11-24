@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 10:14:03 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/21 17:37:02 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/24 18:24:42 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ int	envvar_len(char *str)
 	int	i;
 
 	i = 1;
+	if (str[1] == '?')
+		return (i);
 	while (ft_isalnum(str[i]) == 1 || str[i] == '_')
 		i++;
 	return (i);
