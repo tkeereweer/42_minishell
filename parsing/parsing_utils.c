@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 18:38:12 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/17 13:29:57 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/24 16:06:57 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,17 +70,52 @@ char	is_redir(char *str)
 	return (0);
 }
 
-void del_linked(t_node *lst)
+t_list	*list_error(t_list **list, char *str, t_list **temp)
 {
-	(void)lst;
+	char	*temp_str;
+	int		i;
+
+	if (str)
+	{
+		if (!ft_strncmp("syntax error\n", str, ft_strlen("syntax error\n")))
+		{
+			temp_str = (*temp)->next->content->content.str;
+			i = 0;
+			while (temp_str[i] && !ft_is_whitespace(temp_str[i]))
+				i++;
+			write(STDERR_FILENO, "syntax error near: '", 20);
+			write(STDERR_FILENO, temp_str, i);
+			write(STDERR_FILENO, "'\n", 2);
+		}
+		else
+			write(STDERR_FILENO, str, ft_strlen(str));
+	}
+	ft_lstclear(list, del_linked);
+	return (NULL);
 }
 
-t_list	*list_error(t_list **list,char *str)
+int	pipeline_list_error(char *str, t_list **temp, int result)
 {
-	ft_lstclear(list, del_linked);
+	char	*temp_str;
+	int		i;
+
 	if (str)
-		write(STDERR_FILENO, str, ft_strlen(str));
-	return (NULL);
+	{
+		if (!ft_strncmp("syntax error\n", str, ft_strlen("syntax error\n")))
+		{
+			temp_str = (*temp)->next->content->content.str;
+			i = 0;
+			while (temp_str[i] && !ft_is_whitespace(temp_str[i]))
+				i++;
+			write(STDERR_FILENO, "syntax error near: '", 20);
+			write(STDERR_FILENO, temp_str, i);
+			write(STDERR_FILENO, "'\n", 2);
+			return (result);
+		}
+		else
+			write(STDERR_FILENO, str, ft_strlen(str));
+	}
+	return (result);
 }
 
 int tokenizer_error(char *str)

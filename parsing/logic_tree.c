@@ -15,7 +15,7 @@
 t_node	*node_new(t_content content, t_type type)
 {
 	t_node	*new;
-
+	
 	new = (t_node *) malloc(sizeof(t_node));
 	if (new == NULL)
 		return (NULL);
@@ -28,8 +28,10 @@ t_node	*node_new(t_content content, t_type type)
 		new->content.str = content.str;
 	else if (type == ARGS)
 		new->content.str = content.str;
-	else
+	else if (type == REDIR)
 		new->content.redir = content.redir;
+	else
+		new->content = content;
 	new->left_child = NULL;
 	new->right_child = NULL;
 	new->parent = NULL;

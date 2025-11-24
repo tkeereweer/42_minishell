@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
 /*   Updated: 2025/11/24 18:28:07 by mkeerewe         ###   ########.fr       */
@@ -79,18 +79,18 @@ t_node	*create_logic_tree(t_list *list);
 int		create_cmd_trees(t_node *node);
 void	free_tree(t_node *tree);
 //parsing
-t_list	*clean_node_list(char *line);
+t_list	*clean_node_list(char *line, char **path_tab);
 int 	open_par_token(t_list **list);
 int 	close_par_token(t_list **list);
 int		pipeline_token(char *str, t_list **list);
 int		and_token(t_list **list);
 int		or_token(t_list **list);
-int 	build_node_list(char *line, t_list **list);
+int 	build_node_list(char *line, t_list **list, char **path_tab);
 char	is_sep(char *str);
 char	is_logic(char *str);
 char	is_redir(char *str);
 void 	del_linked(t_node *lst);
-t_list	*list_error(t_list **list,char *str);
+t_list	*list_error(t_list **list,char *str, t_list **temp);
 int		pipe_token(t_list **lst);
 int		write_token(t_list **lst, char *filepath);
 int		read_token(t_list **lst, char *filepath);
@@ -99,10 +99,26 @@ int		heredoc_token(t_list **lst, char *limiter);
 int		word_token(char *word, t_list **lst);
 int		cmd_token(char *word, t_list **lst);
 int		arg_token(char *word, t_list **lst);
-int 	tokenizer_error(char *str);
+int		tokenizer_error(char *str);
 int		empty_end(char *line, int *j, int *i);
 char	*remove_redir(char *str, int start, int end);
-int		pipeline_list(char *line, t_list **head);
+int     pipeline_list(char *line, t_list **head);
+int     pipeline_list_error(char *str, t_list **temp, int result);
+int		tokenize_word(char *line, int *i, char **str, int space);
+int		iterate_over_quotes(char *line, int *j);
+int     redir_token(t_list **lst, char *line, int *i);
+int     return_1_subpipe(char ***subpipe, char *line);
+int     build_subpipe(char ***subpipe, char *line, int *i);
+int     clean_args_nodes(t_list **head);
+int     increment_subpipe(char ***subpipe, char *line, int *i, int *j);
+int     check_quote_balance(char *line, int *j, char **tab);
+int     sep_tokenizer(char *line, int *i, t_list **list);
+t_list	*set_temp(t_list **list, t_list *temp);
+int     separator_logic(char *line, int *i, t_list *temp, t_list **list);
+t_list	*syntax_error(t_list **lst);
+int     check_unclosed_par(t_list **list);
+int		tab_len(char **tab);
+char	**args_tab(char *str);
 //parsing end
 // variable expansion
 int 	expand_envvars(char **str, t_data *data);
@@ -114,9 +130,6 @@ void	free_split(char **tab);
 int		subpipe_error(int code, char **subpipe);
 char	**tab_realloc(char **tab, int n);
 char	*remove_redir(char *str, int start, int end);
-int		tokenize_word(char *line, int *i, char *str, int space);
-int		tab_len(char **tab);
-char	**args_tab(char *str);
 //builtins
 int 	ft_cd(char *path, t_data *data);
 int 	ft_pwd(void);
@@ -131,5 +144,8 @@ char	*ft_getenv(char *var, char **env);
 int		handle_signals_parent(void);
 int		handle_signals_child(void);
 char	**get_envvar_pointer(char *var, char **env);
+//heredoc
+char	**heredoc(char **path_tab, char *limiter);
+int		set_heredoc(char **line, int *j, char **tab);
 #endif
 

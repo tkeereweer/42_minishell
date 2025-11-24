@@ -5,6 +5,8 @@ SRCS = parsing/logic_tree.c \
 	parsing/parsing_utils.c \
 	parsing/parsing_utils2.c \
 	parsing/parsing_utils3.c \
+	parsing/parsing_utils4.c \
+	parsing/parsing_utils5.c \
 	parsing/token_redir.c \
 	parsing/token.c \
 	parsing/token2.c \
@@ -18,8 +20,11 @@ SRCS = parsing/logic_tree.c \
 	execution/builtins/ft_exit.c \
 	execution/signals_parent.c \
 	execution/signals_child.c \
-	main.c \
-	tree_visualiser.c
+	parsing/get_args.c \
+	parsing/heredoc_function.c \
+	parsing/heredoc_command.c \
+	tree_visualiser.c \
+	main.c
 
 OBJS = $(SRCS:.c=.o)
 
