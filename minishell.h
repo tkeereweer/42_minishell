@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/24 18:28:07 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/25 09:33:17 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ typedef struct s_node
 typedef struct s_data
 {
 	char			**env;
+	char			**path_tab;
 	t_node			*tree;
 }	t_data;
 

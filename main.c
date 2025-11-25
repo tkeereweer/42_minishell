@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/24 18:43:46 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/25 09:34:47 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,15 +84,14 @@ void	clean_exit(t_data *data, char *line)
 	exit(1);
 }
 
-int	run_line(char *line)
+int	run_line(char *line, char **path_tab)
 {
 	t_list	*list;
 	t_node	*tree;
 
-	if (line != NULL && ft_strlen_gnl(line) != 0)
+	if (line != NULL && ft_strlen_gnl(line) != 0) // what if only spaces
 	{
 		add_history(line);
-        char **path_tab = NULL; //replace with struct
 		list = clean_node_list(line, path_tab);
 		if (list != NULL)
 		{
@@ -142,25 +141,26 @@ int	main(int argc, char *argv[], char **envp)
 	(void) argv;
 	if (handle_signals_parent() == 1)
 		return (1);
-	tab = malloc(5 *sizeof(char *));
-	tab[0] = ft_strdup("cmd");
-	tab[1] = ft_strdup("t***.**");
-	tab[2] = ft_strdup("last");
-	tab[3] = ft_strdup("\"$?\"");
-	tab[4] = NULL;
+	// tab = malloc(5 *sizeof(char *));
+	// tab[0] = ft_strdup("cmd");
+	// tab[1] = ft_strdup("t***.**");
+	// tab[2] = ft_strdup("last");
+	// tab[3] = ft_strdup("\"$?\"");
+	// tab[4] = NULL;
 	if (copy_env(&data, envp) == 1)
 		return (1);
-	ft_export("?=1", &data);
-	ft_cd("parsing", &data);
-	ft_pwd();
-	ft_env(&data);
-	expand_vars(&tab, &data);
+	data.path_tab = NULL;
+	// ft_export("?=1", &data);
+	// ft_cd("parsing", &data);
+	// ft_pwd();
+	// ft_env(&data);
+	// expand_vars(&tab, &data);
 	prompt = build_prompt(&data);
 	if (prompt == NULL)
 		clean_exit(&data, NULL);
 	line = readline(prompt);
 	free(prompt);
-	if (run_line(line) == 1)
+	if (run_line(line, data.path_tab) == 1)
 		clean_exit(&data, line);
 	while (line != NULL)
 	{
@@ -170,9 +170,10 @@ int	main(int argc, char *argv[], char **envp)
 			clean_exit(&data, NULL);
 		line = readline(prompt);
 		free(prompt);
-		if (run_line(line) == 1)
+		if (run_line(line, data.path_tab) == 1)
 			clean_exit(&data, line);
 	}
+	ft_printf("exit\n");
 	free_split(data.env);
 	free_split(tab);
 	rl_clear_history();

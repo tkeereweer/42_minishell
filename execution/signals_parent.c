@@ -6,13 +6,13 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 11:56:55 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/24 12:03:19 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/25 10:18:15 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-volatile sig_atomic_t	g_signum;
+volatile sig_atomic_t	g_signum; // check volatile
 
 void	sigint_parent(int signal)
 {
