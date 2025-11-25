@@ -6,20 +6,11 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 16:39:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/21 17:06:15 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/25 10:54:10 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-typedef struct s_make_tab
-{
-	int		word_count;
-	int 	i;
-	int 	j;
-	char    *str;
-	char	**tab;
-}   t_make_tab;
 
 static char	**tab_1_string(char **tab, char *str)
 {

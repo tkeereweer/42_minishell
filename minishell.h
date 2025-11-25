@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/24 18:28:07 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/25 10:54:07 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,19 @@ typedef struct s_node
 typedef struct s_data
 {
 	char			**env;
+    char            **path_tab;
 	t_node			*tree;
 }	t_data;
+
+//filer struct for get_args
+typedef struct s_make_tab
+{
+	int		word_count;
+	int 	i;
+	int 	j;
+	char    *str;
+	char	**tab;
+}   t_make_tab;
 
 t_node	*node_new(t_content content, t_type type);
 t_node	*create_logic_tree(t_list *list);

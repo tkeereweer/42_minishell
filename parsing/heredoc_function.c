@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc.c                                          :+:      :+:    :+:   */
+/*   heredoc_function.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 08:25:50 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/21 15:30:07 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/25 12:06:00 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static char	**temp_filepath(char **tmp_name, int count)
 	if (!tmp_name)
 		return (free_split(tmp_name), NULL);
 	tmp_name[count] = NULL;
-	len = ft_strlen("/Users/maximeturgeon/minishell/temp");
+	len = ft_strlen("/Users/maximeturgeon/minishell/temp");//decide of temporary path
 	tmp_num = ft_itoa(count);
 	if (!tmp_num)
 		return (free_split(tmp_name), NULL);
@@ -72,7 +72,7 @@ static int	write_heredoc(char *limiter, int fd)
 	line = get_next_line(STDIN_FILENO);
 	if (!line)
 		return (free(tmp_lim), -1);
-	while (line && ft_strncmp(line, tmp_lim, ft_strlen(tmp_lim)))
+	while (line && ft_strncmp(line, tmp_lim, ft_strlen(tmp_lim)))//line != eof sent by ctrl D
 	{
 		ft_putstr_fd(line, fd);
 		free(line);
@@ -105,7 +105,7 @@ char	**heredoc(char **path_tab, char *limiter)
 	fd = open(path_tab[count - 1], O_WRONLY | O_CREAT, 0644);
 	if (fd == -1)
 		return (free(path_tab), NULL);
-	if (!write_heredoc(limiter, fd))
+	if (!write_heredoc(limiter, fd))//shalll we fork and wait here ?
 		return (free(path_tab), NULL);
 	close(fd);
 	return (path_tab);
