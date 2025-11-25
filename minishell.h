@@ -6,7 +6,11 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/11/25 09:33:17 by mkeerewe         ###   ########.fr       */
+=======
+/*   Updated: 2025/11/25 10:54:07 by mturgeon         ###   ########.fr       */
+>>>>>>> 64d542d90757369887b473bbe11c4589ec5461d4
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +78,16 @@ typedef struct s_data
 	char			**path_tab;
 	t_node			*tree;
 }	t_data;
+
+//filer struct for get_args
+typedef struct s_make_tab
+{
+	int		word_count;
+	int 	i;
+	int 	j;
+	char    *str;
+	char	**tab;
+}   t_make_tab;
 
 t_node	*node_new(t_content content, t_type type);
 t_node	*create_logic_tree(t_list *list);

@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 10:25:28 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/24 17:28:05 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/25 10:24:40 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static int	sep_logical_tokenizer(char *line, int *i, t_list **list/*, t_list **t
 		j = 0;
 		while (ft_is_whitespace(line[*i + j]))
 			j++;
-		if (line[*i] + j && (is_logic(&line[*i] + j) || line[*i] + j == ')'))
+		if (line[*i + j] && (is_logic(&line[*i + j]) || line[*i + j] == ')'))
 			if (sep_tokenizer(line, i, list) == -1)
 				return (-1);	
 	}
@@ -57,7 +57,7 @@ int	separator_logic(char *line, int *i, t_list *temp, t_list **list)
 		if (sep_logical_tokenizer(line, i, list) == -1)
 			return (-1);
 		if (temp && temp->content->type == LOGIC)
-		return (-3);	
+		    return (-3);	
 	}
 	else if (sep_logical_tokenizer(line, i, list) == -1)
 		return (-1);

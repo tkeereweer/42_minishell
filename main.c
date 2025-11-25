@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/25 09:34:47 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/25 13:22:03 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,7 @@ int	main(int argc, char *argv[], char **envp)
 
 	(void) argc;
 	(void) argv;
+    data.path_tab = NULL;
 	if (handle_signals_parent() == 1)
 		return (1);
 	// tab = malloc(5 *sizeof(char *));
