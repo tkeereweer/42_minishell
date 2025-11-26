@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/25 13:22:03 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/25 16:05:01 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,26 +84,26 @@ void	clean_exit(t_data *data, char *line)
 	exit(1);
 }
 
-int	run_line(char *line, char **path_tab)
+int	run_line(char *line, t_data *data)
 {
 	t_list	*list;
-	t_node	*tree;
 
 	if (line != NULL && ft_strlen_gnl(line) != 0) // what if only spaces
 	{
 		add_history(line);
-		list = clean_node_list(line, path_tab);
+		list = clean_node_list(line, data->path_tab);
 		if (list != NULL)
 		{
-			tree = create_logic_tree(list);
-			if (create_cmd_trees(tree) == 1)
+			data->tree = create_logic_tree(list);
+			if (create_cmd_trees(data->tree) == 1)
 			{
-				free_tree(tree);
+				free_tree(data->tree);
 				return (1);
 			}
-			// draw_tree(tree);
-			print_tree(tree);
-			free_tree(tree);
+			exec_tree(data->tree, data);
+			// draw_tree(data->tree);
+			// print_tree(data->tree);
+			free_tree(data->tree);
 		}
 	}
 	return (0);
@@ -134,7 +134,6 @@ int	main(int argc, char *argv[], char **envp)
 {
 	char	*line;
 	t_data	data;
-	char	**tab;
 	char	*prompt;
 
 	(void) argc;
@@ -142,26 +141,19 @@ int	main(int argc, char *argv[], char **envp)
     data.path_tab = NULL;
 	if (handle_signals_parent() == 1)
 		return (1);
-	// tab = malloc(5 *sizeof(char *));
-	// tab[0] = ft_strdup("cmd");
-	// tab[1] = ft_strdup("t***.**");
-	// tab[2] = ft_strdup("last");
-	// tab[3] = ft_strdup("\"$?\"");
-	// tab[4] = NULL;
 	if (copy_env(&data, envp) == 1)
 		return (1);
 	data.path_tab = NULL;
-	// ft_export("?=1", &data);
-	// ft_cd("parsing", &data);
-	// ft_pwd();
-	// ft_env(&data);
-	// expand_vars(&tab, &data);
+	data.child_cnt = 0;
+	data.cmd_cnt = 0;
+	data.pid_tab = NULL;
+	data.pipe_tab = NULL;
 	prompt = build_prompt(&data);
 	if (prompt == NULL)
 		clean_exit(&data, NULL);
 	line = readline(prompt);
 	free(prompt);
-	if (run_line(line, data.path_tab) == 1)
+	if (run_line(line, &data) == 1)
 		clean_exit(&data, line);
 	while (line != NULL)
 	{
@@ -171,12 +163,11 @@ int	main(int argc, char *argv[], char **envp)
 			clean_exit(&data, NULL);
 		line = readline(prompt);
 		free(prompt);
-		if (run_line(line, data.path_tab) == 1)
+		if (run_line(line, &data) == 1)
 			clean_exit(&data, line);
 	}
 	ft_printf("exit\n");
 	free_split(data.env);
-	free_split(tab);
 	rl_clear_history();
 	return (0);
 }

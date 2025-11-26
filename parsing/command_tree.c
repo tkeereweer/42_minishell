@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 17:46:51 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/25 13:05:36 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/25 16:36:27 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,8 @@ int	create_cmd_trees(t_node *node)
 	pipeline = NULL;
 	if (create_cmd_trees(node->left_child) == 1)
 		return (1);
+	if (create_cmd_trees(node->right_child) == 1)
+		return (1);
 	if (node->type == PIPELINE)
 	{
 		res = pipeline_list(node->content.str, &pipeline);
@@ -139,8 +141,6 @@ int	create_cmd_trees(t_node *node)
 		}
 		free_pipeline_list(start_list);
 	}
-	if (create_cmd_trees(node->right_child) == 1)
-		return (1);
 	return (0);
 }
 

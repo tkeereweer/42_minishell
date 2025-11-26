@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 15:24:33 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/21 17:37:51 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/26 11:24:18 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,11 @@ int	expand_wildcards(char ***tab, int i, char *pat)
 	if (has_wc(pat) == -1)
 		return (0);
 	getcwd(buf, PATH_MAX);
+	if (buf == NULL)
+		return (1);
 	dir_stream = opendir(buf);
+	if (dir_stream == NULL)
+		return (1);
 	dir_entry = readdir(dir_stream);
 	first = 1;
 	while (dir_entry != NULL)
@@ -119,47 +123,47 @@ int	expand_wildcards(char ***tab, int i, char *pat)
 	return (closedir(dir_stream));
 }
 
-int	remove_quotes(char **str)
+int	add_to_redir_path(char **path, int first, char *filename)
 {
-	char	*tmp;
+	char *new_path;
 
-	tmp = *str;
-	*str = ft_substr(*str, 1, ft_strlen(*str) - 2);
-	if (*str == NULL)
+	if (first == 1)
+		new_path = (char *) my_realloc(path, (ft_strlen(filename) + 1) * sizeof(char));
+	else
+		new_path = (char *) my_realloc(*path, (ft_strlen(filename) + ft_strlen(*path) + 1) * sizeof(char));
+	if (new_path == NULL)
 		return (1);
-	free(tmp);
+	strcat(new_path, filename);
+	*path = new_path;
 	return (0);
 }
 
-int	expand_vars(char ***tab, t_data *data)
+int	expand_wildcards_redir(char **path, char *pat)
 {
-	int	i;
-	int	mode;
+	char			buf[PATH_MAX];
+	DIR				*dir_stream;
+	struct dirent	*dir_entry;
+	int				first;
 
-	i = 1;
-	while ((*tab)[i] != NULL)
+	if (has_wc(pat) == -1)
+		return (0);
+	getcwd(buf, PATH_MAX);
+	if (buf == NULL)
+		return (1);
+	dir_stream = opendir(buf);
+	if (dir_stream == NULL)
+		return (1);
+	dir_entry = readdir(dir_stream);
+	first = 1;
+	while (dir_entry != NULL)
 	{
-		mode = 0;
-		if ((*tab)[i][0] == '\'')
-			mode = 2;
-		else if ((*tab)[i][0] == '"')
-			mode = 1;
-		if (mode == 1 || mode == 2)
+		if (match_pat(dir_entry->d_name, pat) == 1)
 		{
-			if (remove_quotes(&(*tab)[i]) == 1)
-				return (1);
+			if (add_to_redir_path(path, first, dir_entry->d_name)== 1)
+				return (1); // handle error
+			first = 0;
 		}
-		if (mode != 2)
-		{
-			if (expand_envvars(&(*tab)[i], data) == 1)
-				return (1);
-		}
-		if (mode != 1)
-		{
-			if (expand_wildcards(tab, i, (*tab)[i]) == 1)
-				return (1);
-		}
-		i++;
+		dir_entry = readdir(dir_stream);
 	}
-	return (0);
+	return (closedir(dir_stream));
 }

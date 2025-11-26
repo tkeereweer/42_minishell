@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/25 13:41:30 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/26 11:27:17 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 # include <dirent.h>
 # include <linux/limits.h>
 // # include <sys/syslimits.h>
+# include <sys/wait.h>
+# include <errno.h>
 # include "libft/src/libft.h"
 
 extern volatile sig_atomic_t	g_signum;
@@ -75,6 +77,8 @@ typedef struct s_data
 	int		child_cnt;
 	int		cmd_cnt;
 	int		**pipe_tab;
+	pid_t	*pid_tab;
+	t_node	*tree;
 }	t_data;
 
 //filer struct for get_args
@@ -136,7 +140,9 @@ char	**args_tab(char *str);
 // variable expansion
 int 	expand_envvars(char **str, t_data *data);
 int		expand_wildcards(char ***tab, int i, char *pat);
+int		expand_wildcards_redir(char **path, char *pat);
 int		expand_vars(char ***tab, t_data *data);
+int		expand_vars_redir(char **path, t_data *data);
 //testing
 void	draw_tree(t_node *root);
 void	free_split(char **tab);
@@ -151,6 +157,7 @@ void	ft_exit(unsigned int n);
 int		ft_export(char *key_val, t_data *data);
 void	ft_unset(char **tab, t_data *data);
 void	ft_env(t_data *data);
+int		run_builtins(char **argv, t_data *data);
 //utils
 char	*ft_strcat(char *dst, char *src);
 char	*ft_getenv(char *var, char **env);
@@ -160,5 +167,7 @@ char	**get_envvar_pointer(char *var, char **env);
 //heredoc
 char	**heredoc(char **path_tab, char *limiter);
 int		set_heredoc(char **line, int *j, char **tab);
+// execution
+int		exec_tree(t_node *node, t_data *data);
 #endif
 

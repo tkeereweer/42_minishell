@@ -12,17 +12,21 @@ SRCS = parsing/logic_tree.c \
 	parsing/token2.c \
 	parsing/variable_expansion/env_vars.c \
 	parsing/variable_expansion/wildcards.c \
+	parsing/variable_expansion/expand_vars.c \
 	execution/builtins/ft_export.c \
 	execution/builtins/ft_unset.c \
 	execution/builtins/ft_env.c \
 	execution/builtins/ft_cd.c \
 	execution/builtins/ft_pwd.c \
 	execution/builtins/ft_exit.c \
+	execution/builtins/ft_echo.c \
+	execution/builtins/run_builtins.c \
 	execution/signals_parent.c \
 	execution/signals_child.c \
 	parsing/get_args.c \
 	parsing/heredoc_function.c \
 	parsing/heredoc_command.c \
+	execution/exec_tree.c \
 	tree_visualiser.c \
 	main.c
 
