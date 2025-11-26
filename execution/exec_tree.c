@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:46:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/26 11:27:19 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/26 13:23:49 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_node	*last_cmd(t_node *node)
 int	find_cmd_mode(t_node *node, t_node *root)
 {
 	if (node->parent->left_child == node && node->parent->right_child == NULL)
-		return (3);
+		return (4);
 	else if (node == first_cmd(root))
 		return (1);
 	else if (node == last_cmd(root))
@@ -121,9 +121,8 @@ int	exec_tree(t_node *node, t_data *data)
 			return (-1);
 		}
 		exit_status = WEXITSTATUS(wait_for_pids(data));
-		exit_status = 128;
 		clean_data(data);
-	}
+	} // exit_status could be wrong here
 	if ((exit_status == 128 && node->type == LOGIC && node->content.logic == AND) || (exit_status != 128 && node->type == LOGIC && node->content.logic == OR))
 	{
 		if (exec_tree(node->right_child, data) == -1)

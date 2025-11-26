@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 16:59:37 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/26 10:43:47 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/26 11:48:43 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,13 @@ char	*get_exe_path(char **env, char *cmd)
 
 void	cmd_not_found(char *cmd)
 {
-    ft_printf("minishell: command not found: %s\n", cmd);
+	ft_printf("minishell: command not found: %s\n", cmd);
 	exit(127);
 }
 
 void	permission_error(char *path)
 {
-    ft_printf("minishell: %s: Permission denied\n");
+	ft_printf("minishell: %s: Permission denied\n");
 	exit(126);
 }
 
@@ -73,19 +73,17 @@ void	exec_fail(char *path, char *cmd)
 
 int setup_cmd(t_node *node, t_data *data, int mode)
 {
-    char    *exec_path;
-    if (mode == 1)
-    {
-        return (run_builtins(node->content.tab, data));
-    }
-    else
-    {
-        exec_path = get_exe_path(data->env, node->content.tab[0]);
-        if (exec_path == NULL)
-            cmd_not_found(node->content.tab[0]);
-        if (expand_vars(&node->content.tab, data) == 1) // expand vars before fork?
-            return (-1); // or exit with errror code?
-        if (execve(exec_path, node->content.tab, data->env) == -1)
-            exec_fail(exec_path, node->content.tab[0]);
-    }
+	char    *exec_path;
+	if (mode == 1)
+	{
+		return (run_builtins(node->content.tab, data));
+	}
+	else
+	{
+		exec_path = get_exe_path(data->env, node->content.tab[0]);
+		if (exec_path == NULL)
+			cmd_not_found(node->content.tab[0]);
+		if (execve(exec_path, node->content.tab, data->env) == -1)
+			exec_fail(exec_path, node->content.tab[0]);
+	}
 }

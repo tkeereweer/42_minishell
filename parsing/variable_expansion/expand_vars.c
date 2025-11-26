@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 10:50:02 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/26 11:25:49 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/26 11:33:07 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int	expand_vars_redir(char **path, t_data *data)
 	int	mode;
 
 	i = 1;
+	mode = 0;
 	if (*path[0] == '\'')
 		mode = 2;
 	else if (*path[0] == '"')

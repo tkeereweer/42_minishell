@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 15:24:33 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/26 11:24:18 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/26 11:32:30 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,7 @@ int	expand_wildcards(char ***tab, int i, char *pat)
 
 	if (has_wc(pat) == -1)
 		return (0);
-	getcwd(buf, PATH_MAX);
-	if (buf == NULL)
+	if (getcwd(buf, PATH_MAX) == NULL)
 		return (1);
 	dir_stream = opendir(buf);
 	if (dir_stream == NULL)
@@ -128,7 +127,7 @@ int	add_to_redir_path(char **path, int first, char *filename)
 	char *new_path;
 
 	if (first == 1)
-		new_path = (char *) my_realloc(path, (ft_strlen(filename) + 1) * sizeof(char));
+		new_path = (char *) my_realloc(*path, (ft_strlen(filename) + 1) * sizeof(char));
 	else
 		new_path = (char *) my_realloc(*path, (ft_strlen(filename) + ft_strlen(*path) + 1) * sizeof(char));
 	if (new_path == NULL)
@@ -147,8 +146,7 @@ int	expand_wildcards_redir(char **path, char *pat)
 
 	if (has_wc(pat) == -1)
 		return (0);
-	getcwd(buf, PATH_MAX);
-	if (buf == NULL)
+	if (getcwd(buf, PATH_MAX) == NULL)
 		return (1);
 	dir_stream = opendir(buf);
 	if (dir_stream == NULL)
