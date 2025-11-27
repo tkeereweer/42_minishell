@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:48:21 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/26 17:28:52 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/27 11:06:46 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ static pid_t	*pid_arr_realloc(pid_t *arr, int size)
 
 //close unused pipes here bc it will depend if child or not child
 //if child, close after forking
-int	create_fork(t_node *arg, t_data *data)
+int	create_pid(t_node *arg, t_data *data)
 {
 	pid_t	*temp;
 

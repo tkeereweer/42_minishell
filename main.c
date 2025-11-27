@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/26 14:14:04 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/27 15:08:37 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	run_line(char *line, t_data *data)
 				return (1);
 			}
 			exec_tree(data->tree, data);
-			draw_tree(data->tree);
+			// draw_tree(data->tree);
 			// print_tree(data->tree);
 			free_tree(data->tree);
 		}

@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/27 10:17:09 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/27 13:17:55 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,8 +180,9 @@ void	permission_error(char *path);
 void	exec_fail(char *path, char *cmd);
 int	configure_redir(t_node *redir, t_data *data, int *in_redir, int *out_redir);
 int	create_pipe(t_data *data, int mode);
-int	create_fork(t_node *arg, t_data *data);
+int	create_pid(t_node *arg, t_data *data);
 int	**int_tab_realloc(int **tab, int size);
 int	**new_int_tab(int size);
+int  valid_char(char *str);
 #endif
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_vars.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 10:50:02 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/27 10:48:09 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/27 10:58:27 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	expand_vars(char ***tab, t_data *data)
 			mode = 1;
 		if (mode == 1 || mode == 2)
 		{
-			if (new_remove_quotes(&(*tab)[i]) == 1)
+			if (remove_quotes(&(*tab)[i]) == 1)
 				return (1);
 		}
 		if (mode != 2)

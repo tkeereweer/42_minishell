@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 16:59:37 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/26 13:58:06 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/27 14:50:11 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,20 +69,3 @@ void	exec_fail(char *path, char *cmd)
 	perror(cmd);
 	exit(1);
 }
-
-// int setup_cmd(t_node *node, t_data *data, int mode)
-// {
-// 	char    *exec_path;
-// 	// if (mode == 1)
-// 	// {
-// 	// 	return (run_builtins(node->content.tab, data));
-// 	// }
-// 	// else
-// 	// {
-// 		// exec_path = get_exe_path(data->env, node->content.tab[0]);
-// 		// if (exec_path == NULL)
-// 		// 	cmd_not_found(node->content.tab[0]);
-// 		// if (execve(exec_path, node->content.tab, data->env) == -1)
-// 		// 	exec_fail(exec_path, node->content.tab[0]);
-// 	// }
-// }

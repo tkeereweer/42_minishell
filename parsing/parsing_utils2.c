@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 14:36:14 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/24 13:50:43 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/27 14:34:32 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	empty_end(char *line, int *j, int *i)
 		*i += 1;
 	if (!line[*i])
 		return (-1);//syntax error
-    *j = *i;
+	*j = *i;
 	return (1);
 }
 
@@ -68,16 +68,19 @@ char	*remove_redir(char *str, int start, int end)
 	size_t	dest_len;
 	int		i;
 	int		j;
-
+	
+	i = 0;
+	while (ft_is_whitespace(str[start  + i]) || str[start + i] == '<' || str[start + i] == '>')
+		i++;
 	dest_len = ft_strlen(str) - (end - start);
 	dest = (char *)malloc(dest_len * sizeof(char));
 	if (!dest)
 		return (NULL);
-	ft_strncpy(dest, str, start - 1);
+	ft_strncpy(dest, str, start + i - 1);
 	i = end + 1;
 	j = start;
 	while (ft_is_whitespace(str[i]))
-		i++;
+		i++;   
 	while (str[i])
 	{
 		dest[j] = str[i];

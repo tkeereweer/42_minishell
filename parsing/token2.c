@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 21:04:31 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/24 13:58:08 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/27 14:40:59 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,12 @@ int	tokenize_word(char *line, int *i, char **str, int space)
 	{
 		if (!iterate_over_quotes(line, &j))
 			return (tokenizer_error("unclosed quotes\n"));
-		*i += 1;
+		// *i += 1;
 	}
 	else
-		while (line[j] && !ft_is_whitespace(line[j]))    
+		while (line[j] && valid_char(&line[j]))    
 			j++;
-	*str = ft_substr(&line[*i], 0, j - *i);
+	*str = ft_substr(&line[*i], 0, j - *i + 1);
 	if (!*str)
 		return (tokenizer_error("malloc fail\n"));
 	temp = ft_strtrim(*str, " \t\n\v\f\r");

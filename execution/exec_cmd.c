@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/27 10:24:13 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/27 15:05:37 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,12 @@ static int	dup_fds(int fd, t_redir_type kind, int *in_redir, int *out_redir)
 	}
 	close (fd);
 	return (1);
+}
+static int redir_error(char *path)
+{
+    write(STDERR_FILENO, "minishell: ", 11);
+    perror(path);
+    exit(1);
 }
 
 int	configure_redir(t_node *redir, t_data *data, int *in_redir, int *out_redir)
@@ -55,8 +61,8 @@ int	configure_redir(t_node *redir, t_data *data, int *in_redir, int *out_redir)
 		else if (kind == HEREDOC)
 			fd = open(path, O_RDONLY);
 		if (dup_fds(fd, kind, in_redir, out_redir) == -1)
-			return (-1);
-		temp = redir->right_child;
+			return (redir_error(path));
+		temp = temp->right_child;
 	}
 	return (1);
 }
@@ -97,8 +103,7 @@ static int exec_child(t_node *cmd, t_data *data, int mode)
 	in = 0;
 	if (cmd->right_child)
 		if (configure_redir(cmd->right_child, data, &in, &out) == -1)
-			return (-1);
-	//config_pipe_child()
+			exit(1);
 	if (mode != 4)
 	{
 		if (mode > 1)
@@ -126,14 +131,14 @@ static int exec_child(t_node *cmd, t_data *data, int mode)
 	}
 	else 
 		run_builtins(cmd->left_child->content.tab, data, mode);
-	return (1);
+	exit(0);
 }
 
 int	exec_cmd(t_node *cmd, t_data *data, int mode)
 {
 	data->cmd_cnt++;
 	create_pipe(data, mode);
-	create_fork(cmd->left_child, data);
+	create_pid(cmd->left_child, data);
 	if (is_builtin(cmd->left_child->content.tab[0]) && mode == 4)
 	{
 		data->pid_tab[data->cmd_cnt - 1] = -1;
@@ -148,7 +153,7 @@ int	exec_cmd(t_node *cmd, t_data *data, int mode)
 		if (data->pid_tab[data->cmd_cnt - 1] == 0)
 		{
 			handle_signals_child();
-			return (exec_child(cmd, data, mode));
+			exec_child(cmd, data, mode);
 		}
 		if (mode < 3)//in parent
 			close(data->pipe_tab[data->cmd_cnt - 1][1]);
@@ -164,9 +169,8 @@ int	exec_cmd(t_node *cmd, t_data *data, int mode)
 		if (data->pid_tab[data->cmd_cnt - 1] == 0)
 		{
 			handle_signals_child();
-			return (exec_child(cmd, data, mode));
+			exec_child(cmd, data, mode);
 		}
 		return (0);
 	}
-//RE-REDIRECT STDIN  AND OUT IF CALLED IN MAIN PROCESS AFTER BUILTIN OTHEWISE EVERYTHING WRITTEN IN NON CLOSED FD
 }

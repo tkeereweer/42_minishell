@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_tree.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 17:46:51 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/25 16:36:27 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/27 15:45:41 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,17 @@ void	add_cmd_children(t_node *cmd, t_list **pipeline)
 	while (*pipeline != NULL && (*pipeline)->content->type != PIPE)
 	{
 		if ((*pipeline)->content->type == ARGS)
+        {
 			cmd->left_child = (*pipeline)->content;
+            cmd->left_child->parent = cmd;
+        }
 		else if ((*pipeline)->content->type == REDIR)
 		{
 			tmp = cmd;
 			while (tmp->right_child != NULL)
 				tmp = tmp->right_child;
 			tmp->right_child = (*pipeline)->content;
+            tmp->right_child->parent = tmp;
 		}
 		*pipeline = (*pipeline)->next;
 	}
