@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 10:50:02 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/26 11:33:07 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/27 08:20:26 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,41 @@ int	remove_quotes(char **str)
 		return (1);
 	free(tmp);
 	return (0);
+}
+
+int	new_remove_quotes(char **str)
+{
+	int	i;
+	int	single;
+	int	double;
+	int	start;
+
+	i = 0;
+	single = 0;
+	double = 0;
+	start = 0;
+	while (*str[i] != '\0')
+	{
+		if (*str[i] == '\'')
+		{
+			single++;
+			start = i;
+		}
+		else if (*str[i] == '"')
+		{
+			double++;
+			start = i;
+		}
+		i++;
+		while (single > 0 || double > 0)
+		{
+			if (single > 0 && *str[i] == '\'')
+				single--;
+			else if (double > 0 && *str[i] == '"')
+				double--;
+			i++;
+		}
+	}
 }
 
 int	expand_vars(char ***tab, t_data *data)
