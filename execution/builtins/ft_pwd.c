@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 12:07:54 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/24 15:37:35 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/26 14:12:07 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	ft_pwd(void)
 
 	if (getcwd(buf, PATH_MAX) == NULL)
 		return (-1);
-	ft_printf("%s", buf);
+	ft_printf("%s\n", buf);
 	return (0);
 }
 

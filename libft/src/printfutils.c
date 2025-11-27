@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 15:48:13 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/10/14 11:47:57 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/26 17:41:37 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,6 @@ char	*ft_ltohex_long(unsigned long n)
 
 int	ft_putchar(char c)
 {
-	write(1, &c, 1);
+	write(STDOUT_FILENO, &c, 1);
 	return (1);
 }
