@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 15:24:33 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/27 16:11:36 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/27 16:22:04 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	do_ign(int *ign, int idx)
 	return (0);
 }
 
-int	has_wc(char *str, int *ign);
+int	has_wc(char *str, int *ign)
 {
 	int	i;
 
@@ -113,7 +113,7 @@ int	expand_wildcards(char ***tab, int i, char *pat, int *ign)
 	struct dirent	*dir_entry;
 	int				first;
 
-	if (has_wc(pat) == -1)
+	if (has_wc(pat, ign) == -1)
 		return (0);
 	if (getcwd(buf, PATH_MAX) == NULL)
 		return (1);
@@ -151,14 +151,14 @@ int	add_to_redir_path(char **path, int first, char *filename)
 	return (0);
 }
 
-int	expand_wildcards_redir(char **path, char *pat)
+int	expand_wildcards_redir(char **path, char *pat, int *ign)
 {
 	char			buf[PATH_MAX];
 	DIR				*dir_stream;
 	struct dirent	*dir_entry;
 	int				first;
 
-	if (has_wc(pat) == -1)
+	if (has_wc(pat, ign) == -1)
 		return (0);
 	if (getcwd(buf, PATH_MAX) == NULL)
 		return (1);

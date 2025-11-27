@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/27 16:16:34 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/27 16:30:30 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,9 @@ int	configure_redir(t_node *redir, t_data *data, int *in_redir, int *out_redir)
 	while (temp)
 	{
 		path = temp->content.redir.path;
-		if (expand_vars_redir(&path, data) == -1)
-			return (-1);
+		(void) data;
+		// if (expand_vars_redir(&path, data) == -1)
+		// 	return (-1);
 		kind = temp->content.redir.kind;
 		if (kind == WRITE)
 			fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
