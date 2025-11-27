@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 10:50:02 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/27 08:20:26 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/27 09:55:27 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,39 +24,31 @@ int	remove_quotes(char **str)
 	return (0);
 }
 
+int	clean_quotes(char **str, int i, char type)
+{
+	ft_strlcpy(&*str[i], &*str[i + 1], ft_strlen(*str) + 1);
+	i++;
+	while (*str[i] != type)
+		i++;
+	ft_strlcpy(&*str[i], &*str[i + 1], ft_strlen(*str) + 1);
+	return (i);
+}
+
 int	new_remove_quotes(char **str)
 {
 	int	i;
-	int	single;
-	int	double;
-	int	start;
 
 	i = 0;
-	single = 0;
-	double = 0;
-	start = 0;
 	while (*str[i] != '\0')
 	{
-		if (*str[i] == '\'')
-		{
-			single++;
-			start = i;
-		}
-		else if (*str[i] == '"')
-		{
-			double++;
-			start = i;
-		}
+		if (*str[i] == '\'' || *str[i] == '"')
+			i = clean_quotes(str, i, *str[i]);
 		i++;
-		while (single > 0 || double > 0)
-		{
-			if (single > 0 && *str[i] == '\'')
-				single--;
-			else if (double > 0 && *str[i] == '"')
-				double--;
-			i++;
-		}
 	}
+	*str = my_realloc(*str, ft_strlen(*str));
+	if (*str == NULL)
+		return (1);
+	return (0);
 }
 
 int	expand_vars(char ***tab, t_data *data)
@@ -74,7 +66,7 @@ int	expand_vars(char ***tab, t_data *data)
 			mode = 1;
 		if (mode == 1 || mode == 2)
 		{
-			if (remove_quotes(&(*tab)[i]) == 1)
+			if (new_remove_quotes(&(*tab)[i]) == 1)
 				return (1);
 		}
 		if (mode != 2)
