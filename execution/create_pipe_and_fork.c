@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:48:21 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/25 18:38:34 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/26 17:28:52 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	create_pipe(t_data *data, int mode)
 {
 	int **temp;
 
-	if (mode == 3)
+	if (mode > 2)
 		return (1);
 	if (!data->pipe_tab)
 		return (new_pipe_tab(data));//should we decrement cmd_cnt if pipe creation error ?
@@ -47,7 +47,7 @@ int	create_pipe(t_data *data, int mode)
 	return (1);
 }
 
-static int	is_builtin(char *name)
+int	is_builtin(char *name)
 {
 	char	*builtins[7];
 	int		i;
@@ -89,7 +89,7 @@ static pid_t	*pid_arr_realloc(pid_t *arr, int size)
 
 //close unused pipes here bc it will depend if child or not child
 //if child, close after forking
-int	create_fork(t_node *arg, t_data *data, int mode)
+int	create_fork(t_node *arg, t_data *data)
 {
 	pid_t	*temp;
 

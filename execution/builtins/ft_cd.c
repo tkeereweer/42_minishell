@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 09:21:20 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/24 15:30:08 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/26 13:52:04 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ int ft_cd(char *path, t_data *data)
 		ret = chdir(path);
 	if (ret == 0)
 		return (update_env(buf, data));
+	if (ret == -1)
+		perror("cd");
 	return (ret);
 }
 

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   set_heredoc.c                                      :+:      :+:    :+:   */
+/*   heredoc_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 14:29:27 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/21 15:53:00 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/26 14:49:35 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static char	*set_limiter(char **line, int *j, int *start)
 	if (!iterate_over_quotes(*line, j))
 		return (NULL);
 	if (!((*line)[*j] == '\'' || (*line)[*j] == '"'))
-		while (!ft_is_whitespace((*line)[*j]))
+		while ((*line)[*j] && !ft_is_whitespace((*line)[*j]))
 			*j += 1;
 	if ((*line)[*j] == '\'' || (*line)[*j] == '"')
 		limiter = remove_quotes(*line, *start, j);

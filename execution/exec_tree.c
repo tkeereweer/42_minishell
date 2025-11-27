@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tree.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:46:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/26 13:23:49 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/26 17:34:59 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,21 +36,6 @@ int	find_cmd_mode(t_node *node, t_node *root)
 		return (3);
 	else
 		return (2);
-}
-
-int	exec_cmd(t_node	*node, t_data *data, int mode)
-{
-	int	i;
-
-	i = 0;
-	ft_printf("Mode is %d\n", mode);
-	(void) data;
-	while (node->left_child->content.tab[i] != NULL)
-	{
-		ft_printf("%s;\n", node->left_child->content.tab[i]);
-		i++;
-	}
-	return (0);
 }
 
 int	exec_pipeline(t_node *node, t_data *data, t_node *pipeline_root)
@@ -91,13 +76,16 @@ void	clean_data(t_data *data)
 	int	i;
 
 	i = 0;
-	while (i < data->cmd_cnt)
-	{
-		free(data->pipe_tab[i]);
-		i++;
-	}
-	free(data->pipe_tab);
-	data->pipe_tab = NULL;
+    if (data->pipe_tab)
+    {
+	    while (i < data->cmd_cnt)
+	    {
+		    free(data->pipe_tab[i]);
+		    i++;
+	    }
+	    free(data->pipe_tab);
+	    data->pipe_tab = NULL;
+    }
 	free(data->pid_tab);
 	data->pid_tab = NULL;
 	data->child_cnt = 0;
@@ -123,7 +111,8 @@ int	exec_tree(t_node *node, t_data *data)
 		exit_status = WEXITSTATUS(wait_for_pids(data));
 		clean_data(data);
 	} // exit_status could be wrong here
-	if ((exit_status == 128 && node->type == LOGIC && node->content.logic == AND) || (exit_status != 128 && node->type == LOGIC && node->content.logic == OR))
+	if ((exit_status == 0 && node->type == LOGIC && node->content.logic == AND)
+            || (exit_status != 0 && node->type == LOGIC && node->content.logic == OR))
 	{
 		if (exec_tree(node->right_child, data) == -1)
 			return (-1);

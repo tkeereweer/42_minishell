@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   run_builtins.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 10:20:16 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/26 11:33:27 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/26 13:52:18 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-int	run_builtins(char **argv, t_data *data)
+int	run_builtins(char **argv, t_data *data, int mode)
 {
 	int	ret;
 
@@ -31,5 +31,7 @@ int	run_builtins(char **argv, t_data *data)
 		ret = ft_export(argv[1], data);
 	else if (strcmp(argv[0], "unset") == 0)
 		ft_unset(&argv[1], data);
+	if (mode !=4)
+		exit(ret);
 	return (ret);
 }

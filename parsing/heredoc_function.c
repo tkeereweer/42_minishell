@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 08:25:50 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/25 12:06:00 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/26 14:53:55 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static char	**temp_filepath(char **tmp_name, int count)
 	if (!tmp_name)
 		return (free_split(tmp_name), NULL);
 	tmp_name[count] = NULL;
-	len = ft_strlen("/Users/maximeturgeon/minishell/temp");//decide of temporary path
+	len = ft_strlen("/home/mturgeon/minishell");//decide of temporary path
 	tmp_num = ft_itoa(count);
 	if (!tmp_num)
 		return (free_split(tmp_name), NULL);
@@ -29,7 +29,7 @@ static char	**temp_filepath(char **tmp_name, int count)
 	if (!tmp_name[count - 1])
 		return (free(tmp_num), free_split(tmp_name), NULL);
 	tmp_name[count - 1][0] = '\0';
-	ft_strncat(tmp_name[count - 1], "/Users/maximeturgeon/minishell/temp", len);
+	ft_strncat(tmp_name[count - 1], "/home/mturgeon/minishell", len);
 	ft_strncat(tmp_name[count - 1], tmp_num, ft_strlen(tmp_num));
 	return (free(tmp_num), tmp_name);	
 }
