@@ -6,20 +6,34 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 15:24:33 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/26 11:32:30 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/27 16:11:36 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-int	has_wc(char *str)
+int	do_ign(int *ign, int idx)
+{
+	int	i;
+
+	i = 0;
+	while (ign[i] != -1)
+	{
+		if (ign[i] == idx)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	has_wc(char *str, int *ign);
 {
 	int	i;
 
 	i = 0;
 	while (str[i] != '\0')
 	{
-		if (str[i] == '*')
+		if (str[i] == '*' && do_ign(ign, i) == 0)
 			return (i);
 		i++;
 	}
@@ -92,7 +106,7 @@ int	add_file(char ***tab, int first, int i, char *filename)
 	return (0);
 }
 
-int	expand_wildcards(char ***tab, int i, char *pat)
+int	expand_wildcards(char ***tab, int i, char *pat, int *ign)
 {
 	char			buf[PATH_MAX];
 	DIR				*dir_stream;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_vars.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 10:50:02 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/27 10:58:27 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/27 16:17:11 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,30 +31,134 @@ int	remove_quotes(char **str)
 
 int	clean_quotes(char **str, int i, char type)
 {
-	ft_strlcpy(&*str[i], &*str[i + 1], ft_strlen(*str) + 1);
+	ft_strncpy(&(*str)[i], &(*str)[i + 1], ft_strlen(&(*str)[i + 1]));
 	i++;
-	while (*str[i] != type)
+	while ((*str)[i] != type)
 		i++;
-	ft_strlcpy(&*str[i], &*str[i + 1], ft_strlen(*str) + 1);
+	ft_strncpy(&(*str)[i], &(*str)[i + 1], ft_strlen(&(*str)[i + 1]));
 	return (i);
 }
 
-int	new_remove_quotes(char **str)
+int	new_remove_quotes(char **str, char type)
 {
 	int	i;
 
 	i = 0;
-	while (*str[i] != '\0')
+	while ((*str)[i] != '\0')
 	{
-		if (*str[i] == '\'' || *str[i] == '"')
-			i = clean_quotes(str, i, *str[i]);
+		if ((*str)[i] == type)
+			i = clean_quotes(str, i, type);
 		i++;
 	}
-	*str = my_realloc(*str, ft_strlen(*str));
+	*str = my_realloc(*str, ft_strlen(*str) + 1);
 	if (*str == NULL)
 		return (1);
 	return (0);
 }
+
+int	*realloc_inttab(int *inttab, int new_size)
+{
+	int	*out;
+	int i;
+
+	out = (int *) malloc(new_size * sizeof(int));
+	if (out == NULL)
+		return (NULL);
+	i = 0;
+	while (inttab[i] != -1)
+	{
+		ft_memmove(out[i], inttab[i], sizeof(int));
+		i++;
+	}
+	ft_memmove(out[i], inttab[i], sizeof(int));
+	free(inttab);
+	return (out);
+}
+
+new_expand_vars(char ***tab, t_data *data)
+{
+	int	i;
+	int	j;
+	int	k;
+	int	*inttab;
+
+	i = 0;
+	while ((*tab)[i] != NULL)
+	{
+		k = 1;
+		inttab = (int *) malloc(sizeof(int));
+		if (inttab == NULL)
+			return (-1);
+		inttab[0] = -1;
+		j = 0;
+		while ((*tab)[i][j] == '\0')
+		{
+			if ((*tab)[i][j] == '"')
+			{
+				expand_envvars(&(*tab)[i][j], data, '"');
+				while ((*tab)[i][j] != '"')
+					j++;
+			}
+			j++;
+		}
+		new_remove_quotes((*tab)[i], '"');
+		j = 0;
+		while ((*tab)[i][j] == '\0')
+		{
+			if ((*tab)[i][j] == '\'')
+			{
+				while ((*tab)[i][j] != '\'')
+				{
+					if ((*tab)[i][j] == '*')
+					{
+						k++;
+						inttab = realloc_inttab(inttab, k);
+						if (inttab == NULL)
+							return (-1);
+						inttab[k - 1] = j - 1;
+						inttab[k] = -1;
+					}
+					j++;
+				}
+			}
+			j++;
+		}
+		new_remove_quotes((*tab)[i], '\'');
+		expand_wildcards(tab, i, (*tab)[i], inttab);
+	}
+}
+	
+	
+
+
+
+
+
+// 			if ((*tab)[i][j] == '\'')
+// 			{
+// 				while ((*tab)[i][j] != '\'')
+// 					j++;
+// 				j++;
+// 			}
+// 			else if ((*tab)[i][j] == '"')
+// 			{
+// 				expand_envvars(&(*tab)[i][j], data, '"');
+// 				while ((*tab)[i][j] != '"')
+// 					j++;
+// 				j++;
+// 			}
+// 			else
+// 			{
+// 				expand_envvars(&(*tab)[i][j], data, '\0');
+// 				new_remove_quotes((*tab)[i]);
+// 				expand_wildcards(tab, i, &(*tab)[i][j]);
+// 				while ((*tab)[i][j] != '\0' && (*tab)[i][j] != '\'' && (*tab)[i][j] != '"')
+// 					j++;
+// 			}
+// 		}
+// 		i++;
+// 	}
+// }
 
 int	expand_vars(char ***tab, t_data *data)
 {

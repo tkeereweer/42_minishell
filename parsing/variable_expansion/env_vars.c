@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 10:14:03 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/26 10:49:56 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/27 13:34:49 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ char	*ft_getenv(char *var, char **env)
 	return (NULL);
 }
 
-int	has_envvar(char *str)
+int	has_envvar(char *str, char type)
 {
 	int	i;
 
 	i = 0;
-	while (str[i] != '\0')
+	while (str[i] != '\0' && str[i] != type)
 	{
 		if (str[i] == '$')
 			return (i);
@@ -71,14 +71,14 @@ char	*ft_strcat(char *dst, char *src)
 	return (dst);
 }
 
-int	expand_envvars(char **str, t_data *data)
+int	expand_envvars(char **str, t_data *data, char type)
 {
 	int		env_pos;
 	char	*envvar;
 	char	*expanded;
 	char	*new_str;
 
-	env_pos = has_envvar(*str);
+	env_pos = has_envvar(*str, type);
 	if (env_pos == -1)
 		return (0);
 	envvar = ft_substr(*str, env_pos, envvar_len(&(*str)[env_pos]));
@@ -96,5 +96,5 @@ int	expand_envvars(char **str, t_data *data)
 	ft_strcat(new_str, &(*str)[env_pos + envvar_len(&(*str)[env_pos])]);
 	free(*str);
 	*str = new_str;
-	return (expand_envvars(str, data));
+	return (expand_envvars(str, data, type));
 }
