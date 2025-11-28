@@ -44,18 +44,19 @@ CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-LINKS = $(LIBFT) -lreadline
+LINKS = $(LIBFT) -L/opt/homebrew/opt/readline/lib -lreadline
 
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LINKS) -o $(NAME)
+	dsymutil $@
 
 $(LIBFT):
 	make -C $(LIBFT_DIR)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c -I/opt/homebrew/opt/readline/include $< -o $@
 
 clean:
 	make clean -C $(LIBFT_DIR)

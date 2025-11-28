@@ -6,34 +6,50 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 15:24:33 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/27 16:22:04 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/28 11:49:17 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-int	do_ign(int *ign, int idx)
+int	in_quotes(char *str, int idx)
 {
 	int	i;
+	int	big;
+	int small;
 
 	i = 0;
-	while (ign[i] != -1)
+	big = 0;
+	small = 0;
+	while (str[i] != '\0')
 	{
-		if (ign[i] == idx)
-			return (1);
+		if (str[i] == '\'' && small == 0 && big == 0)
+			small++;
+		else if (str[i] == '"' && big == 0 && small == 0)
+			big++;
+		else if (str[i] == '\'' && small != 0 && big == 0)
+			small--;
+		else if (str[i] == '"' && big != 0 && small == 0)
+			big--;
+		if (i == idx && str[i] == '"' && small == 0)
+			return (3);
+		else if (i == idx && str[i] == '\'' && big == 0)
+			return (3);
+		if (i == idx && big == 0 && small == 0)
+			return (0);
 		i++;
 	}
 	return (0);
 }
 
-int	has_wc(char *str, int *ign)
+int	has_wc(char *str)
 {
 	int	i;
 
 	i = 0;
 	while (str[i] != '\0')
 	{
-		if (str[i] == '*' && do_ign(ign, i) == 0)
+		if (str[i] == '*' && in_quotes(str, i) == 0)
 			return (i);
 		i++;
 	}
@@ -53,12 +69,14 @@ int	match_pat(char *str, char *pat)
 	match = 0;
 	while (i < ft_strlen(str))
 	{
-		if (j < ft_strlen(pat) && pat[j] == str[i])
+		if ((pat[j] == '\'' || pat[j] == '"') && in_quotes(pat, j) == 3)
+			j++;
+		else if (j < ft_strlen(pat) && pat[j] == str[i])
 		{
 			i++;
 			j++;
 		}
-		else if (j < ft_strlen(pat) && pat[j] == '*')
+		else if (j < ft_strlen(pat) && pat[j] == '*' && in_quotes(pat, j) == 0)
 		{
 			start_i = j;
 			match = i;
@@ -73,7 +91,7 @@ int	match_pat(char *str, char *pat)
 		else
 			return (0);
 	}
-	while (j < ft_strlen(pat) && pat[j] == '*')
+	while (j < ft_strlen(pat) && pat[j] == '*' && in_quotes(pat, j) == 0)
 		j++;
 	return (j == ft_strlen(pat));
 }
@@ -106,20 +124,20 @@ int	add_file(char ***tab, int first, int i, char *filename)
 	return (0);
 }
 
-int	expand_wildcards(char ***tab, int i, char *pat, int *ign)
+int	expand_wildcards(char ***tab, int i, char *pat)
 {
 	char			buf[PATH_MAX];
 	DIR				*dir_stream;
 	struct dirent	*dir_entry;
 	int				first;
 
-	if (has_wc(pat, ign) == -1)
+	if (has_wc(pat) == -1)
 		return (0);
 	if (getcwd(buf, PATH_MAX) == NULL)
-		return (1);
+		return (-1);
 	dir_stream = opendir(buf);
 	if (dir_stream == NULL)
-		return (1);
+		return (-1);
 	dir_entry = readdir(dir_stream);
 	first = 1;
 	while (dir_entry != NULL)
@@ -127,7 +145,7 @@ int	expand_wildcards(char ***tab, int i, char *pat, int *ign)
 		if (match_pat(dir_entry->d_name, pat) == 1)
 		{
 			if (add_file(tab, first, i, dir_entry->d_name) == 1)
-				return (1); // handle error
+				return (-1); // handle error
 			first = 0;
 			i++;
 		}
@@ -146,25 +164,25 @@ int	add_to_redir_path(char **path, int first, char *filename)
 		new_path = (char *) my_realloc(*path, (ft_strlen(filename) + ft_strlen(*path) + 1) * sizeof(char));
 	if (new_path == NULL)
 		return (1);
-	strcat(new_path, filename);
+	ft_strcat(new_path, filename);
 	*path = new_path;
 	return (0);
 }
 
-int	expand_wildcards_redir(char **path, char *pat, int *ign)
+int	expand_wildcards_redir(char **path, char *pat)
 {
 	char			buf[PATH_MAX];
 	DIR				*dir_stream;
 	struct dirent	*dir_entry;
 	int				first;
 
-	if (has_wc(pat, ign) == -1)
+	if (has_wc(pat) == -1)
 		return (0);
 	if (getcwd(buf, PATH_MAX) == NULL)
-		return (1);
+		return (-1);
 	dir_stream = opendir(buf);
 	if (dir_stream == NULL)
-		return (1);
+		return (-1);
 	dir_entry = readdir(dir_stream);
 	first = 1;
 	while (dir_entry != NULL)
@@ -172,10 +190,23 @@ int	expand_wildcards_redir(char **path, char *pat, int *ign)
 		if (match_pat(dir_entry->d_name, pat) == 1)
 		{
 			if (add_to_redir_path(path, first, dir_entry->d_name)== 1)
-				return (1); // handle error
+				return (-1); // handle error
 			first = 0;
 		}
 		dir_entry = readdir(dir_stream);
 	}
 	return (closedir(dir_stream));
 }
+
+// int	main(void)
+// {
+// 	char	*pat;
+// 	char	*file;
+
+// 	pat = ft_strdup("'m*'*.c");
+// 	file = ft_strdup("main.c");
+// 	ft_printf("%i", match_pat(file, pat));
+// 	free(pat);
+// 	free(file);
+// 	return (0);
+// }

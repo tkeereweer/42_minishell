@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:46:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/27 16:35:13 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/28 11:53:30 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	exec_pipeline(t_node *node, t_data *data, t_node *pipeline_root)
 		return (-1);
 	if (node->type == CMD)
 	{
-		if(new_expand_vars(&node->left_child->content.tab, data) == 1)
+		if(expand_vars(&node->left_child->content.tab, data) == -1)
 			return (-1);
 		ret = exec_cmd(node, data, find_cmd_mode(node, pipeline_root));
         if (ret == -1)
@@ -118,7 +118,10 @@ int	exec_tree(t_node *node, t_data *data)
         if (mode == 4 && is_builtin(node->left_child->left_child->content.tab[0]))
 		    exit_status = ret;
         else
-            exit_status = WEXITSTATUS(wait_for_pids(data));
+		{
+			exit_status = wait_for_pids(data);
+            exit_status = WEXITSTATUS(exit_status);
+		}
 		clean_data(data);
 	}
 	if ((exit_status == 0 && node->type == LOGIC && node->content.logic == AND) || (exit_status != 0 && node->type == LOGIC && node->content.logic == OR))

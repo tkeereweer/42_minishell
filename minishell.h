@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/27 18:17:08 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/28 11:44:48 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <dirent.h>
-# include <linux/limits.h>
-// # include <sys/syslimits.h>
+// # include <linux/limits.h>
+# include <sys/syslimits.h>
 # include <sys/wait.h>
 # include <errno.h>
 # include "libft/src/libft.h"
@@ -138,13 +138,11 @@ int		tab_len(char **tab);
 char	**args_tab(char *str);
 //parsing end
 // variable expansion
-int 	expand_envvars(char **str, t_data *data);
-int		expand_wildcards(char ***tab, int i, char *pat, int *ign);
-int		expand_wildcards_redir(char **path, char *pat, int *ign);
+int		expand_envvars(char **str, t_data *data);
+int		expand_wildcards(char ***tab, int i, char *pat);
+int		expand_wildcards_redir(char **path, char *pat);
 int		expand_vars(char ***tab, t_data *data);
 int		expand_vars_redir(char **path, t_data *data);
-int		new_remove_quotes(char **str, char type);
-int 	new_expand_vars(char ***tab, t_data *data);
 //testing
 void	draw_tree(t_node *root);
 void	free_split(char **tab);
@@ -172,7 +170,7 @@ int		set_heredoc(char **line, int *j, char **tab);
 // execution
 int		exec_tree(t_node *node, t_data *data);
 int		exec_cmd(t_node *cmd, t_data *data, int mode);
-int	is_builtin(char *name);
+int		is_builtin(char *name);
 
 
 char	*find_path(char **paths, char *cmd);
@@ -180,11 +178,11 @@ char	*get_exe_path(char **env, char *cmd);
 void	cmd_not_found(char *cmd);
 void	permission_error(char *path);
 void	exec_fail(char *path, char *cmd);
-int	configure_redir(t_node *redir, t_data *data, int *in_redir, int *out_redir);
-int	create_pipe(t_data *data, int mode);
-int	create_pid(t_node *arg, t_data *data);
-int	**int_tab_realloc(int **tab, int size);
-int	**new_int_tab(int size);
-int  valid_char(char *str);
+int		configure_redir(t_node *redir, t_data *data, int *in_redir, int *out_redir);
+int		create_pipe(t_data *data, int mode);
+int		create_pid(t_node *arg, t_data *data);
+int		**int_tab_realloc(int **tab, int size);
+int		**new_int_tab(int size);
+int		valid_char(char *str);
 #endif
 

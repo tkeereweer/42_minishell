@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 10:14:03 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/27 18:37:03 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/28 11:51:43 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,8 @@ char	*ft_getenv(char *var, char **env)
 	return (NULL);
 }
 
-int	has_envvar(char *str)
+int	has_envvar(char *str, int i)
 {
-	int	i;
-
-	i = 0;
 	while (str[i] != '\0' && str[i] != '"')
 	{
 		if (str[i] == '$')
@@ -71,14 +68,14 @@ char	*ft_strcat(char *dst, char *src)
 	return (dst);
 }
 
-int	expand_envvars(char **str, t_data *data)
+int	expand_envvar_str(char **str, int i, t_data *data)
 {
 	int		env_pos;
 	char	*envvar;
 	char	*expanded;
 	char	*new_str;
 
-	env_pos = has_envvar(*str);
+	env_pos = has_envvar(*str, i);
 	if (env_pos == -1)
 		return (0);
 	envvar = ft_substr(*str, env_pos, envvar_len(&(*str)[env_pos]));
@@ -96,12 +93,12 @@ int	expand_envvars(char **str, t_data *data)
 	ft_strcat(new_str, &(*str)[env_pos + envvar_len(&(*str)[env_pos])]);
 	free(*str);
 	*str = new_str;
-	return (expand_envvars(str, data));
+	return (expand_envvar_str(str, i, data));
 }
 
-int	new_expand_envvars(char **str, t_data *data)
+int	expand_envvars(char **str, t_data *data)
 {
-	int	i;
+	int		i;
 
 	i = 0;
 	while ((*str)[i] != '\0')
@@ -115,29 +112,35 @@ int	new_expand_envvars(char **str, t_data *data)
 		else if ((*str)[i] == '"')
 		{
 			i++;
-			expand_envvars(str, data);
+			if (expand_envvar_str(str, i, data) == 1)
+				return (-1);
 			while ((*str)[i] != '"')
 				i++;
 		}
+		else if ((*str)[i] == '$')
+		{
+			if (expand_envvar_str(str, i, data) == 1)
+				return (-1);
+		}
 		i++;
 	}
-	new_remove_quotes(str, '"');
 	return (0);
 }
 
-int	main(int argc, char *argv[], char *envp[])
-{
-	char *str;
-	t_data data;
+// int	main(int argc, char *argv[], char *envp[])
+// {
+// 	char *str;
+// 	t_data data;
 
-	if (argc < 0)
-		return (0);
-	str = malloc(20);
-	str[0] = '\0';
-	ft_strcat(str, "\"$USER\"\"$SHELL\"");
-	data.env = envp;
-	new_expand_envvars(&str, &data);
-	free(str);
-	return (0);
-}
+// 	if (argc < 0)
+// 		return (0);
+// 	str = malloc(20);
+// 	str[0] = '\0';
+// 	ft_strcat(str, "$USER\"$SHELL\"");
+// 	data.env = envp;
+// 	new_expand_envvars(&str, &data);
+// 	ft_printf(str);
+// 	free(str);
+// 	return (0);
+// }
 
