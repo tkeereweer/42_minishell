@@ -204,10 +204,179 @@ test_combined() {
     run_test "multiple commands" "echo one && echo two && echo three"
 }
 
+test_crazy_quotes() {
+    echo -e "\n${BLUE}[Crazy Quotes]${NC}"
+    run_test "crazy quotes 1" "echo this 'is a'test'case'"
+    run_test "crazy quotes 2" "echo \"hello \$USER\"how'are you'"
+    run_test "crazy quotes 3" "echo 'hello \$USER'how\"are you\""
+    run_test "crazy quotes 4" "echo \"hello '\$USER\'\"how'are you'"
+    run_test "crazy quotes 5" "echo 'hello \"\$USER\"'how'are you'"
+}
+
+test_redirect_who() {
+    echo -e "\n${BLUE}[Redirect Who?]${NC}"
+    run_test "multiple redirs 1" "echo whatisupbabyyyy >test_4.txt>test_5.txt >test_4.txt >test_6.txt>test_7.txt"
+    run_test "multiple redirs 2" "wc -c <test_4.txt<test_5.txt <test_4.txt >test_6.txt> test_7.txt"
+}
+
+test_pipe_madness() {
+    echo -e "\n${BLUE}[Pipe Madness]${NC}"
+    run_test "5 pipes" "echo hello| cat |cat|cat |  cat|cat"
+    run_test "pipe with empty command" "echo test |cat| |cat"
+    run_test "pipe + redirect middle" "echo start|cat>test_out.txt| cat"
+    run_test "many pipes with grep" "echo 'one two three four'|cat |cat|grep three| cat"
+    run_test "pipe chain with wc" "ls|cat |  cat  |wc -l"
+    run_test "pipe with multiple outputs" "echo test |tee test_out.txt|cat"
+}
+
+test_redirect_chaos() {
+    echo -e "\n${BLUE}[Redirect Chaos]${NC}"
+    run_test "redirect before command" ">test_out.txt echo hello&&cat test_out.txt"
+    run_test "multiple input redirects" "cat< $TESTFILE<$TESTFILE"
+    run_test "redirect sandwich" "<$TESTFILE cat>test_out.txt&&cat test_out.txt"
+    run_test "append chain" "echo one>test_out.txt&&echo two>>test_out.txt &&echo three  >>test_out.txt&&cat test_out.txt"
+    run_test "overwrite after append" "echo first >test_out.txt &&echo second>> test_out.txt&&  echo third>test_out.txt && cat test_out.txt"
+    run_test "redirect stderr and stdout" "ls nonexistent 2>test_err.txt>test_out.txt||cat test_err.txt"
+}
+
+test_logic_insanity() {
+    echo -e "\n${BLUE}[Logical Insanity]${NC}"
+    run_test "AND chain success" "true&&true  &&true&&echo success"
+    run_test "AND chain fail" "true &&false&& echo should_not_print"
+    run_test "OR chain" "false||false ||true|| echo should_not_print"
+    run_test "mixed logic 1" "true&&false||echo printed"
+    run_test "mixed logic 2" "false  ||true&&echo printed"
+    run_test "mixed logic 3" "true &&echo first||echo second"
+    run_test "mixed logic 4" "false||echo first  &&  echo second"
+    run_test "logic with pipes" "echo test|cat&&echo success  ||echo fail"
+    run_test "logic with redirects" "echo test>test_out.txt&&cat test_out.txt||echo fail"
+}
+
+test_parentheses_priority() {
+    echo -e "\n${BLUE}[Parentheses Priority]${NC}"
+    run_test "simple parens" "( echo hello )"
+    run_test "parens with AND" "(true&&echo yes)"
+    run_test "parens with OR" "( false||echo yes)"
+    run_test "parens priority 1" "false||(true&&echo yes)"
+    run_test "parens priority 2" "(false||true)&&echo yes"
+    run_test "nested parens" "(  (echo hello)  )"
+    run_test "parens with pipes" "(echo test|cat)"
+    run_test "multiple paren groups" "(echo one)&&(echo two)"
+    run_test "complex parens 1" "(true&&false)||(true&&echo success)"
+    run_test "complex parens 2" "false&&(echo no)||(  true&&echo yes)"
+}
+
+test_variable_expansion_madness() {
+    echo -e "\n${BLUE}[Variable Expansion Madness]${NC}"
+    run_test "expand in quotes" "echo \"User is \$USER\""
+    run_test "no expand in single quotes" "echo 'User is \$USER'"
+    run_test "mixed quote expansion" "echo 'USER:'\$USER"
+    run_test "multiple variables" "echo \$USER \$HOME \$PATH|wc -w"
+
+    run_test "undefined variable" "echo \$NONEXISTENT_VAR_12345"
+    run_test "dollar without var" "echo \$"
+    run_test "multiple dollars" "echo \$\$"
+    run_test "variable with special chars" "echo \$USER-\$HOME"
+    run_test "variable in redirect" "echo test>\$HOME/.test_minishell_tmp&&cat \$HOME/.test_minishell_tmp&&rm \$HOME/.test_minishell_tmp"
+}
+
+test_wildcard_chaos() {
+    echo -e "\n${BLUE}[Wildcard Chaos]${NC}"
+    # Create test files for wildcards
+    touch test_wild_1.txt test_wild_2.txt test_wild_a.txt test_wild_b.txt
+
+    run_test "simple wildcard" "ls test_wild_*.txt|wc -l"
+    run_test "wildcard with cat" "cat test_wild_*.txt 2>/dev/null||echo no_match"
+    run_test "wildcard in quotes" "echo 'test_*.txt'"
+    run_test "wildcard no match" "ls no_match_*.xyz 2>/dev/null||echo no_files"
+    run_test "multiple wildcards" "ls test_*.txt *.sh|grep test|wc -l"
+    run_test "wildcard with redirect" "cat test_wild_*.txt>test_out.txt 2>/dev/null&&wc -l<test_out.txt"
+
+    # Cleanup wildcard test files
+    rm -f test_wild_*.txt
+}
+
+test_ultimate_chaos() {
+    echo -e "\n${BLUE}[ULTIMATE CHAOS]${NC}"
+    run_test "everything 1" "echo \$USER|cat>test_out.txt&&cat<test_out.txt|grep \$USER"
+    run_test "everything 2" "(echo one&&echo two)|cat|cat>test_out.txt&&cat test_out.txt"
+    run_test "everything 3" "<$TESTFILE cat|grep World>test_out.txt&&cat test_out.txt||echo fail"
+    run_test "everything 4" "echo 'test \$USER'|cat&&(true||false)&&echo success"
+    run_test "everything 5" "(false||true)&&echo \$USER|cat|cat  |cat"
+    run_test "everything 6" "echo test>test_1.txt&&cat<test_1.txt|cat>test_2.txt&&cat test_2.txt"
+    run_test "everything 7" "(echo a&&echo b)|cat|(cat&&cat)>test_out.txt&&cat test_out.txt"
+    run_test "pipe redirect logic quote var" "echo \"\$USER is\" 'testing'|cat>test_out.txt&&cat test_out.txt||echo failed"
+    run_test "massive pipe chain" "echo start|cat|cat|cat  |cat|cat  |cat|cat|wc -w"
+    run_test "logic redirect pipe combo" "true&&echo ok|cat>test_out.txt||echo fail&&cat test_out.txt"
+}
+
+test_edge_cases_extreme() {
+    echo -e "\n${BLUE}[Extreme Edge Cases]${NC}"
+    run_test "many spaces" "echo          hello          world"
+    run_test "tabs and spaces" "echo 	hello	world"
+    run_test "empty quotes" "echo '' \"\" ''"
+    run_test "only quotes" "echo ''"
+    run_test "nested empty quotes" "echo '\"\"'"
+    run_test "redirect to same file twice" "echo test > test_out.txt && cat test_out.txt > test_out.txt && cat test_out.txt"
+    run_test "cat to itself" "cat test_out.txt > test_out.txt || echo cannot_do"
+    run_test "many redirects same file" "echo a > test_out.txt > test_out.txt > test_out.txt && cat test_out.txt"
+}
+
+test_quote_escape_hell() {
+    echo -e "\n${BLUE}[Quote Escape Hell]${NC}"
+    run_test "quote escape 1" "echo \"hello\\\"world\""
+    run_test "quote escape 2" "echo 'it'\\''s working'"
+    run_test "backslash madness" "echo \\\\\\\\"
+    run_test "dollar in single quotes" "echo '\$USER \$HOME \$PATH'"
+    run_test "dollar in double quotes" "echo \"\$USER is \$USER\""
+    run_test "empty var expansion" "echo prefix\$NONEXISTENTsuffix"
+    run_test "quote concatenation" "echo hello\"world\"test'foo'bar"
+    run_test "spaces in quotes" "echo \"   spaced   out   \""
+}
+
+test_redirect_edge_cases() {
+    echo -e "\n${BLUE}[Redirect Edge Cases]${NC}"
+    run_test "redirect with no command" ">test_out.txt"
+    run_test "input redirect nonexistent" "<nonexistent_file.txt cat 2>/dev/null||echo error"
+    run_test "redirect in weird positions" "echo<test1.txt hello>test_out.txt&&cat test_out.txt"
+    run_test "multiple appends" "echo a>>test_out.txt&&echo b  >>test_out.txt&&echo c>>  test_out.txt&&cat test_out.txt"
+    run_test "overwrite after read" "cat test1.txt>test1.txt||echo cannot_read_and_write"
+}
+
+test_builtin_edge_cases() {
+    echo -e "\n${BLUE}[Builtin Edge Cases]${NC}"
+    run_test "echo -n with newline" "echo -n hello&&echo world"
+    run_test "echo -n multiple" "echo -n one&&echo -n two  &&echo three"
+    run_test "echo with -n and -e" "echo -n hello"
+    run_test "pwd in pipe" "pwd|cat"
+    run_test "env in pipe" "env|grep PATH|head -1"
+    run_test "export in subshell" "(export TEST=value&&echo \$TEST)"
+}
+
+test_special_characters() {
+    echo -e "\n${BLUE}[Special Characters]${NC}"
+    run_test "ampersand in quotes" "echo 'one && two'"
+    run_test "pipe in quotes" "echo 'one | two'"
+    run_test "redirect in quotes" "echo 'output > file'"
+    run_test "dollar question mark" "true && echo \$?"
+}
+
+test_stress_test() {
+    echo -e "\n${BLUE}[STRESS TEST - THE FINAL BOSS]${NC}"
+    run_test "mega combo 1" "(echo \$USER&&echo \$HOME)|cat|grep -E '.*'>test_out.txt&&cat test_out.txt|wc -l"
+    run_test "mega combo 2" "echo 'test \"nested\" quotes'|cat|cat  |cat|cat>test_out.txt&&<test_out.txt cat"
+    run_test "mega combo 3" "(true&&echo success||echo fail)|cat&&(false||echo recovered)|cat>test_out.txt&&cat test_out.txt"
+    run_test "mega combo 4" "echo start>test_1.txt&&cat test_1.txt|cat>test_2.txt&&cat test_2.txt|cat>test_3.txt&&cat test_3.txt"
+    run_test "mega combo 5" "<$TESTFILE cat|grep World|cat|cat>test_out.txt&&<test_out.txt cat|cat  |cat"
+    run_test "pipe logic redirect chaos" "(echo one|cat)&&(echo two|cat)|cat>test_out.txt&&cat test_out.txt||echo fail"
+    run_test "the ultimate test" "(echo \"\$USER: \"&&cat $TESTFILE)|cat|cat>test_out.txt&&<test_out.txt cat|grep -v '^$'|wc -l"
+}
+
 # Main execution
 main() {
     setup
 
+    # Basic tests
     test_simple_commands
     test_pipes
     test_redirections
@@ -217,6 +386,23 @@ main() {
     test_variables
     test_edge_cases
     test_combined
+
+    # Crazy tests
+    test_crazy_quotes
+    test_redirect_who
+    test_pipe_madness
+    test_redirect_chaos
+    test_logic_insanity
+    test_parentheses_priority
+    test_variable_expansion_madness
+    test_wildcard_chaos
+    test_edge_cases_extreme
+    test_quote_escape_hell
+    test_redirect_edge_cases
+    test_builtin_edge_cases
+    test_special_characters
+    test_ultimate_chaos
+    test_stress_test
 
     cleanup
 }
