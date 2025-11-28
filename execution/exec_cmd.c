@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/28 11:31:05 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/28 15:48:36 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,31 +39,25 @@ static int redir_error(char *path)
 int	configure_redir(t_node *redir, t_data *data, int *in_redir, int *out_redir)
 {
 	int				fd;
-	char			*path;
 	t_redir_type	kind;
-	t_node			*temp;
 
-	//expand 
 	fd = -1;
-	temp = redir;
-	while (temp)
+	while (redir != NULL)
 	{
-		path = temp->content.redir.path;
-		(void) data;
-		if (expand_vars_redir(&path, data) == -1)
+		if (expand_vars_redir(&(redir->content.redir.path), data) == -1)
 			return (-1);
-		kind = temp->content.redir.kind;
+		kind = redir->content.redir.kind;
 		if (kind == WRITE)
-			fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			fd = open(redir->content.redir.path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else if (kind == APPEND)
-			fd = open(path, O_WRONLY | O_CREAT | O_APPEND, 0644);
+			fd = open(redir->content.redir.path, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		else if (kind == READ)
-			fd = open(path, O_RDONLY);
+			fd = open(redir->content.redir.path, O_RDONLY);
 		else if (kind == HEREDOC)
-			fd = open(path, O_RDONLY);
+			fd = open(redir->content.redir.path, O_RDONLY);
 		if (dup_fds(fd, kind, in_redir, out_redir) == -1)
-			return (redir_error(path));
-		temp = temp->right_child;
+			return (redir_error(redir->content.redir.path));
+		redir = redir->right_child;
 	}
 	return (1);
 }
@@ -109,7 +103,8 @@ static int exec_child(t_node *cmd, t_data *data, int mode)
 	{
 		if (mode > 1)
 		{
-			close(data->pipe_tab[data->cmd_cnt - 1][0]);
+			if (mode == 2)
+				close(data->pipe_tab[data->cmd_cnt - 1][0]);
 			if (!in)
 			{
 				dup2(data->pipe_tab[data->cmd_cnt - 2][0], STDIN_FILENO);

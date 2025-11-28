@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:46:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/28 11:53:30 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/28 14:08:52 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int	exec_pipeline(t_node *node, t_data *data, t_node *pipeline_root)
 {
     int ret;
 
+	ret = 0;
 	if (node == NULL || (node->parent != NULL && node->parent->type == CMD))
 		return (0);
 	if (exec_pipeline(node->left_child, data, pipeline_root) == -1)
