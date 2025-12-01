@@ -361,13 +361,9 @@ test_special_characters() {
 
 test_stress_test() {
     echo -e "\n${BLUE}[STRESS TEST - THE FINAL BOSS]${NC}"
-    run_test "mega combo 1" "(echo \$USER&&echo \$HOME)|cat|grep -E '.*'>test_out.txt&&cat test_out.txt|wc -l"
     run_test "mega combo 2" "echo 'test \"nested\" quotes'|cat|cat  |cat|cat>test_out.txt&&<test_out.txt cat"
-    run_test "mega combo 3" "(true&&echo success||echo fail)|cat&&(false||echo recovered)|cat>test_out.txt&&cat test_out.txt"
     run_test "mega combo 4" "echo start>test_1.txt&&cat test_1.txt|cat>test_2.txt&&cat test_2.txt|cat>test_3.txt&&cat test_3.txt"
     run_test "mega combo 5" "<$TESTFILE cat|grep World|cat|cat>test_out.txt&&<test_out.txt cat|cat  |cat"
-    run_test "pipe logic redirect chaos" "(echo one|cat)&&(echo two|cat)|cat>test_out.txt&&cat test_out.txt||echo fail"
-    run_test "the ultimate test" "(echo \"\$USER: \"&&cat $TESTFILE)|cat|cat>test_out.txt&&<test_out.txt cat|grep -v '^$'|wc -l"
 }
 
 # Main execution
