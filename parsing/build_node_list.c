@@ -6,33 +6,34 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 11:50:24 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/24 14:22:25 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/01 18:15:17 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int  check_quote_balance(char *line, int *j, char **tab)
+int  check_quote_balance(char **line, int *j, char **tab)
 {
 	int		quote_small;
 	int		quote_big;
 
 	quote_small = 0;
 	quote_big = 0;
-	while (line[*j])
+	while ((*line)[*j])
 	{
-		if (is_sep(&line[*j]) && (quote_small % 2 == 0) && (quote_big % 2 == 0))
+		if (is_sep(&(*line)[*j]) && (quote_small % 2 == 0) && (quote_big % 2 == 0))
 			break;
-		if (line[*j] == '\'' || line[*j] == '"')
+		if ((*line)[*j] == '\'' || (*line)[*j] == '"')
 		{
-			if (line[*j] == '\'' && (quote_big % 2 == 0))
+			if ((*line)[*j] == '\'' && (quote_big % 2 == 0))
 				quote_small++;
-			if (line[*j] == '"' && (quote_small % 2 == 0))
+			if ((*line)[*j] == '"' && (quote_small % 2 == 0))
 				quote_big++;
 		}
-		if (line[*j] == '<' && line[*j +  1] && line[*j + 1] == '<')
-			if (!set_heredoc(&line, j, tab))
-				return (-1);
+		if ((*line)[*j] == '<' && (*line)[*j +  1] && (*line)[*j + 1] == '<')
+			*line = set_heredoc(*line, j, tab);
+		if (!*line)
+			return (-1);
 		*j += 1;
 	}
 	if ((quote_small % 2 == 1) || (quote_big % 2 == 1))
@@ -40,7 +41,7 @@ int  check_quote_balance(char *line, int *j, char **tab)
 	return (1);
 }
 
-static int	tokenize_pipeline(char *line, int *i, t_list **list, char **tab)
+static int	tokenize_pipeline(char **line, int *i, t_list **list, char **tab)
 {
 	char	*pipeline;
 	int		j;
@@ -50,7 +51,7 @@ static int	tokenize_pipeline(char *line, int *i, t_list **list, char **tab)
 	result = check_quote_balance(line, &j, tab);
 	if (result <= 0)
 		return (result);
-	pipeline = ft_substr(line, *i, j - *i);
+	pipeline = ft_substr(*line, *i, j - *i);
 	if (!pipeline)
 		return (-1);//free shit
 	if (!pipeline_token(pipeline, list))
@@ -83,7 +84,7 @@ int build_node_list(char *line, t_list **list, char **path_tab)
 		}
 		else
 		{
-			result = tokenize_pipeline(line, &i, list, path_tab);
+			result = tokenize_pipeline(&line, &i, list, path_tab);
 			if (result <= 0)
 				return (result);//returns 0 means unclosed quotes
 		}
@@ -115,7 +116,7 @@ static int  check_par_usage(t_list **temp)
 
 t_list	*clean_node_list(char *line, char **path_tab)
 {
-	int result;
+	int     result;
 	t_list	*list;
 	t_list	*temp;
 

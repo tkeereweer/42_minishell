@@ -6,11 +6,28 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 14:29:27 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/26 14:49:35 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/01 18:11:31 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	clean_path_tab(char **path_tab)
+{
+    int i;
+
+    if (!path_tab)
+        return (1);
+    i = 0;
+    while(path_tab[i])
+    {
+        unlink(path_tab[i]);
+        free(path_tab[i]);
+        path_tab[i] = NULL;
+        i++;
+    }
+    return (1);
+}
 
 // end++ is to offset the last quote when replacing w/ path
 static char	*remove_quotes(char *line, int start, int *end)
@@ -37,22 +54,20 @@ static char	*remove_quotes(char *line, int start, int *end)
 
 //start and end are indexes in the main line
 //remove end - start + 1 and add ft_strlen(path)
-static int	replace_with_path(char **dest, char *path, int start, int end)
+char	*replace_with_path(char *dest, char *path, int start, int end)
 {
 	char    *temp;
 	size_t  new_len;
 
-	new_len = ft_strlen(*dest) - ( end - start + 1) + ft_strlen(path);
-	temp = (char *)malloc(sizeof(char) * (new_len + 1));
-	temp[new_len] = '\0';
+	new_len = ft_strlen(dest) - ( end - start + 1) + ft_strlen(path) + 1;
+	temp = (char *)ft_calloc(sizeof(char), new_len + 1);
 	if (!temp)
-		return (0);
-	ft_strncat(temp, *dest, start);
+		return (NULL);
+	ft_strncat(temp, dest, start);
 	ft_strncat(temp, path, ft_strlen(path));
-	ft_strncat(temp, &(*dest)[end], ft_strlen(&(*dest)[end]));
-	free(*dest);
-	*dest = temp;
-	return (1);
+	ft_strncat(temp, &dest[end], ft_strlen(&dest[end]));
+	// free(dest);
+	return (temp);
 }
 
 static char	*set_limiter(char **line, int *j, int *start)
@@ -76,23 +91,24 @@ static char	*set_limiter(char **line, int *j, int *start)
 		return (NULL);
 	return (limiter);
 }
-int	set_heredoc(char **line, int *j, char **tab)
+char	*set_heredoc(char *line, int *j, char **tab)
 {
 	int     start;
 	char    *limiter;
 	int     i;
 
 	start = 0;
-	limiter = set_limiter(line, j, &start);
+	limiter = set_limiter(&line, j, &start);
 	if (!limiter)
-		return (0);
+		return (NULL);
 	tab = heredoc(tab, limiter);
 	if (!tab)
-		return (free(limiter), 0);
+		return (free(limiter), NULL);
 	i = 0;
 	while (tab[i])
 		i++;
-	if (!replace_with_path(line, tab[i - 1], start, *j))
-		return (free(limiter), -1);
-	return (free(limiter), 1);
+	line = replace_with_path(line, tab[i - 1], start, *j);
+    if (!*line)
+		return (free(limiter), NULL);
+	return (free(limiter), line);
 }

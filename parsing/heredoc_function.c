@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 08:25:50 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/26 14:53:55 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/01 17:14:27 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static char	**temp_filepath(char **tmp_name, int count)
 	if (!tmp_name)
 		return (free_split(tmp_name), NULL);
 	tmp_name[count] = NULL;
-	len = ft_strlen("/home/mturgeon/minishell");//decide of temporary path
+	len = ft_strlen("/home/mturgeon/minishell");
 	tmp_num = ft_itoa(count);
 	if (!tmp_num)
 		return (free_split(tmp_name), NULL);
@@ -38,7 +38,6 @@ static char	**try_filepath(char **filepath, int count)
 {
 	if (access(filepath[count - 1], F_OK) == 0)
 	{
-		//if temp file exists, try to delete it to keep going
 		if (unlink(filepath[count - 1]) == -1)
 		{
 			write(STDERR_FILENO, "heredoc failed\n", 15);
@@ -92,6 +91,9 @@ char	**heredoc(char **path_tab, char *limiter)
 {
 	static int	count = 0;
 	int			fd;
+
+	if (!path_tab)
+		count = 0;
 	if (!limiter)
 		return (NULL);
 	count++;
@@ -101,11 +103,10 @@ char	**heredoc(char **path_tab, char *limiter)
 	path_tab = try_filepath(path_tab, count);
 	if (!path_tab)
 		return (free(path_tab), NULL);
-	//check permission values for open w/ regards of shell functionality?
 	fd = open(path_tab[count - 1], O_WRONLY | O_CREAT, 0644);
 	if (fd == -1)
 		return (free(path_tab), NULL);
-	if (!write_heredoc(limiter, fd))//shalll we fork and wait here ?
+	if (!write_heredoc(limiter, fd))
 		return (free(path_tab), NULL);
 	close(fd);
 	return (path_tab);

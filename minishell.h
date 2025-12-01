@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/01 08:47:38 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/01 16:54:12 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ int     return_1_subpipe(char ***subpipe, char *line);
 int     build_subpipe(char ***subpipe, char *line, int *i);
 int     clean_args_nodes(t_list **head);
 int     increment_subpipe(char ***subpipe, char *line, int *i, int *j);
-int     check_quote_balance(char *line, int *j, char **tab);
+int     check_quote_balance(char **line, int *j, char **tab);
 int     sep_tokenizer(char *line, int *i, t_list **list);
 t_list	*set_temp(t_list **list, t_list *temp);
 int     separator_logic(char *line, int *i, t_list *temp, t_list **list);
@@ -166,7 +166,8 @@ int		handle_signals_child(void);
 char	**get_envvar_pointer(char *var, char **env);
 //heredoc
 char	**heredoc(char **path_tab, char *limiter);
-int		set_heredoc(char **line, int *j, char **tab);
+char	*set_heredoc(char *line, int *j, char **tab);
+int		clean_path_tab(char **path_tab);
 // execution
 int		exec_tree(t_node *node, t_data *data);
 int		exec_cmd(t_node *cmd, t_data *data, int mode);
