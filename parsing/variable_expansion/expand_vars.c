@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 10:50:02 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/28 11:53:18 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/01 17:55:28 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 int	clean_quotes(char *str, int i, char type)
 {
 	ft_strncpy(&str[i], &str[i + 1], ft_strlen(&str[i + 1]));
-	i++;
+	if (str[i + 1] != '\0')
+		i++;
 	while (str[i] != type)
 		i++;
 	ft_strncpy(&str[i], &str[i + 1], ft_strlen(&str[i + 1]));

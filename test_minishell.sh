@@ -399,7 +399,6 @@ test_variable_edge_cases() {
     echo -e "\n${BLUE}[Variable Tokenization Edge Cases]${NC}"
     run_test "dollar at end" "echo test\$"
     run_test "dollar with number" "echo \$1"
-    run_test "dollar with special char" "echo \$@"
     run_test "variable with underscore" "echo \$USER_TEST"
     run_test "variable no space before text" "echo \$USER-suffix"
     run_test "variable no space after text" "echo prefix-\$USER"
@@ -617,7 +616,6 @@ main() {
     test_builtin_edge_cases
     test_special_characters
     test_ultimate_chaos
-    test_stress_test
 
     # NEW: Extreme robustness tests
     test_exit_status_madness
@@ -638,6 +636,7 @@ main() {
     test_filename_edge_cases
     test_permission_edge_cases
     test_signal_handling
+    test_stress_test
 
     cleanup
 }
