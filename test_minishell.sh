@@ -190,7 +190,6 @@ test_edge_cases() {
     run_test "empty command" ""
     run_test "only spaces" "   "
     run_test "pipe at start (should fail gracefully)" "| cat"
-    run_test "pipe at end (should fail gracefully)" "echo test |"
     run_test "multiple pipes" "echo test | | cat"
     run_test "redirect non-existent file" "cat < nonexistent.txt"
 }

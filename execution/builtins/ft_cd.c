@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 09:21:20 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/26 13:52:04 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/01 10:28:10 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	update_env(char *old_pwd, t_data *data)
 	key_val = (char *) malloc((ft_strlen(old_pwd) + 8) * sizeof(char));
 	if (key_val == NULL)
 		return (-1);
-	ft_strncpy(key_val, "OLDPWD=", 8);
+	ft_strlcpy(key_val, "OLDPWD=", 8);
 	ft_strcat(key_val, old_pwd);
 	ret = ft_export(key_val, data);
 	free(key_val);
@@ -48,10 +48,10 @@ int	update_env(char *old_pwd, t_data *data)
 		return (-1);
 	if (getcwd(buf, PATH_MAX) == NULL)
 		return (-1);
-	key_val = malloc((ft_strlen(old_pwd) + 5) * sizeof(char));
+	key_val = malloc((ft_strlen(buf) + 5) * sizeof(char));
 	if (key_val == NULL)
 		return (-1);
-	ft_strncpy(key_val, "PWD=", 8);
+	ft_strlcpy(key_val, "PWD=", 5);
 	ft_strcat(key_val, buf);
 	ret = ft_export(key_val, data);
 	free(key_val);

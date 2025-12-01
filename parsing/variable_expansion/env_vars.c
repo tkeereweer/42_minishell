@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 10:14:03 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/28 11:51:43 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/01 10:57:42 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	envvar_len(char *str)
 	i = 1;
 	if (str[1] == '?')
 		return (i);
-	while (ft_isalnum(str[i]) == 1 || str[i] == '_')
+	while (str[i] != '\0' && (ft_isalnum(str[i]) == 1 || str[i] == '_'))
 		i++;
 	return (i);
 }
@@ -81,13 +81,18 @@ int	expand_envvar_str(char **str, int i, t_data *data)
 	envvar = ft_substr(*str, env_pos, envvar_len(&(*str)[env_pos]));
 	if (envvar == NULL)
 		return (1);
+	if (envvar[0] == '$' && ft_strlen(envvar) == 1)
+	{
+		free(envvar);
+		return (0);
+	}
 	expanded = ft_getenv(envvar, data->env);
 	free(envvar);
 	new_str = (char *) malloc((ft_strlen(*str) + ft_strlen_gnl(expanded) - envvar_len(&(*str)[env_pos]) + 1) * sizeof(char));
 	if (new_str == NULL)
 		return (1);
 	new_str[0] = '\0';
-	ft_strncpy(new_str, *str, env_pos);
+	ft_strlcpy(new_str, *str, env_pos);
 	if (expanded != NULL)
 		ft_strcat(new_str, expanded);
 	ft_strcat(new_str, &(*str)[env_pos + envvar_len(&(*str)[env_pos])]);
