@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:46:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/28 14:08:52 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/01 11:24:23 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ int	exec_tree(t_node *node, t_data *data)
 			exit_status = wait_for_pids(data);
             exit_status = WEXITSTATUS(exit_status);
 		}
+		data->exit_status = exit_status;
 		clean_data(data);
 	}
 	if ((exit_status == 0 && node->type == LOGIC && node->content.logic == AND) || (exit_status != 0 && node->type == LOGIC && node->content.logic == OR))

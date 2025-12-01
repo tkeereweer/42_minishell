@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/01 14:50:47 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/01 18:26:43 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ int	main(int argc, char *argv[], char **envp)
 	data.cmd_cnt = 0;
 	data.pid_tab = NULL;
 	data.pipe_tab = NULL;
+	data.exit_status = 0;
 	prompt = build_prompt(&data);
 	if (prompt == NULL)
 		clean_exit(&data, NULL);

@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 15:24:33 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/28 11:49:17 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/01 13:16:09 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,18 +102,24 @@ int	add_file(char ***tab, int first, int i, char *filename)
 	char	*tmp1;
 	char	*tmp2;
 
+	if (first != 1)
+	{
+		len = 0;
+		while ((*tab)[len] != NULL)
+			len++;
+		*tab = tab_realloc(*tab, len + 2);
+		if (*tab == NULL)
+			return (1);
+	}
 	tmp2 = (*tab)[i];
 	(*tab)[i] = ft_strdup(filename);
 	if ((*tab)[i] == NULL)
 		return (1);
 	if (first == 1)
+	{
+		// free(tmp2);
 		return (0);
-	len = 0;
-	while ((*tab)[len] != NULL)
-		len++;
-	*tab = tab_realloc(*tab, len + 2);
-	if (*tab == NULL)
-		return (1);
+	}
 	while (i < len)
 	{
 		tmp1 = (*tab)[i + 1];
