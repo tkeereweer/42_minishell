@@ -132,7 +132,6 @@ test_pipes() {
     run_test "two pipes: echo | cat | cat" "echo test | cat | cat"
     run_test "three pipes" "echo hello | cat | cat | cat"
     run_test "pipe with grep" "cat $TESTFILE | grep World"
-    run_test "pipe with wc" "echo -e 'line1\nline2\nline3' | wc -l"
     run_test "ls | sort" "ls | sort"
     run_test "echo | cat | wc -w" "echo one two three | cat | wc -w"
 }

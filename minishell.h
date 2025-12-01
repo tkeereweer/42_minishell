@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/28 11:44:48 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/01 08:47:38 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <dirent.h>
-// # include <linux/limits.h>
-# include <sys/syslimits.h>
+# include <linux/limits.h>
+// # include <sys/syslimits.h>
 # include <sys/wait.h>
 # include <errno.h>
 # include "libft/src/libft.h"
@@ -153,7 +153,7 @@ char	*remove_redir(char *str, int start, int end);
 int 	ft_cd(char *path, t_data *data);
 int 	ft_pwd(void);
 void	ft_echo(char **args);
-void	ft_exit(unsigned int n);
+void	ft_exit(unsigned int n, t_data *data);
 int		ft_export(char *key_val, t_data *data);
 void	ft_unset(char **tab, t_data *data);
 void	ft_env(t_data *data);
