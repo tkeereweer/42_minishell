@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/01 18:27:04 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/01 18:27:44 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,9 +177,9 @@ int		is_builtin(char *name);
 
 char	*find_path(char **paths, char *cmd);
 char	*get_exe_path(char **env, char *cmd);
-void	cmd_not_found(char *cmd);
-void	permission_error(char *path);
-void	exec_fail(char *path, char *cmd);
+void	cmd_not_found(char *cmd, t_data *data);
+void	permission_error(char *path, t_data *data);
+void	exec_fail(char *path, char *cmd, t_data *data);
 int		configure_redir(t_node *redir, t_data *data, int *in_redir, int *out_redir);
 int		create_pipe(t_data *data, int mode);
 int		create_pid(t_node *arg, t_data *data);

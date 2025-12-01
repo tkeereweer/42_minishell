@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 10:14:03 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/01 14:47:03 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/01 17:29:27 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,4 +163,3 @@ int	expand_envvars(char **str, t_data *data)
 // 	free(str);
 // 	return (0);
 // }
-

@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 15:24:33 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/01 13:16:09 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/01 17:28:51 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	in_quotes(char *str, int idx)
 {
 	int	i;
 	int	big;
-	int small;
+	int	small;
 
 	i = 0;
 	big = 0;
@@ -162,7 +162,7 @@ int	expand_wildcards(char ***tab, int i, char *pat)
 
 int	add_to_redir_path(char **path, int first, char *filename)
 {
-	char *new_path;
+	char	*new_path;
 
 	if (first == 1)
 		new_path = (char *) my_realloc(*path, (ft_strlen(filename) + 1) * sizeof(char));
@@ -195,7 +195,7 @@ int	expand_wildcards_redir(char **path, char *pat)
 	{
 		if (match_pat(dir_entry->d_name, pat) == 1)
 		{
-			if (add_to_redir_path(path, first, dir_entry->d_name)== 1)
+			if (add_to_redir_path(path, first, dir_entry->d_name) == 1)
 				return (-1); // handle error
 			first = 0;
 		}

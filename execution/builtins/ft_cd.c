@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 09:21:20 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/01 10:28:10 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/01 17:27:35 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ int	update_env(char *old_pwd, t_data *data)
 	return (0);
 }
 
-int ft_cd(char *path, t_data *data)
+int	ft_cd(char *path, t_data *data)
 {
-	int 	ret;
+	int		ret;
 	char	*home;
 	char	*new_str;
 	char	buf[PATH_MAX];

@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:21:39 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/20 16:59:08 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/01 17:30:03 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 t_node	*node_new(t_content content, t_type type)
 {
 	t_node	*new;
-	
+
 	new = (t_node *) malloc(sizeof(t_node));
 	if (new == NULL)
 		return (NULL);

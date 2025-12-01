@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 10:20:16 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/01 08:49:28 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/01 17:26:56 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	run_builtins(char **argv, t_data *data, int mode)
 		ret = ft_export(argv[1], data);
 	else if (ft_strncmp(argv[0], "unset", 6) == 0)
 		ft_unset(&argv[1], data);
-	if (mode !=4)
+	if (mode != 4)
 		exit(ret);
 	return (ret);
 }
