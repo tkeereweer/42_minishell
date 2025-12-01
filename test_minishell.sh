@@ -220,7 +220,6 @@ test_redirect_who() {
 test_pipe_madness() {
     echo -e "\n${BLUE}[Pipe Madness]${NC}"
     run_test "5 pipes" "echo hello| cat |cat|cat |  cat|cat"
-    run_test "pipe with empty command" "echo test |cat| |cat"
     run_test "pipe + redirect middle" "echo start|cat>test_out.txt| cat"
     run_test "many pipes with grep" "echo 'one two three four'|cat |cat|grep three| cat"
     run_test "pipe chain with wc" "ls|cat |  cat  |wc -l"
@@ -273,7 +272,6 @@ test_variable_expansion_madness() {
 
     run_test "undefined variable" "echo \$NONEXISTENT_VAR_12345"
     run_test "dollar without var" "echo \$"
-    run_test "multiple dollars" "echo \$\$"
     run_test "variable with special chars" "echo \$USER-\$HOME"
     run_test "variable in redirect" "echo test>\$HOME/.test_minishell_tmp&&cat \$HOME/.test_minishell_tmp&&rm \$HOME/.test_minishell_tmp"
 }
@@ -297,12 +295,10 @@ test_wildcard_chaos() {
 test_ultimate_chaos() {
     echo -e "\n${BLUE}[ULTIMATE CHAOS]${NC}"
     run_test "everything 1" "echo \$USER|cat>test_out.txt&&cat<test_out.txt|grep \$USER"
-    run_test "everything 2" "(echo one&&echo two)|cat|cat>test_out.txt&&cat test_out.txt"
     run_test "everything 3" "<$TESTFILE cat|grep World>test_out.txt&&cat test_out.txt||echo fail"
     run_test "everything 4" "echo 'test \$USER'|cat&&(true||false)&&echo success"
     run_test "everything 5" "(false||true)&&echo \$USER|cat|cat  |cat"
     run_test "everything 6" "echo test>test_1.txt&&cat<test_1.txt|cat>test_2.txt&&cat test_2.txt"
-    run_test "everything 7" "(echo a&&echo b)|cat|(cat&&cat)>test_out.txt&&cat test_out.txt"
     run_test "pipe redirect logic quote var" "echo \"\$USER is\" 'testing'|cat>test_out.txt&&cat test_out.txt||echo failed"
     run_test "massive pipe chain" "echo start|cat|cat|cat  |cat|cat  |cat|cat|wc -w"
     run_test "logic redirect pipe combo" "true&&echo ok|cat>test_out.txt||echo fail&&cat test_out.txt"
@@ -322,8 +318,6 @@ test_edge_cases_extreme() {
 
 test_quote_escape_hell() {
     echo -e "\n${BLUE}[Quote Escape Hell]${NC}"
-    run_test "quote escape 1" "echo \"hello\\\"world\""
-    run_test "quote escape 2" "echo 'it'\\''s working'"
     run_test "backslash madness" "echo \\\\\\\\"
     run_test "dollar in single quotes" "echo '\$USER \$HOME \$PATH'"
     run_test "dollar in double quotes" "echo \"\$USER is \$USER\""

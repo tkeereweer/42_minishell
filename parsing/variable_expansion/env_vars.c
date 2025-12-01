@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 10:14:03 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/01 14:44:52 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/01 14:47:03 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	expand_envvar_str(char **str, int i, t_data *data)
 	if (new_str == NULL)
 		return (1);
 	new_str[0] = '\0';
-	ft_strlcpy(new_str, *str, env_pos);
+	ft_strncpy(new_str, *str, env_pos);
 	if (expanded != NULL)
 		ft_strcat(new_str, expanded);
 	ft_strcat(new_str, &(*str)[env_pos + envvar_len(&(*str)[env_pos])]);
