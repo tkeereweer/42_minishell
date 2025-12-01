@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/28 15:48:36 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/01 12:01:12 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ static int	dup_fds(int fd, t_redir_type kind, int *in_redir, int *out_redir)
 }
 static int redir_error(char *path)
 {
-    write(STDERR_FILENO, "minishell: ", 11);
-    perror(path);
-    exit(1);
+	write(STDERR_FILENO, "minishell: ", 11);
+	perror(path);
+	exit(1);
 }
 
 int	configure_redir(t_node *redir, t_data *data, int *in_redir, int *out_redir)
@@ -88,9 +88,10 @@ static int exec_builtin(t_node *cmd, t_data *data, int mode)
 	return (ret);
 }
 
+//this function is in a child process
 static int exec_child(t_node *cmd, t_data *data, int mode)
 {	
-	int     out;//bools to know wether to setup in or out
+	int     out;
 	int     in;
 	char    *exec_path;
 
@@ -106,14 +107,13 @@ static int exec_child(t_node *cmd, t_data *data, int mode)
 			if (mode == 2)
 				close(data->pipe_tab[data->cmd_cnt - 1][0]);
 			if (!in)
-			{
 				dup2(data->pipe_tab[data->cmd_cnt - 2][0], STDIN_FILENO);
-				close(data->pipe_tab[data->cmd_cnt - 2][0]);
-			}
+			close(data->pipe_tab[data->cmd_cnt - 2][0]);
 		}
-		if (mode < 3 && !out)
+		if (mode < 3)
 		{
-			dup2(data->pipe_tab[data->cmd_cnt - 1][1], STDOUT_FILENO);
+			if (!out)
+				dup2(data->pipe_tab[data->cmd_cnt - 1][1], STDOUT_FILENO);
 			close(data->pipe_tab[data->cmd_cnt - 1][1]);
 		}
 	}
@@ -132,9 +132,14 @@ static int exec_child(t_node *cmd, t_data *data, int mode)
 
 int	exec_cmd(t_node *cmd, t_data *data, int mode)
 {
+	int ret;
 	data->cmd_cnt++;
-	create_pipe(data, mode);
-	create_pid(cmd->left_child, data);
+	ret = create_pipe(data, mode);
+	if (ret < 0)
+		return (ret);
+	ret  = create_pid(cmd->left_child, data);
+	if (ret < 0)
+		return (ret);
 	if (is_builtin(cmd->left_child->content.tab[0]) && mode == 4)
 	{
 		data->pid_tab[data->cmd_cnt - 1] = -1;
@@ -154,7 +159,7 @@ int	exec_cmd(t_node *cmd, t_data *data, int mode)
 		if (mode < 3)//in parent
 			close(data->pipe_tab[data->cmd_cnt - 1][1]);
 		if (mode > 1)
-				close(data->pipe_tab[data->cmd_cnt - 2][0]);
+			close(data->pipe_tab[data->cmd_cnt - 2][0]);
 		return (0);
 	}
 	else

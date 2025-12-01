@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 14:22:48 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/25 15:12:53 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/01 13:29:36 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,14 +60,27 @@ int	**int_tab_realloc(int **tab, int size)
 {
 	int	**dst;
 	int	old_len;
+    int i;
 
 	if (!tab)
 		return (new_int_tab(size));
-	dst = new_int_tab(size);
+	dst = (int **)ft_calloc(size + 1, sizeof(int *));
 	if (!dst)
 		return (NULL);
 	old_len = int_tab_len(tab);
-	ft_memmove(*dst, *tab, old_len * sizeof(int *));
+	i = 0;
+    while (i < old_len && i < size)
+    {
+        dst[i] = tab[i];
+        i++;
+    }
+    while (i < size)
+    {
+        dst[i] = (int *)ft_calloc(2, sizeof(int));
+        if (!dst[i])
+            return(free_int_tab(dst), NULL);
+        i++;
+    }
 	free(tab);
 	return (dst);
 }
