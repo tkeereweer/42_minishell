@@ -27,6 +27,10 @@ SRCS = parsing/logic_tree.c \
 	parsing/heredoc_function.c \
 	parsing/heredoc_command.c \
 	execution/exec_tree.c \
+	execution/exec_cmd.c \
+	execution/exec_cmd2.c \
+	execution/create_pipe_and_fork.c \
+	execution/int_tab_realloc.c \
 	tree_visualiser.c \
 	main.c
 
@@ -46,6 +50,7 @@ all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LINKS) -o $(NAME)
+# 	dsymutil $@
 
 $(LIBFT):
 	make -C $(LIBFT_DIR)

@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 16:39:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/25 10:54:10 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/27 11:58:22 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ char	**args_tab(char *str)
 	{
 		if (!iterate_over_quotes(str, &(s.i)))
 			return (NULL);
-		if (ft_is_whitespace(str[s.i]))
+		if (ft_is_whitespace(str[s.i]) || !str[s.i])
 		{
 			temp = ft_substr(str, s.j, s.i - s.j);
 			s.tab = make_tab(s.tab, temp, &s.word_count);

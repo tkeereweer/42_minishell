@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/25 16:05:01 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/11/28 09:13:48 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ char	*build_prompt(t_data *data)
 		return (NULL);
 	if (getcwd(buf, PATH_MAX) == NULL)
 		return (NULL);
-	prompt = (char *) malloc((ft_strlen(user) + ft_strlen(buf) + 1) * sizeof(char));
+	prompt = (char *) malloc((ft_strlen(user) + ft_strlen(buf) + 4) * sizeof(char));
 	if (prompt == NULL)
 		return (NULL);
 	ft_strncpy(prompt, user, ft_strlen(user));

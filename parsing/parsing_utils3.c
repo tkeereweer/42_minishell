@@ -6,11 +6,24 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:39:11 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/24 18:17:07 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/11/27 13:17:58 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int  valid_char(char *str)
+{
+    if (!*str)
+        return (0);
+    if (is_logic(str))
+        return (0);
+    if (is_redir(str))
+        return (0);
+    if (ft_is_whitespace(*str))
+        return (0);
+    return (1);
+}
 
 int	iterate_over_quotes(char *line, int *j)
 {
@@ -25,7 +38,7 @@ int	iterate_over_quotes(char *line, int *j)
 			small_quote++;
 		if (line[*j] == '"')
 			big_quote++;
-		while ((small_quote % 2 != 0) || (big_quote % 2 != 0))
+		while (((small_quote % 2 != 0) || (big_quote % 2 != 0)) || valid_char(&line[*j + 1]))
 		{
 			*j += 1;
 			if (!line[*j])

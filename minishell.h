@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/26 11:27:17 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/01 08:47:38 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ int		tab_len(char **tab);
 char	**args_tab(char *str);
 //parsing end
 // variable expansion
-int 	expand_envvars(char **str, t_data *data);
+int		expand_envvars(char **str, t_data *data);
 int		expand_wildcards(char ***tab, int i, char *pat);
 int		expand_wildcards_redir(char **path, char *pat);
 int		expand_vars(char ***tab, t_data *data);
@@ -153,11 +153,11 @@ char	*remove_redir(char *str, int start, int end);
 int 	ft_cd(char *path, t_data *data);
 int 	ft_pwd(void);
 void	ft_echo(char **args);
-void	ft_exit(unsigned int n);
+void	ft_exit(unsigned int n, t_data *data);
 int		ft_export(char *key_val, t_data *data);
 void	ft_unset(char **tab, t_data *data);
 void	ft_env(t_data *data);
-int		run_builtins(char **argv, t_data *data);
+int		run_builtins(char **argv, t_data *data, int mode);
 //utils
 char	*ft_strcat(char *dst, char *src);
 char	*ft_getenv(char *var, char **env);
@@ -169,5 +169,20 @@ char	**heredoc(char **path_tab, char *limiter);
 int		set_heredoc(char **line, int *j, char **tab);
 // execution
 int		exec_tree(t_node *node, t_data *data);
+int		exec_cmd(t_node *cmd, t_data *data, int mode);
+int		is_builtin(char *name);
+
+
+char	*find_path(char **paths, char *cmd);
+char	*get_exe_path(char **env, char *cmd);
+void	cmd_not_found(char *cmd);
+void	permission_error(char *path);
+void	exec_fail(char *path, char *cmd);
+int		configure_redir(t_node *redir, t_data *data, int *in_redir, int *out_redir);
+int		create_pipe(t_data *data, int mode);
+int		create_pid(t_node *arg, t_data *data);
+int		**int_tab_realloc(int **tab, int size);
+int		**new_int_tab(int size);
+int		valid_char(char *str);
 #endif
 
