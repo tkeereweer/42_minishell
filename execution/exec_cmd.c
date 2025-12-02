@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/02 16:34:26 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/02 20:43:00 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,39 @@ static int ambig_redirect(void)
 	return (-2);
 }
 
+//check for env variable expansion in heredoc
+//flag for quoted heredocs is a 'Q' at end of filepath
+static int  expand_heredoc(int fd, char *path, t_data *data)
+{
+    char    *temp;
+    char    *file;
+
+    file = NULL;
+    if (path[ft_strlen(path) - 1] == 'Q')
+        return (1);
+    temp = get_next_line(fd);
+    if (!temp)
+        return (-2);//read/write error
+    while (temp)
+    {
+        file = my_realloc(file, ft_strlen_gnl(file) + ft_strlen(temp) + 1);
+        if (!file)
+            return (free(temp), -1);//mallocfail
+        ft_strncat(file, temp, ft_strlen(temp));
+        free(temp);
+        temp = get_next_line(fd);
+    }
+    if (expand_envvars_redir(&file, data) == -1)//change to expand_envar_heredoc where it expands regardless of quote type
+        return (free(temp), free(file), -1);
+    close(fd);
+    fd = open(path, O_WRONLY | O_TRUNC);
+    if (write(fd, file, ft_strlen(file)) == -1)
+        return (free(temp), free(file), -2);
+    close(fd);
+    open(path, O_RDONLY);//do we have functions for this like lseek ? or flags for open ?
+    return (free(temp), free(file), 1);
+}
+
 int	configure_redir(t_node *redir, t_data *data, int *in_redir, int *out_redir)
 {
 	int				fd;
@@ -67,7 +100,9 @@ int	configure_redir(t_node *redir, t_data *data, int *in_redir, int *out_redir)
 		else if (kind == HEREDOC)
 		{
 			fd = open(redir->content.redir.path, O_RDONLY);
-			// expand_heredoc(fd);
+			res = expand_heredoc(fd, redir->content.redir.path, data);
+            if (res < 0)
+                return (res);
 		}
 		if (dup_fds(fd, kind, in_redir, out_redir) == -1)
 			return (redir_error(redir->content.redir.path));

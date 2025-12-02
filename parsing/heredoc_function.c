@@ -6,13 +6,13 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 08:25:50 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/01 18:48:06 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/02 19:23:12 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static char	**temp_filepath(char **tmp_name, int count)
+static char	**temp_filepath(char **tmp_name, int count, int quoted_heredoc)
 {
 	char	*tmp_num;
 	size_t	len;
@@ -22,6 +22,8 @@ static char	**temp_filepath(char **tmp_name, int count)
 		return (free_split(tmp_name), NULL);
 	tmp_name[count] = NULL;
 	len = ft_strlen("/tmp/temp");
+	if (quoted_heredoc)
+		len++;
 	tmp_num = ft_itoa(count);
 	if (!tmp_num)
 		return (free_split(tmp_name), NULL);
@@ -31,6 +33,8 @@ static char	**temp_filepath(char **tmp_name, int count)
 	tmp_name[count - 1][0] = '\0';
 	ft_strncat(tmp_name[count - 1], "/tmp/temp", len);
 	ft_strncat(tmp_name[count - 1], tmp_num, ft_strlen(tmp_num));
+	if (quoted_heredoc)
+		ft_strncat(tmp_name[count - 1], "Q", 1);
 	return (free(tmp_num), tmp_name);	
 }
 
@@ -87,7 +91,7 @@ static int	write_heredoc(char *limiter, int fd)
 //creates a temporary file in /temp/dev or /dev
 //close the file descriptor so file offset resets
 //stores filepaths in path_tab, initialized to NULL
-char	**heredoc(char **path_tab, char *limiter)
+char	**heredoc(char **path_tab, char *limiter, int quoted_heredoc)
 {
 	static int	count = 0;
 	int			fd;
@@ -97,7 +101,7 @@ char	**heredoc(char **path_tab, char *limiter)
 	if (!limiter)
 		return (NULL);
 	count++;
-	path_tab = temp_filepath(path_tab, count);
+	path_tab = temp_filepath(path_tab, count, quoted_heredoc);
 	if (!path_tab)
 		return (NULL);
 	path_tab = try_filepath(path_tab, count);

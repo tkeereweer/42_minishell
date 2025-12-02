@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:39:11 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/02 11:27:36 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/02 18:02:38 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,17 @@
 
 int  valid_char(char *str)
 {
-    if (!*str)
-        return (0);
-    if (*str == '|')
-        return (0);
-    if (is_logic(str))
-        return (0);
-    if (is_redir(str))
-        return (0);
-    if (ft_is_whitespace(*str))
-        return (0);
-    return (1);
+	if (!*str)
+		return (0);
+	if (*str == '|')
+		return (0);
+	if (is_logic(str))
+		return (0);
+	if (is_redir(str))
+		return (0);
+	if (ft_is_whitespace(*str))
+		return (0);
+	return (1);
 }
 
 int	iterate_over_quotes(char *line, int *j)
@@ -58,69 +58,69 @@ int	iterate_over_quotes(char *line, int *j)
 static int  redir_big(t_list **lst, char *line, int *i)
 {
 	char	*str;
-    int     res;
+	int     res;
 
 	str = NULL;
 	if (line[*i] == '>' && line[*i + 1] && line[*i + 1] == '>')
-    {
+	{
 		res = tokenize_word(line, i, &str, 2);
-        if (res <= 0)
-            return (res);
-        if (!append_token(lst, str))
+		if (res <= 0)
+			return (res);
+		if (!append_token(lst, str))
 			return (0);
-        return (*i);
-    }
+		return (*i);
+	}
 	if (line[*i] == '<' && line[*i + 1] && line[*i + 1] == '<')
-    {
+	{
 		res = tokenize_word(line, i, &str, 2);
-        if (res <= 0)
-            return (res);
-        if (!heredoc_token(lst, str))
+		if (res <= 0)
+			return (res);
+		if (!heredoc_token(lst, str))
 			return (0);
-        return (*i);
-    }
-    return (1);
+		return (*i);
+	}
+	return (1);
 }
 
 static int  redir_small(t_list **lst, char *line, int *i)
 {
  	char	*str;
-    int     res;
+	int     res;
 
 	str = NULL;
 	if (line[*i] == '>')
-    {
+	{
 		res = tokenize_word(line, i, &str, 1);
-        if (res <= 0)
-            return (res);
-        if (!write_token(lst, str))
+		if (res <= 0)
+			return (res);
+		if (!write_token(lst, str))
 			return (0);
-        return(*i);
-    }
+		return(*i);
+	}
 	if (line[*i] == '<')
-    {
+	{
 		res = tokenize_word(line, i, &str, 1);
-        if (res <= 0)
-            return (res);
-        if (!read_token(lst, str))
+		if (res <= 0)
+			return (res);
+		if (!read_token(lst, str))
 			return (0);
-        return (*i);
-    }
+		return (*i);
+	}
 	return (1);   
 }
 
 //returns error code or value of *i
 int redir_token(t_list **lst, char *line, int *i)
 {
-    int res;
+	int res;
 
-    res = redir_big(lst, line, i);
-    if (res <= 0 || res > 1)
-        return (res);
-    res = redir_small(lst, line, i);
-    if (res <= 0 || res > 1)
-        return (res);
-    return (*i);
+	res = redir_big(lst, line, i);
+	if (res <= 0 || res > 1)
+		return (res);
+	res = redir_small(lst, line, i);
+	if (res <= 0 || res > 1)
+		return (res);
+	return (*i);
 }
 
 int return_1_subpipe(char ***subpipe, char *line)
@@ -139,7 +139,7 @@ static int	isolate_pipes(char ***subpipe, char *line, int *i, int *k)
 	int	j;
 
 	j = *i;
-    count = 1;
+	count = 1;
 	while (line[*i])
 	{
 		if (!iterate_over_quotes(line, i))

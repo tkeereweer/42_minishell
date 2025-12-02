@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/02 16:34:36 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/02 20:00:32 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,7 @@ int		expand_wildcards(char ***tab, int i, char *pat);
 int		expand_wildcards_redir(char **path, char *pat);
 int		expand_vars(char ***tab, t_data *data);
 int		expand_vars_redir(char **path, t_data *data);
+int     remove_quotes(char **str);
 //testing
 void	draw_tree(t_node *root);
 void	free_split(char **tab);
@@ -165,9 +166,10 @@ char	*ft_getenv(char *var, char **env);
 int		handle_signals_parent(int mode);
 int		handle_signals_child(void);
 char	**get_envvar_pointer(char *var, char **env);
+char	*my_realloc(char *ptr, size_t size);
 //heredoc
-char	**heredoc(char **path_tab, char *limiter);
-char	*set_heredoc(char *line, int *j, char ***tab);
+char	**heredoc(char **path_tab, char *limiter, int quoted_heredoc);
+int     set_heredoc(char **line, int *j, char ***tab);
 int		clean_path_tab(char **path_tab);
 // execution
 int		exec_tree(t_node *node, t_data *data);

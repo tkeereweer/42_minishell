@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 11:50:24 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/02 14:03:39 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/02 17:52:58 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int  check_quote_balance(char **line, int *j, char ***tab)
 {
 	int		quote_small;
 	int		quote_big;
+	int     res;
 
 	quote_small = 0;
 	quote_big = 0;
@@ -31,7 +32,11 @@ int  check_quote_balance(char **line, int *j, char ***tab)
 				quote_big++;
 		}
 		if ((*line)[*j] == '<' && (*line)[*j +  1] && (*line)[*j + 1] == '<')
-			*line = set_heredoc(*line, j, tab);
+		{
+			res = set_heredoc(line, j, tab);
+			if (res <= 0)
+				return (res);
+		}
 		if (!*line)
 			return (-1);
 		*j += 1;
