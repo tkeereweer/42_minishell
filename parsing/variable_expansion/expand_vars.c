@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_vars.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 10:50:02 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/02 08:29:15 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/02 09:24:36 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@ int	clean_quotes(char *str, int i, char type)
         return (1);
     }
 	ft_strncpy(&str[i], &str[i + 1], ft_strlen(&str[i + 1]));
-	i++;
-	while (str[i] && str[i] != type)
+	if (str[i + 1] != '\0')
+		i++;
+	while (str[i] != type)
 		i++;
 	ft_strncpy(&str[i], &str[i + 1], ft_strlen(&str[i + 1]));
 	return (i - 1);

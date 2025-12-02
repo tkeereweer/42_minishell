@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 12:16:15 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/21 17:35:04 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/01 10:30:48 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,10 @@ int	ft_export(char *key_val, t_data *data)
 		return (1); // set errno ??
 	}
 	key = ft_substr(key_val, 0, key_len);
+	if (key == NULL)
+		return (1);
 	curr_key_val = get_envvar_pointer(key, data->env);
+	free(key);
 	if (curr_key_val != NULL)
 	{
 		tmp = *curr_key_val;

@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 10:14:03 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/28 11:51:43 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/01 17:29:27 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ int	envvar_len(char *str)
 
 	i = 1;
 	if (str[1] == '?')
-		return (i);
-	while (ft_isalnum(str[i]) == 1 || str[i] == '_')
+		return (i + 1);
+	while (str[i] != '\0' && (ft_isalnum(str[i]) == 1 || str[i] == '_'))
 		i++;
 	return (i);
 }
@@ -81,8 +81,22 @@ int	expand_envvar_str(char **str, int i, t_data *data)
 	envvar = ft_substr(*str, env_pos, envvar_len(&(*str)[env_pos]));
 	if (envvar == NULL)
 		return (1);
-	expanded = ft_getenv(envvar, data->env);
-	free(envvar);
+	if (envvar[0] == '$' && ft_strlen(envvar) == 1)
+	{
+		free(envvar);
+		return (0);
+	}
+	if (envvar[1] == '?' && ft_strlen(envvar) == 2)
+	{
+		expanded = ft_strdup(ft_itoa(data->exit_status));
+		if (expanded == NULL)
+		{
+			free(envvar);
+			return (1);
+		}
+	}
+	else
+		expanded = ft_getenv(envvar, data->env);
 	new_str = (char *) malloc((ft_strlen(*str) + ft_strlen_gnl(expanded) - envvar_len(&(*str)[env_pos]) + 1) * sizeof(char));
 	if (new_str == NULL)
 		return (1);
@@ -91,6 +105,9 @@ int	expand_envvar_str(char **str, int i, t_data *data)
 	if (expanded != NULL)
 		ft_strcat(new_str, expanded);
 	ft_strcat(new_str, &(*str)[env_pos + envvar_len(&(*str)[env_pos])]);
+	if (envvar[1] == '?' && ft_strlen(envvar) == 2)
+		free(expanded);
+	free(envvar);
 	free(*str);
 	*str = new_str;
 	return (expand_envvar_str(str, i, data));
@@ -121,6 +138,9 @@ int	expand_envvars(char **str, t_data *data)
 		{
 			if (expand_envvar_str(str, i, data) == 1)
 				return (-1);
+			if ((*str)[0] != '\0' && envvar_len(&(*str)[i]) == 1)
+				i++;
+			continue ;
 		}
 		i++;
 	}
@@ -143,4 +163,3 @@ int	expand_envvars(char **str, t_data *data)
 // 	free(str);
 // 	return (0);
 // }
-

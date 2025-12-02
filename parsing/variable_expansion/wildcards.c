@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 15:24:33 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/28 11:49:17 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/01 17:28:51 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	in_quotes(char *str, int idx)
 {
 	int	i;
 	int	big;
-	int small;
+	int	small;
 
 	i = 0;
 	big = 0;
@@ -102,18 +102,24 @@ int	add_file(char ***tab, int first, int i, char *filename)
 	char	*tmp1;
 	char	*tmp2;
 
+	if (first != 1)
+	{
+		len = 0;
+		while ((*tab)[len] != NULL)
+			len++;
+		*tab = tab_realloc(*tab, len + 2);
+		if (*tab == NULL)
+			return (1);
+	}
 	tmp2 = (*tab)[i];
 	(*tab)[i] = ft_strdup(filename);
 	if ((*tab)[i] == NULL)
 		return (1);
 	if (first == 1)
+	{
+		// free(tmp2);
 		return (0);
-	len = 0;
-	while ((*tab)[len] != NULL)
-		len++;
-	*tab = tab_realloc(*tab, len + 2);
-	if (*tab == NULL)
-		return (1);
+	}
 	while (i < len)
 	{
 		tmp1 = (*tab)[i + 1];
@@ -156,7 +162,7 @@ int	expand_wildcards(char ***tab, int i, char *pat)
 
 int	add_to_redir_path(char **path, int first, char *filename)
 {
-	char *new_path;
+	char	*new_path;
 
 	if (first == 1)
 		new_path = (char *) my_realloc(*path, (ft_strlen(filename) + 1) * sizeof(char));
@@ -189,7 +195,7 @@ int	expand_wildcards_redir(char **path, char *pat)
 	{
 		if (match_pat(dir_entry->d_name, pat) == 1)
 		{
-			if (add_to_redir_path(path, first, dir_entry->d_name)== 1)
+			if (add_to_redir_path(path, first, dir_entry->d_name) == 1)
 				return (-1); // handle error
 			first = 0;
 		}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/01 12:01:12 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/01 16:49:13 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,9 +121,9 @@ static int exec_child(t_node *cmd, t_data *data, int mode)
 	{
 		exec_path = get_exe_path(data->env, cmd->left_child->content.tab[0]);
 		if (exec_path == NULL)
-			cmd_not_found(cmd->left_child->content.tab[0]);
+			cmd_not_found(cmd->left_child->content.tab[0], data);
 		if (execve(exec_path, cmd->left_child->content.tab, data->env) == -1)
-			exec_fail(exec_path, cmd->left_child->content.tab[0]);
+			exec_fail(exec_path, cmd->left_child->content.tab[0], data);
 	}
 	else 
 		run_builtins(cmd->left_child->content.tab, data, mode);
