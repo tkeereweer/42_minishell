@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 11:50:24 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/01 19:15:21 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:03:39 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,11 @@ int build_node_list(char *line, t_list **list, char ***path_tab)
 		temp = set_temp(list, temp);
 	}
 	if (temp->content->type == LOGIC)
+	{
+		if (!temp->prev)
+			return (-3);
 		return (-2);
+	}
 	return (1);
 }
 
@@ -101,11 +105,15 @@ static int  check_par_usage(t_list **temp)
 	{
 		if ((*temp)->content->type == PAR && (*temp)->content->content.parenthesis == '(')
 		{
+			if ((*temp)->next && (*temp)->next->content->content.parenthesis == ')')
+				return (-3);
 			if ((*temp)->prev && (*temp)->prev->content->type == PIPELINE)
 				return (-1);//wrong par usage
 		}
 		if ((*temp)->content->type == PAR && (*temp)->content->content.parenthesis == ')')
 		{
+			if ((*temp)->next && (*temp)->next->content->content.parenthesis == '(')
+				return (-3);
 			if ((*temp)->next && (*temp)->next->content->type == PIPELINE)
 				return (-2);//syntax error near **first word of next token**
 		}
@@ -123,20 +131,22 @@ t_list	*clean_node_list(char *line, char ***path_tab)
 	list = NULL;
 	result = build_node_list(line, &list, path_tab);
 	if (result == 0)
-		return (list_error(&list, "unclosed quotes\n", NULL));
+		return (list_error(&list, "minishell: unclosed quotes\n", NULL));
 	if (result == -1)
-		return (list_error(&list, "malloc fail somewhere\n", NULL));
+		return (list_error(&list, "minishell: malloc fail somewhere\n", NULL));
 	if (result == -2)
-		return (list_error(&list, "dangling logical operator\n", NULL));
+		return (list_error(&list, "minishell: dangling logical operator\n", NULL));
 	if (result == -3)
 		return (syntax_error(&list)); 
 	if (check_unclosed_par(&list) == -1)
-		return (list_error(&list, "unclosed parenthesis\n", NULL));
+		return (list_error(&list, "minishell: unclosed parenthesis\n", NULL));
 	temp = list;
 	result = check_par_usage(&temp);
 	if (result == -1)
-		return (list_error(&list, "wrong parentheses usage\n", NULL));
+		return (list_error(&list, "minishell: wrong parentheses usage\n", NULL));
 	if (result == -2)
-		return (list_error(&list, "syntax error\n", &temp));
+		return (list_error(&list, "minishell: syntax error\n", &temp));
+	if (result == -3)
+		return (list_error(&list, "minishell: syntax error near unexpected token: ')'\n", &temp));
 	return (list);
 }

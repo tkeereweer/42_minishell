@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_vars.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 10:14:03 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/01 17:29:27 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/02 16:15:24 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,19 +147,52 @@ int	expand_envvars(char **str, t_data *data)
 	return (0);
 }
 
-// int	main(int argc, char *argv[], char *envp[])
-// {
-// 	char *str;
-// 	t_data data;
+static int is_ambiguous(char *str)
+{
+    int i;
 
-// 	if (argc < 0)
-// 		return (0);
-// 	str = malloc(20);
-// 	str[0] = '\0';
-// 	ft_strcat(str, "$USER\"$SHELL\"");
-// 	data.env = envp;
-// 	new_expand_envvars(&str, &data);
-// 	ft_printf(str);
-// 	free(str);
-// 	return (0);
-// }
+    i = 0;
+    while (str[i] && str[i] != '\'' && str[i] != '"')
+    {
+        if (ft_is_whitespace(str[i]))
+            return (-1);
+        i++;
+    }
+    return (0);
+}
+
+int	expand_envvars_redir(char **str, t_data *data)
+{
+	int		i;
+
+	i = 0;
+	while ((*str)[i] != '\0')
+	{
+		if ((*str)[i] == '\'')
+		{
+			i++;
+			while ((*str)[i] != '\'')
+				i++;
+		}
+		else if ((*str)[i] == '"')
+		{
+			i++;
+			if (expand_envvar_str(str, i, data) == 1)
+				return (-1);
+			while ((*str)[i] != '"')
+				i++;
+		}
+		else if ((*str)[i] == '$')
+		{
+			if (expand_envvar_str(str, i, data) == 1)
+				return (-1);
+            if (is_ambiguous(&(*str)[i]) < 0)
+                return (-2);
+			if ((*str)[0] != '\0' && envvar_len(&(*str)[i]) == 1)
+				i++;
+			continue ;
+		}
+		i++;
+	}
+	return (0);
+}

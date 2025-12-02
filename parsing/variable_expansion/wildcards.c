@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 15:24:33 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/01 17:28:51 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/02 15:35:10 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,10 +197,16 @@ int	expand_wildcards_redir(char **path, char *pat)
 		{
 			if (add_to_redir_path(path, first, dir_entry->d_name) == 1)
 				return (-1); // handle error
-			first = 0;
+			first--;
 		}
 		dir_entry = readdir(dir_stream);
 	}
+    if (first < 0) //ambig redirect
+    {
+        if (closedir(dir_stream) == -1)
+            return (-1);
+        return (-2);        
+    }
 	return (closedir(dir_stream));
 }
 

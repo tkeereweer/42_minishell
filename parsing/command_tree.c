@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_tree.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 17:46:51 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/01 17:30:36 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:06:34 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,10 +102,10 @@ void	free_pipeline_list(t_list *pipeline)
 void	handle_error_pipeline_list(t_node *node)
 {
 	if (node->parent == NULL || node->parent->right_child == node)
-		ft_putstr_fd("syntax error near unexpected token: 'newline'\n", STDERR_FILENO);
+		ft_putstr_fd("minishell: syntax error near unexpected token: 'newline'\n", STDERR_FILENO);
 	else
 	{
-		ft_putstr_fd("syntax error near unexpected token: '", STDERR_FILENO);
+		ft_putstr_fd("minishell: syntax error near unexpected token: '", STDERR_FILENO);
 		if (node->parent->content.logic == AND)
 			ft_putstr_fd("&&'\n", STDERR_FILENO);
 		else
@@ -122,10 +122,12 @@ int	create_cmd_trees(t_node *node)
 	if (node == NULL)
 		return (0);
 	pipeline = NULL;
-	if (create_cmd_trees(node->left_child) == 1)
-		return (1);
-	if (create_cmd_trees(node->right_child) == 1)
-		return (1);
+    res = create_cmd_trees(node->left_child);
+	if (res > 0)
+		return (res);
+    res = create_cmd_trees(node->right_child);
+	if (res > 0)
+		return (res);
 	if (node->type == PIPELINE)
 	{
 		res = pipeline_list(node->content.str, &pipeline);
@@ -134,7 +136,10 @@ int	create_cmd_trees(t_node *node)
 			if (res == -1)
 				handle_error_pipeline_list(node);
 			free_pipeline_list(pipeline);
-			return (1);
+            if (res == 0)
+			    return (1);
+            else
+                return (2);
 		}
 		start_list = pipeline;
 		free(node->content.str);
