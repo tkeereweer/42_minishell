@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/02 14:52:10 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/02 16:34:17 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ int	run_line(char *line, t_data *data)
 	t_list	*list;
     char    **temp;
     int     i;
+    int     res;
+
     temp = NULL;
 	if (line != NULL && ft_strlen_gnl(line) != 0) // what if only spaces
 	{
@@ -104,12 +106,15 @@ int	run_line(char *line, t_data *data)
 		if (list != NULL)
 		{
 			data->tree = create_logic_tree(list);
-			if (create_cmd_trees(data->tree) == 1)
+			res = create_cmd_trees(data->tree);
+            if (res == 1)
 			{
 				free_tree(data->tree);
                 clean_path_tab(temp);
 				return (1);
 			}
+            if (res == 2)
+                return (0);
 			exec_tree(data->tree, data);
 			free_tree(data->tree);
             clean_path_tab(temp);

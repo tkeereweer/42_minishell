@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 20:16:56 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/01 17:27:34 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/02 11:24:19 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,12 +101,12 @@ int pipeline_list(char *line, t_list **head)
 
 	result = tokenize_pipe(line, head);
 	if (result == 0)
-		return (pipeline_list_error("malloc fail\n", NULL, result));
+		return (pipeline_list_error("minishell: malloc fail\n", NULL, result));
 	if (result == -2)
-		return (pipeline_list_error("syntax error near '|'\n", NULL, result));
+		return (pipeline_list_error("minishell: syntax error near unexpected token '|'\n", NULL, result));
 	if (result == -1)
 		return (-1);
 	if (result == -3)
-		return (pipeline_list_error("no command after pipe\n", NULL, result));
+		return (pipeline_list_error("minishell: no command after pipe\n", NULL, result));
 	return (clean_args_nodes(head));
 }

@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:39:11 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/27 13:17:58 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/02 11:27:36 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 int  valid_char(char *str)
 {
     if (!*str)
+        return (0);
+    if (*str == '|')
         return (0);
     if (is_logic(str))
         return (0);

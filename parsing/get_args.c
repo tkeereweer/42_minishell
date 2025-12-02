@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 16:39:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/27 11:58:22 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/02 11:41:25 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ t_make_tab	init_struct(char *str)
 	utils.word_count = 0;
 	utils.str = str;
 	utils.tab = NULL;
+	while (ft_is_whitespace(str[utils.i]))
+		utils.i++;
 	return (utils);
 }
 char	**args_tab(char *str)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/02 14:43:40 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/02 16:34:26 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,27 @@ static int redir_error(char *path)
 	exit(1);
 }
 
+static int ambig_redirect(void)
+{
+	write(STDERR_FILENO, "minishell: ", ft_strlen("minishell: "));
+	write(STDERR_FILENO, "ambiguous redirect\n", ft_strlen(" ambiguous redirect\n"));
+	return (-2);
+}
+
 int	configure_redir(t_node *redir, t_data *data, int *in_redir, int *out_redir)
 {
 	int				fd;
+	int             res;
 	t_redir_type	kind;
 
 	fd = -1;
 	while (redir != NULL)
 	{
-		if (expand_vars_redir(&(redir->content.redir.path), data) == -1)
+		res = expand_vars_redir(&(redir->content.redir.path), data);
+		if (res == - 1)
 			return (-1);
+		if (res == -2)
+			return (ambig_redirect());
 		kind = redir->content.redir.kind;
 		if (kind == WRITE)
 			fd = open(redir->content.redir.path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -54,7 +65,10 @@ int	configure_redir(t_node *redir, t_data *data, int *in_redir, int *out_redir)
 		else if (kind == READ)
 			fd = open(redir->content.redir.path, O_RDONLY);
 		else if (kind == HEREDOC)
+		{
 			fd = open(redir->content.redir.path, O_RDONLY);
+			// expand_heredoc(fd);
+		}
 		if (dup_fds(fd, kind, in_redir, out_redir) == -1)
 			return (redir_error(redir->content.redir.path));
 		redir = redir->right_child;
@@ -78,8 +92,11 @@ static int exec_builtin(t_node *cmd, t_data *data, int mode)
 	if (old_stdin == -1 || old_stdout == -1)
 		return (-1);
 	if (cmd->right_child)
-		if (configure_redir(cmd->right_child, data, &in, &out) == -1)
-			return (-1);
+	{
+		ret = configure_redir(cmd->right_child, data, &in, &out);
+		if (ret < 0)
+			return (ret);
+	}
 	ret = run_builtins(cmd->left_child->content.tab, data, mode);
 	dup2(old_stdin, STDIN_FILENO);
 	close(old_stdin);
@@ -93,13 +110,17 @@ static int exec_child(t_node *cmd, t_data *data, int mode)
 {	
 	int     out;
 	int     in;
+	int     res;
 	char    *exec_path;
 
 	out = 0;
 	in = 0;
 	if (cmd->right_child)
-		if (configure_redir(cmd->right_child, data, &in, &out) == -1)
-			exit(1);
+	{
+		res = configure_redir(cmd->right_child, data, &in, &out);
+		if (res < 0)
+			exit(res);
+	}
 	if (mode != 4)
 	{
 		if (mode > 1)

@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 14:36:14 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/01 18:13:38 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/02 13:52:04 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,9 @@ char	*remove_redir(char *str, int start, int end)
 	i = end + 1;
 	j = start;
 	while (ft_is_whitespace(str[i]))
-		i++;   
+		i++;
+    dest[j] = ' ';
+    j++;
 	while (str[i])
 	{
 		dest[j] = str[i];
@@ -98,11 +100,10 @@ t_list	*syntax_error(t_list **lst)
 
 	last = ft_lstlast(*lst);
 	temp = last->content->content.logic;
-	write(STDERR_FILENO, "syntax error near: ", ft_strlen("syntax error near: "));
+	write(STDERR_FILENO, "minishell: syntax error near unexpected token: ", ft_strlen("minishell: syntax error near unexpected token: "));
 	if (temp == 0)
 		write(STDERR_FILENO, "'&&'\n", ft_strlen("'&&'\n"));
 	else
 		write(STDERR_FILENO, "'||'\n", ft_strlen("'||'\n"));
-	ft_lstclear(lst, del_linked);
 	return (NULL);
 }

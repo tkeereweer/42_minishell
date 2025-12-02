@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   expand_vars.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 10:50:02 by mkeerewe          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/12/02 11:36:25 by mkeerewe         ###   ########.fr       */
+=======
+/*   Updated: 2025/12/02 15:34:31 by mturgeon         ###   ########.fr       */
+>>>>>>> fix_quotes_
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +18,11 @@
 
 int	clean_quotes(char *str, int i, char type)
 {
+<<<<<<< HEAD
     if (str[i + 1] == type)
+=======
+    if (str[i + 1] == type) //to handle the "" and '' cases
+>>>>>>> fix_quotes_
     {
         str[i] = '\0';
         str[i + 1] = '\0';
@@ -66,10 +74,14 @@ int	expand_vars(char ***tab, t_data *data)
 
 int	expand_vars_redir(char **path, t_data *data)
 {
-	if (expand_envvars(path, data) == -1)
-		return (-1);
-	if (expand_wildcards_redir(path, *path) == -1)
-		return (-1);
+    int res;
+    //expand functions return -2 on ambig redirect
+	res = expand_envvars_redir(path, data);
+    if (res < 0)
+		return (res);
+	res = expand_wildcards_redir(path, *path);
+    if (res < 0)
+		return (res);
 	if (remove_quotes(path) == 1)
 		return (-1);
 	return (0);
