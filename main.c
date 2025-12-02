@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/01 14:50:47 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/02 08:44:11 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,25 +87,30 @@ void	clean_exit(t_data *data, char *line)
 int	run_line(char *line, t_data *data)
 {
 	t_list	*list;
-
+    char    **temp;
+    int     i;
+    temp = NULL;
 	if (line != NULL && ft_strlen_gnl(line) != 0) // what if only spaces
 	{
 		add_history(line);
-		list = clean_node_list(line, data->path_tab);
+        i = 0;
+        while (ft_is_whitespace(line[i]))
+            i++;
+        if (!line[i])
+            return (0);
+		list = clean_node_list(line, &temp);
 		if (list != NULL)
 		{
 			data->tree = create_logic_tree(list);
 			if (create_cmd_trees(data->tree) == 1)
 			{
 				free_tree(data->tree);
-                clean_path_tab(data->path_tab);
+                clean_path_tab(temp);
 				return (1);
 			}
 			exec_tree(data->tree, data);
-			// draw_tree(data->tree);
-			// print_tree(data->tree);
 			free_tree(data->tree);
-            clean_path_tab(data->path_tab);
+            clean_path_tab(temp);
 		}
 	}
 	return (0);
@@ -140,12 +145,10 @@ int	main(int argc, char *argv[], char **envp)
 
 	(void) argc;
 	(void) argv;
-    data.path_tab = NULL;
 	if (handle_signals_parent() == 1)
 		return (1);
 	if (copy_env(&data, envp) == 1)
 		return (1);
-	data.path_tab = NULL;
 	data.child_cnt = 0;
 	data.cmd_cnt = 0;
 	data.pid_tab = NULL;

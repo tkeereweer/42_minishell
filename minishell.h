@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/01 16:54:12 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/02 09:01:50 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ typedef struct s_node
 typedef struct s_data
 {
 	char	**env;
-	char	**path_tab;
+	// char	**path_tab;
 	int		child_cnt;
 	int		cmd_cnt;
 	int		**pipe_tab;
@@ -96,13 +96,13 @@ t_node	*create_logic_tree(t_list *list);
 int		create_cmd_trees(t_node *node);
 void	free_tree(t_node *tree);
 //parsing
-t_list	*clean_node_list(char *line, char **path_tab);
+t_list	*clean_node_list(char *line, char ***path_tab);
 int 	open_par_token(t_list **list);
 int 	close_par_token(t_list **list);
 int		pipeline_token(char *str, t_list **list);
 int		and_token(t_list **list);
 int		or_token(t_list **list);
-int 	build_node_list(char *line, t_list **list, char **path_tab);
+int 	build_node_list(char *line, t_list **list, char ***path_tab);
 char	is_sep(char *str);
 char	is_logic(char *str);
 char	is_redir(char *str);
@@ -128,7 +128,7 @@ int     return_1_subpipe(char ***subpipe, char *line);
 int     build_subpipe(char ***subpipe, char *line, int *i);
 int     clean_args_nodes(t_list **head);
 int     increment_subpipe(char ***subpipe, char *line, int *i, int *j);
-int     check_quote_balance(char **line, int *j, char **tab);
+int     check_quote_balance(char **line, int *j, char ***tab);
 int     sep_tokenizer(char *line, int *i, t_list **list);
 t_list	*set_temp(t_list **list, t_list *temp);
 int     separator_logic(char *line, int *i, t_list *temp, t_list **list);
@@ -166,7 +166,7 @@ int		handle_signals_child(void);
 char	**get_envvar_pointer(char *var, char **env);
 //heredoc
 char	**heredoc(char **path_tab, char *limiter);
-char	*set_heredoc(char *line, int *j, char **tab);
+char	*set_heredoc(char *line, int *j, char ***tab);
 int		clean_path_tab(char **path_tab);
 // execution
 int		exec_tree(t_node *node, t_data *data);

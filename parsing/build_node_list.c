@@ -6,13 +6,13 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 11:50:24 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/01 18:15:17 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/01 19:15:21 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int  check_quote_balance(char **line, int *j, char **tab)
+int  check_quote_balance(char **line, int *j, char ***tab)
 {
 	int		quote_small;
 	int		quote_big;
@@ -41,7 +41,7 @@ int  check_quote_balance(char **line, int *j, char **tab)
 	return (1);
 }
 
-static int	tokenize_pipeline(char **line, int *i, t_list **list, char **tab)
+static int	tokenize_pipeline(char **line, int *i, t_list **list, char ***tab)
 {
 	char	*pipeline;
 	int		j;
@@ -66,7 +66,7 @@ static int	tokenize_pipeline(char **line, int *i, t_list **list, char **tab)
 //l.122: catching two logicals next to e.o. AFTER second one is tokenized
 //this helps w/ finding the right syntax error
 //temp hasnt been moved so points to "previous" logical
-int build_node_list(char *line, t_list **list, char **path_tab)
+int build_node_list(char *line, t_list **list, char ***path_tab)
 {
 	int i;
 	int result;
@@ -114,7 +114,7 @@ static int  check_par_usage(t_list **temp)
 	return (1);
 }
 
-t_list	*clean_node_list(char *line, char **path_tab)
+t_list	*clean_node_list(char *line, char ***path_tab)
 {
 	int     result;
 	t_list	*list;

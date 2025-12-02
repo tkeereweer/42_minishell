@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 14:29:27 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/01 18:11:31 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/01 19:09:26 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ int	clean_path_tab(char **path_tab)
     i = 0;
     while(path_tab[i])
     {
-        unlink(path_tab[i]);
+        if (unlink(path_tab[i]) == -1)
+            printf("unlink fail\n");
         free(path_tab[i]);
         path_tab[i] = NULL;
         i++;
@@ -91,7 +92,7 @@ static char	*set_limiter(char **line, int *j, int *start)
 		return (NULL);
 	return (limiter);
 }
-char	*set_heredoc(char *line, int *j, char **tab)
+char	*set_heredoc(char *line, int *j, char ***tab)
 {
 	int     start;
 	char    *limiter;
@@ -101,13 +102,13 @@ char	*set_heredoc(char *line, int *j, char **tab)
 	limiter = set_limiter(&line, j, &start);
 	if (!limiter)
 		return (NULL);
-	tab = heredoc(tab, limiter);
+	*tab = heredoc(*tab, limiter);
 	if (!tab)
 		return (free(limiter), NULL);
 	i = 0;
-	while (tab[i])
+	while ((*tab)[i])
 		i++;
-	line = replace_with_path(line, tab[i - 1], start, *j);
+	line = replace_with_path(line, (*tab)[i - 1], start, *j);
     if (!*line)
 		return (free(limiter), NULL);
 	return (free(limiter), line);
