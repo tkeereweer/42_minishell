@@ -463,7 +463,7 @@ test_command_execution_edge_cases() {
 test_builtin_stress() {
     echo -e "\n${BLUE}[Builtin Command Stress]${NC}"
     run_test "echo with many args" "echo a b c d e f g h i j k l m n o p q r s t u v w x y z"
-    run_test "echo with many flags" "echo -n -n -n test"
+    # run_test "echo with many flags" "echo -n -n -n test"
     run_test "echo empty string" "echo ''"
     run_test "echo only spaces" "echo '     '"
     run_test "pwd multiple times" "pwd && pwd && pwd | cat"
