@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/02 09:24:53 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:52:03 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,10 @@
 # include <dirent.h>
 # include <linux/limits.h>
 // # include <sys/syslimits.h>
+# include <sys/types.h>
 # include <sys/wait.h>
 # include <errno.h>
 # include "libft/src/libft.h"
-
-extern volatile sig_atomic_t	g_signum;
 
 typedef enum e_type
 {
@@ -162,7 +161,7 @@ int		run_builtins(char **argv, t_data *data, int mode);
 //utils
 char	*ft_strcat(char *dst, char *src);
 char	*ft_getenv(char *var, char **env);
-int		handle_signals_parent(void);
+int		handle_signals_parent(int mode);
 int		handle_signals_child(void);
 char	**get_envvar_pointer(char *var, char **env);
 //heredoc

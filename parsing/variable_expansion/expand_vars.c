@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 10:50:02 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/02 09:24:36 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/02 11:36:25 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	clean_quotes(char *str, int i, char type)
 {
-    if (str[i + 1] == '\'' || str[i + 1] == '"') //to handle the "" and '' cases
+    if (str[i + 1] == type)
     {
         str[i] = '\0';
         str[i + 1] = '\0';

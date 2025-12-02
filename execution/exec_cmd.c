@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/01 16:49:13 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:43:40 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,7 @@ int	exec_cmd(t_node *cmd, t_data *data, int mode)
 	if (mode !=4)
 	{
 		data->child_cnt++;
+		// change signal handler
 		data->pid_tab[data->cmd_cnt - 1] = fork();
 		if (data->pid_tab[data->cmd_cnt - 1] == -1)
 			return (-4); //fork error

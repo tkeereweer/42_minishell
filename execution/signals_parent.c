@@ -6,13 +6,13 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 11:56:55 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/25 10:18:15 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/02 16:29:21 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-volatile sig_atomic_t	g_signum; // check volatile
+extern volatile sig_atomic_t	g_signum;
 
 void	sigint_parent(int signal)
 {
@@ -26,13 +26,16 @@ void	sigint_parent(int signal)
 	}
 }
 
-int	set_signal_parent(void)
+int	set_signal_parent(int mode)
 {
 	struct sigaction	sigint;
 	struct sigaction	sigquit;
 
 	ft_bzero(&sigint, sizeof(struct sigaction));
-	sigint.sa_handler = &sigint_parent;
+	if (mode == 0)
+		sigint.sa_handler = &sigint_parent;
+	else if (mode == 1)
+		sigint.sa_handler = SIG_IGN;
 	if (sigaction(SIGINT, &sigint, NULL) == -1)
 		return (perror("sigaction"), 1);
 	ft_bzero(&sigquit, sizeof(struct sigaction));
@@ -42,9 +45,9 @@ int	set_signal_parent(void)
 	return (0);
 }
 
-int	handle_signals_parent(void)
+int	handle_signals_parent(int mode)
 {
-	if (set_signal_parent() == 1)
+	if (set_signal_parent(mode) == 1)
 		return (1);
 	return (0);
 }

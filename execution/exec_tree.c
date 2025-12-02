@@ -6,11 +6,13 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:46:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/01 17:26:18 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/02 16:27:35 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+extern volatile sig_atomic_t	g_signum;
 
 t_node	*first_cmd(t_node *node)
 {
@@ -121,7 +123,13 @@ int	exec_tree(t_node *node, t_data *data)
 		else
 		{
 			exit_status = wait_for_pids(data);
-			exit_status = WEXITSTATUS(exit_status);
+			if (WIFEXITED(exit_status))
+				exit_status = WEXITSTATUS(exit_status);
+			if (WIFSIGNALED(exit_status))
+			{
+				if (exit_status < 131)
+					exit_status = 130;
+			}
 		}
 		data->exit_status = exit_status;
 		clean_data(data);

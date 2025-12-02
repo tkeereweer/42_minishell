@@ -6,11 +6,13 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/02 09:23:59 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:52:10 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+volatile sig_atomic_t	g_signum = 0;
 
 void	print_tree(t_node *node)
 {
@@ -137,6 +139,8 @@ char	*build_prompt(t_data *data)
 	return (prompt);
 }
 
+
+
 int	main(int argc, char *argv[], char **envp)
 {
 	char	*line;
@@ -145,8 +149,6 @@ int	main(int argc, char *argv[], char **envp)
 
 	(void) argc;
 	(void) argv;
-	if (handle_signals_parent() == 1)
-		return (1);
 	if (copy_env(&data, envp) == 1)
 		return (1);
 	data.child_cnt = 0;
@@ -157,7 +159,11 @@ int	main(int argc, char *argv[], char **envp)
 	prompt = build_prompt(&data);
 	if (prompt == NULL)
 		clean_exit(&data, NULL);
+	if (handle_signals_parent(0) == 1)
+		return (1); // handle frees
 	line = readline(prompt);
+	if (handle_signals_parent(1) == 1)
+		return (1);
 	free(prompt);
 	if (run_line(line, &data) == 1)
 		clean_exit(&data, line);
@@ -167,7 +173,12 @@ int	main(int argc, char *argv[], char **envp)
 		prompt = build_prompt(&data);
 		if (prompt == NULL)
 			clean_exit(&data, NULL);
+		g_signum = 0;
+		if (handle_signals_parent(0) == 1)
+			return (1); // handle frees
 		line = readline(prompt);
+		if (handle_signals_parent(1) == 1)
+			return (1);
 		free(prompt);
 		if (run_line(line, &data) == 1)
 			clean_exit(&data, line);

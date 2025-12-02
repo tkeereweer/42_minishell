@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 11:56:55 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/01 16:59:42 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/02 16:29:33 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	signal_handler_child(int signal)
 {
 	if (signal == SIGINT || signal == SIGQUIT)
 	{
-		g_signum = signal;
+		exit(signal);
 	}
 }
 
@@ -26,11 +26,11 @@ int	set_signal_child(void)
 	struct sigaction	sigquit;
 
 	ft_bzero(&sigint, sizeof(struct sigaction));
-	sigint.sa_handler = SIG_DFL;
+	sigint.sa_handler = &signal_handler_child;
 	if (sigaction(SIGINT, &sigint, NULL) == -1)
 		return (perror("sigaction"), 1);
 	ft_bzero(&sigquit, sizeof(struct sigaction));
-	sigquit.sa_handler = SIG_DFL;
+	sigquit.sa_handler = &signal_handler_child;
 	if (sigaction(SIGQUIT, &sigquit, NULL) == -1)
 		return (perror("sigaction"), 1);
 	return (0);
