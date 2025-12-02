@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_vars.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 10:50:02 by mkeerewe          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/12/02 11:36:25 by mkeerewe         ###   ########.fr       */
-=======
-/*   Updated: 2025/12/02 15:34:31 by mturgeon         ###   ########.fr       */
->>>>>>> fix_quotes_
+/*   Updated: 2025/12/02 16:35:56 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +14,7 @@
 
 int	clean_quotes(char *str, int i, char type)
 {
-<<<<<<< HEAD
     if (str[i + 1] == type)
-=======
-    if (str[i + 1] == type) //to handle the "" and '' cases
->>>>>>> fix_quotes_
     {
         str[i] = '\0';
         str[i + 1] = '\0';
