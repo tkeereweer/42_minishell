@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:46:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/03 13:45:22 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/03 15:46:59 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	exec_pipeline(t_node *node, t_data *data, t_node *pipeline_root)
 		if (expand_vars(&node->left_child->content.tab, data) == -1)
 			return (-1);
 		ret = exec_cmd(node, data, find_cmd_mode(node, pipeline_root));
-		if (ret == -1)
+		if (ret != 0)
 			return (-1);
 	}
 	if (exec_pipeline(node->right_child, data, pipeline_root) == -1)

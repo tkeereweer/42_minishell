@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 12:16:15 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/01 10:30:48 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/03 15:53:34 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ char	**get_envvar_pointer(char *var, char **env)
 	i = 0;
 	while (env[i] != NULL)
 	{
-		if (ft_strncmp(var, env[i], ft_strlen(var)) == 0 && env[i][ft_strlen(var)] == '=')
+		if (ft_strncmp(var, env[i], ft_strlen(var)) == 0
+			&& env[i][ft_strlen(var)] == '=')
 			return (&env[i]);
 		i++;
 	}
@@ -43,7 +44,7 @@ int	get_key_len(char *key_val)
 		i++;
 	}
 	if (idx == 0)
-		return (-2); // bash: export: `=yoyo': not a valid identifier
+		return (-2);
 	else if (idx == -1)
 		return (-1);
 	return (idx);
@@ -61,8 +62,20 @@ int	add_key(char *key_val, t_data *data)
 		return (1);
 	data->env[i] = ft_strdup(key_val);
 	if (data->env[i] == NULL)
-		return (1); // also free tab??
+		return (1);
 	data->env[i + 1] = NULL;
+	return (0);
+}
+
+int	key_already_exists(char **curr_key_val, char *key_val)
+{
+	char	*tmp;
+
+	tmp = *curr_key_val;
+	*curr_key_val = ft_strdup(key_val);
+	if (*curr_key_val == NULL)
+		return (1);
+	free(tmp);
 	return (0);
 }
 
@@ -70,7 +83,6 @@ int	ft_export(char *key_val, t_data *data)
 {
 	char	*key;
 	int		key_len;
-	char	*tmp;
 	char	**curr_key_val;
 
 	key_len = get_key_len(key_val);
@@ -87,13 +99,6 @@ int	ft_export(char *key_val, t_data *data)
 	curr_key_val = get_envvar_pointer(key, data->env);
 	free(key);
 	if (curr_key_val != NULL)
-	{
-		tmp = *curr_key_val;
-		*curr_key_val = ft_strdup(key_val);
-		if (*curr_key_val == NULL)
-			return (1); // also free tab??
-		free(tmp);
-		return (0);
-	}
+		return (key_already_exists(curr_key_val, key_val));
 	return (add_key(key_val, data));
 }

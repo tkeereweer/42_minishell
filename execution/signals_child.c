@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 11:56:55 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/03 11:44:58 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/03 15:56:16 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,6 @@ int	set_signal_child(void)
 
 int	handle_signals_child(void)
 {
-	// check if ctrl-D works as expected in child process
-	// check if g_signum needs to be set for status code
 	if (set_signal_child() == 1)
 		return (1);
 	return (0);
