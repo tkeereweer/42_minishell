@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/02 20:43:00 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/03 09:50:06 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static int  expand_heredoc(int fd, char *path, t_data *data)
         free(temp);
         temp = get_next_line(fd);
     }
-    if (expand_envvars_redir(&file, data) == -1)//change to expand_envar_heredoc where it expands regardless of quote type
+    if (expand_envvar_str(&file, 0, data, 1) == -1)//change to expand_envar_heredoc where it expands regardless of quote type
         return (free(temp), free(file), -1);
     close(fd);
     fd = open(path, O_WRONLY | O_TRUNC);

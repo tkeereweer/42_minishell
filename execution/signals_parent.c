@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 11:56:55 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/02 16:29:21 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/03 11:18:22 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,15 @@ void	sigint_parent(int signal)
 	}
 }
 
+void	sigint_heredoc(int signal)
+{
+	if (signal == SIGINT)
+	{
+		g_signum = SIGINT;
+		ft_printf("%c", '\n');
+	}
+}
+
 int	set_signal_parent(int mode)
 {
 	struct sigaction	sigint;
@@ -36,6 +45,8 @@ int	set_signal_parent(int mode)
 		sigint.sa_handler = &sigint_parent;
 	else if (mode == 1)
 		sigint.sa_handler = SIG_IGN;
+	else if (mode == 2)
+		sigint.sa_handler = &sigint_heredoc;
 	if (sigaction(SIGINT, &sigint, NULL) == -1)
 		return (perror("sigaction"), 1);
 	ft_bzero(&sigquit, sizeof(struct sigaction));

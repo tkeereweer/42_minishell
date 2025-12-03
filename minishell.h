@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/02 20:00:32 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/03 09:48:20 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,7 @@ char	**args_tab(char *str);
 // variable expansion
 int		expand_envvars(char **str, t_data *data);
 int     expand_envvars_redir(char **str, t_data *data);
+int		expand_envvar_str(char **str, int i, t_data *data, int mode);
 int		expand_wildcards(char ***tab, int i, char *pat);
 int		expand_wildcards_redir(char **path, char *pat);
 int		expand_vars(char ***tab, t_data *data);

@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:46:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/02 16:45:25 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/03 11:47:28 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ int	exec_tree(t_node *node, t_data *data)
 			{
 				if (exit_status < 131)
 					exit_status = 130;
+				ft_printf("\n");
 			}
 		}
 		data->exit_status = exit_status;

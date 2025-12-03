@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 14:29:27 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/02 19:40:00 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/03 11:18:35 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,8 @@ int set_heredoc(char **line, int *j, char ***tab)
 
 	start = 0;
 	quoted_heredoc = 0;
+	if (handle_signals_parent(2) == 1)
+		return (-1);
 	limiter = set_limiter(line, j, &start, &quoted_heredoc);
 	if (!limiter)
 	{
@@ -132,6 +134,8 @@ int set_heredoc(char **line, int *j, char ***tab)
 	i = 0;
 	while ((*tab)[i])
 		i++;
+	if (handle_signals_parent(0) == 1)
+		return (-1);
 	*line = replace_with_path(*line, (*tab)[i - 1], start, *j);
 	if (!*line)
 		return (free(limiter), -1);

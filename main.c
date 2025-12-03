@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/02 16:34:17 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/03 11:23:58 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,10 @@ int	run_line(char *line, t_data *data)
 			}
             if (res == 2)
                 return (0);
-			exec_tree(data->tree, data);
+			if (g_signum == 0)
+				exec_tree(data->tree, data);
+			else
+				data->exit_status = 128 + g_signum;
 			free_tree(data->tree);
             clean_path_tab(temp);
 		}

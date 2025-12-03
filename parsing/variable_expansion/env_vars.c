@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_vars.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 10:14:03 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/02 16:15:24 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/03 09:47:10 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,25 @@ char	*ft_getenv(char *var, char **env)
 	return (NULL);
 }
 
-int	has_envvar(char *str, int i)
+int	has_envvar(char *str, int i, int mode)
 {
-	while (str[i] != '\0' && str[i] != '"')
+	if (mode == 0)
 	{
-		if (str[i] == '$')
-			return (i);
-		i++;
+		while (str[i] != '\0' && str[i] != '"')
+		{
+			if (str[i] == '$')
+				return (i);
+			i++;
+		}
+	}
+	else
+	{
+		while (str[i] != '\0')
+		{
+			if (str[i] == '$')
+				return (i);
+			i++;
+		}		
 	}
 	return (-1);
 }
@@ -68,14 +80,14 @@ char	*ft_strcat(char *dst, char *src)
 	return (dst);
 }
 
-int	expand_envvar_str(char **str, int i, t_data *data)
+int	expand_envvar_str(char **str, int i, t_data *data, int mode)
 {
 	int		env_pos;
 	char	*envvar;
 	char	*expanded;
 	char	*new_str;
 
-	env_pos = has_envvar(*str, i);
+	env_pos = has_envvar(*str, i, mode);
 	if (env_pos == -1)
 		return (0);
 	envvar = ft_substr(*str, env_pos, envvar_len(&(*str)[env_pos]));
@@ -110,7 +122,7 @@ int	expand_envvar_str(char **str, int i, t_data *data)
 	free(envvar);
 	free(*str);
 	*str = new_str;
-	return (expand_envvar_str(str, i, data));
+	return (expand_envvar_str(str, i, data, mode));
 }
 
 int	expand_envvars(char **str, t_data *data)
@@ -129,14 +141,14 @@ int	expand_envvars(char **str, t_data *data)
 		else if ((*str)[i] == '"')
 		{
 			i++;
-			if (expand_envvar_str(str, i, data) == 1)
+			if (expand_envvar_str(str, i, data, 0) == 1)
 				return (-1);
 			while ((*str)[i] != '"')
 				i++;
 		}
 		else if ((*str)[i] == '$')
 		{
-			if (expand_envvar_str(str, i, data) == 1)
+			if (expand_envvar_str(str, i, data, 0) == 1)
 				return (-1);
 			if ((*str)[0] != '\0' && envvar_len(&(*str)[i]) == 1)
 				i++;
@@ -177,14 +189,14 @@ int	expand_envvars_redir(char **str, t_data *data)
 		else if ((*str)[i] == '"')
 		{
 			i++;
-			if (expand_envvar_str(str, i, data) == 1)
+			if (expand_envvar_str(str, i, data, 0) == 1)
 				return (-1);
 			while ((*str)[i] != '"')
 				i++;
 		}
 		else if ((*str)[i] == '$')
 		{
-			if (expand_envvar_str(str, i, data) == 1)
+			if (expand_envvar_str(str, i, data, 0) == 1)
 				return (-1);
             if (is_ambiguous(&(*str)[i]) < 0)
                 return (-2);
