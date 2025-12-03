@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:46:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/03 11:47:28 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/03 13:45:22 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,9 +112,10 @@ int	exec_tree(t_node *node, t_data *data)
 	{
 		mode = find_cmd_mode(node->left_child, node);
 		ret = exec_pipeline(node, data, node);
-		if (ret == -1)
+		if (ret != 0)
 		{
-			exit_status = wait_for_pids(data);
+			if (ret != -5)
+				exit_status = wait_for_pids(data);
 			clean_data(data);
 			return (-1);
 		}

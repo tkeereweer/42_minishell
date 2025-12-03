@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   build_node_list.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 11:50:24 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/02 17:52:58 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/03 13:36:42 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static int	tokenize_pipeline(char **line, int *i, t_list **list, char ***tab)
 	pipeline = ft_substr(*line, *i, j - *i);
 	if (!pipeline)
 		return (-1);//free shit
-	if (!pipeline_token(pipeline, list))
+	if (pipeline_token(pipeline, list) == -1)
 		return (free(pipeline), -1);
 	*i = j;
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:48:21 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/27 16:16:22 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/03 14:05:11 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,8 @@ static pid_t	*pid_arr_realloc(pid_t *arr, int size)
 		dst = (pid_t *)ft_calloc(1, sizeof(pid_t));
 	else
 		dst = (pid_t *)ft_calloc(size, sizeof(pid_t));
-	if (!dst)
-		return (NULL);
+	if (dst == NULL)
+		return (free(arr), NULL);
 	if (!arr)
 		return (dst);
 	ft_memmove(dst, arr, (size - 1));
@@ -96,8 +96,8 @@ int	create_pid(t_node *arg, t_data *data)
 	if (arg->type != ARGS)
 		return (-3);//tree build error ?
 	temp = pid_arr_realloc(data->pid_tab, data->cmd_cnt);
-	if (!temp)
-		return (-1);
+	if (temp == NULL)
+		return (-5);
 	data->pid_tab = temp;
 	return (1);
 }

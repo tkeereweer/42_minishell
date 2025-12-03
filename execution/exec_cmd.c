@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/03 09:50:06 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/03 14:28:21 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,13 +189,14 @@ static int exec_child(t_node *cmd, t_data *data, int mode)
 int	exec_cmd(t_node *cmd, t_data *data, int mode)
 {
 	int ret;
+	
 	data->cmd_cnt++;
 	ret = create_pipe(data, mode);
 	if (ret < 0)
 		return (ret);
 	ret  = create_pid(cmd->left_child, data);
 	if (ret < 0)
-		return (ret);
+		return (data->cmd_cnt--, ret);
 	if (is_builtin(cmd->left_child->content.tab[0]) && mode == 4)
 	{
 		data->pid_tab[data->cmd_cnt - 1] = -1;

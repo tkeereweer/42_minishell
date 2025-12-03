@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/03 11:23:58 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/03 14:48:19 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,51 +77,63 @@ int	copy_env(t_data *data, char **envp)
 	return (0);
 }
 
-void	clean_exit(t_data *data, char *line)
+void	clean_exit(t_data *data, char *line, char *prompt)
 {
 	if (line != NULL)
 		free(line);
+	if (prompt != NULL)
+		free(prompt);
 	free_split(data->env);
 	rl_clear_history();
 	exit(1);
+}
+
+int	only_whitespace(char *line)
+{
+	int i;
+
+	i = 0;
+	while (line[i] != '\0')
+	{
+		if (ft_is_whitespace(line[i]) != 1)
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 int	run_line(char *line, t_data *data)
 {
 	t_list	*list;
     char    **temp;
-    int     i;
     int     res;
 
     temp = NULL;
-	if (line != NULL && ft_strlen_gnl(line) != 0) // what if only spaces
+	if (line != NULL && ft_strlen_gnl(line) != 0)
 	{
 		add_history(line);
-        i = 0;
-        while (ft_is_whitespace(line[i]))
-            i++;
-        if (!line[i])
-            return (0);
+        if (only_whitespace(line) == 1)
+			return (0);
 		list = clean_node_list(line, &temp);
-		if (list != NULL)
+		if (list == NULL)
+			return (1);
+		data->tree = create_logic_tree(list);
+		res = create_cmd_trees(data->tree);
+		if (res == 1)
 		{
-			data->tree = create_logic_tree(list);
-			res = create_cmd_trees(data->tree);
-            if (res == 1)
-			{
-				free_tree(data->tree);
-                clean_path_tab(temp);
-				return (1);
-			}
-            if (res == 2)
-                return (0);
-			if (g_signum == 0)
-				exec_tree(data->tree, data);
-			else
-				data->exit_status = 128 + g_signum;
 			free_tree(data->tree);
-            clean_path_tab(temp);
+			clean_path_tab(temp);
+			return (1);
 		}
+		if (res == 2)
+			return (0);
+		if (g_signum == 0)
+			exec_tree(data->tree, data);
+		else
+			data->exit_status = 128 + g_signum;
+		free_tree(data->tree);
+		if (clean_path_tab(temp) == -1)
+			return (1);
 	}
 	return (0);
 }
@@ -147,8 +159,6 @@ char	*build_prompt(t_data *data)
 	return (prompt);
 }
 
-
-
 int	main(int argc, char *argv[], char **envp)
 {
 	char	*line;
@@ -166,30 +176,30 @@ int	main(int argc, char *argv[], char **envp)
 	data.exit_status = 0;
 	prompt = build_prompt(&data);
 	if (prompt == NULL)
-		clean_exit(&data, NULL);
+		clean_exit(&data, NULL, NULL);
 	if (handle_signals_parent(0) == 1)
-		return (1); // handle frees
+		clean_exit(&data, NULL, prompt);
 	line = readline(prompt);
-	if (handle_signals_parent(1) == 1)
-		return (1);
 	free(prompt);
+	if (handle_signals_parent(1) == 1)
+		clean_exit(&data, line, NULL);
 	if (run_line(line, &data) == 1)
-		clean_exit(&data, line);
+		clean_exit(&data, line, NULL);
 	while (line != NULL)
 	{
 		free(line);
 		prompt = build_prompt(&data);
 		if (prompt == NULL)
-			clean_exit(&data, NULL);
+			clean_exit(&data, NULL, NULL);
 		g_signum = 0;
 		if (handle_signals_parent(0) == 1)
-			return (1); // handle frees
+			clean_exit(&data, line, prompt);
 		line = readline(prompt);
-		if (handle_signals_parent(1) == 1)
-			return (1);
 		free(prompt);
+		if (handle_signals_parent(1) == 1)
+			clean_exit(&data, line, prompt);
 		if (run_line(line, &data) == 1)
-			clean_exit(&data, line);
+			clean_exit(&data, line, prompt);
 	}
 	ft_printf("exit\n");
 	free_split(data.env);
