@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_pipe_and_fork.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:48:21 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/27 16:16:22 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/03 16:54:59 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ int	is_builtin(char *name)
 static pid_t	*pid_arr_realloc(pid_t *arr, int size)
 {
 	pid_t	*dst;
+    int     i;
 
 	if (!arr)
 		dst = (pid_t *)ft_calloc(1, sizeof(pid_t));
@@ -82,7 +83,12 @@ static pid_t	*pid_arr_realloc(pid_t *arr, int size)
 		return (NULL);
 	if (!arr)
 		return (dst);
-	ft_memmove(dst, arr, (size - 1));
+    i = 0;
+    while (i < size - 1) 
+    {
+        dst[i] = arr[i];
+        i++;
+    }
 	free(arr);
 	return (dst);
 }
