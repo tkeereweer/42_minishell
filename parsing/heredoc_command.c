@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 14:29:27 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/03 11:18:35 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/03 13:29:12 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	clean_path_tab(char **path_tab)
 	while(path_tab[i])
 	{
 		if (unlink(path_tab[i]) == -1)
-			printf("unlink fail\n");
+			return (-1);
 		free(path_tab[i]);
 		path_tab[i] = NULL;
 		i++;

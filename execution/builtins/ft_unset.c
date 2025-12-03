@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 18:20:27 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/20 09:20:17 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/03 15:02:38 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ void	ft_unset(char **tab, t_data *data)
 		j = 0;
 		while (data->env[j] != NULL)
 		{
-			if (ft_strncmp(tab[i], data->env[j], ft_strlen(tab[i])) == 0 && data->env[j][ft_strlen(tab[i])] == '=')
+			if (ft_strncmp(tab[i], data->env[j], ft_strlen(tab[i])) == 0
+				&& data->env[j][ft_strlen(tab[i])] == '=')
 			{
 				free(data->env[j]);
 				break ;

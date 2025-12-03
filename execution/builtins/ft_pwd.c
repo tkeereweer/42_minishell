@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 12:07:54 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/11/26 14:12:07 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/03 15:03:02 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,3 @@ int	ft_pwd(void)
 	ft_printf("%s\n", buf);
 	return (0);
 }
-
-// #ifndef TESTING
-
-// int	main(void)
-// {
-// 	ft_pwd();
-// 	return (0);
-// }
-// #endif
