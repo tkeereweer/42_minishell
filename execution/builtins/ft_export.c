@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 12:16:15 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/03 15:53:34 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/03 18:16:50 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,15 @@ int	get_key_len(char *key_val)
 int	add_key(char *key_val, t_data *data)
 {
 	int		i;
+    char    **temp;
 
 	i = 0;
 	while (data->env[i] != NULL)
 		i++;
-	data->env = tab_realloc(data->env, i + 1);
-	if (data->env == NULL)
+	temp = tab_realloc(data->env, i + 1);
+	if (temp == NULL)
 		return (1);
+    data->env = temp;
 	data->env[i] = ft_strdup(key_val);
 	if (data->env[i] == NULL)
 		return (1);

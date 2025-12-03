@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/03 15:01:03 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/03 21:01:44 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,41 @@ volatile sig_atomic_t	g_signum = 0;
 // 	print_tree(node->right_child);
 // }
 
+int	set_minimal_env(t_data *data)
+{
+	char	buf[PATH_MAX];
+	char	*temp;
+	ssize_t	len;
+
+	if (!getcwd(buf, PATH_MAX))
+		return (1);
+	data->env = (char **)malloc(4 * sizeof(char *));
+	if (!data->env)
+		return (1);
+	len = ft_strlen(buf) + ft_strlen("PWD=") + 1;
+	temp = (char *)malloc(len);
+	if (!temp)
+		return (free(data->env), 1);
+	ft_strcat(temp, "PWD=");
+	ft_strcat(temp, buf);
+	data->env[0] = temp;
+	data->env[1] = ft_strdup("SHLVL=1");
+	if (!data->env[1])
+		return (free_split(data->env), 1);
+	data->env[2] = ft_strdup("_=/usr/bin/env");
+	if (!data->env[2])
+		return (free_split(data->env), 1);
+	data->env[3] = NULL;
+	return (0);
+}
+
 int	copy_env(t_data *data, char **envp)
 {
 	int	i;
 
 	i = 0;
+	if (!*envp)
+		return (set_minimal_env(data));
 	while (envp[i] != NULL)
 		i++;
 	data->env = (char **) malloc((i + 2) * sizeof(char *));
@@ -152,12 +182,23 @@ t_data	init_data(char **envp)
 	return (data);
 }
 
-char	*build_prompt(t_data *data)
+char	*build_prompt(t_data *data, char **envp)
 {
 	char	*user;
 	char	buf[PATH_MAX];
 	char	*prompt;
 
+	if (!*envp)
+	{
+		getcwd(buf, PATH_MAX);
+		prompt = (char *)malloc(ft_strlen("empty_env:") + ft_strlen(buf) + 3);
+		if (!prompt)
+			return (NULL);
+		ft_strncpy(prompt, "empty_env:", ft_strlen("empty_env:"));
+		ft_strcat(prompt, buf);
+		ft_strcat(prompt, ": ");
+		return (prompt);
+	}
 	user = ft_getenv("$USER", data->env);
 	if (user == NULL)
 		return (NULL);
@@ -174,11 +215,11 @@ char	*build_prompt(t_data *data)
 	return (prompt);
 }
 
-void	handle_next_cmd(t_data *data, char **line)
+void	handle_next_cmd(t_data *data, char **line, char **envp)
 {
 	char	*prompt;
 
-	prompt = build_prompt(data);
+	prompt = build_prompt(data, envp);
 	if (prompt == NULL)
 		clean_exit(data, NULL, NULL);
 	g_signum = 0;
@@ -201,11 +242,11 @@ int	main(int argc, char *argv[], char **envp)
 	(void) argv;
 	line = NULL;
 	data = init_data(envp);
-	handle_next_cmd(&data, &line);
+	handle_next_cmd(&data, &line, envp);
 	while (line != NULL)
 	{
 		free(line);
-		handle_next_cmd(&data, &line);
+		handle_next_cmd(&data, &line, envp);
 	}
 	ft_printf("exit\n");
 	free_split(data.env);

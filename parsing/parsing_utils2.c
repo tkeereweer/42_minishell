@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 14:36:14 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/03 14:42:08 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/03 18:25:00 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,14 @@ void	free_split(char **tab)
 	free(tab);
 }
 
-char	**tab_realloc(char **tab, int n)
+char	**  tab_realloc(char **tab, int n)
 {
 	char	**temp;
 	int		i;
 
 	temp = (char **)ft_calloc(n + 1, sizeof(char *));
 	if (!temp)
-		return (free_split(tab), NULL);
+		return (NULL);
 	temp[n] = NULL;
 	if (!tab)
 		return (temp);

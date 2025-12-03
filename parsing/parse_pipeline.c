@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 20:16:56 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/02 11:24:19 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/03 18:34:41 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static int	tokenize_subpipe(char **subpipe, t_list **lst)
 		if (subpipe[i][0] == '|')
 		{
 			if (!pipe_token(lst))
-				return (0);
+				return (subpipe_error(0, subpipe));
 			i++;
 			continue;
 		}
@@ -92,6 +92,7 @@ static int	tokenize_pipe(char *line, t_list **lst)
 	result = tokenize_subpipe(subpipe, lst);
 	if (result <= 0)
 		return (result);
+    free(subpipe);
 	return (1);
 }
 
