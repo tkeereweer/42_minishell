@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:46:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/03 15:46:59 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/04 11:17:17 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,18 +47,21 @@ int	exec_pipeline(t_node *node, t_data *data, t_node *pipeline_root)
 	ret = 0;
 	if (node == NULL || (node->parent != NULL && node->parent->type == CMD))
 		return (0);
-	if (exec_pipeline(node->left_child, data, pipeline_root) == -1)
-		return (-1);
+	ret = exec_pipeline(node->left_child, data, pipeline_root);
+	if (ret != 0)
+		return (ret);
 	if (node->type == CMD)
 	{
 		if (expand_vars(&node->left_child->content.tab, data) == -1)
 			return (-1);
 		ret = exec_cmd(node, data, find_cmd_mode(node, pipeline_root));
-		if (ret != 0)
-			return (-1);
+		// if (ret != 0)
+		// 	return (-1);
+		return (ret);
 	}
-	if (exec_pipeline(node->right_child, data, pipeline_root) == -1)
-		return (-1);
+	ret = exec_pipeline(node->right_child, data, pipeline_root);
+	// if (ret != 0)
+	// 	return (ret);
 	return (ret);
 }
 
@@ -112,15 +115,15 @@ int	exec_tree(t_node *node, t_data *data)
 	{
 		mode = find_cmd_mode(node->left_child, node);
 		ret = exec_pipeline(node, data, node);
-		if (ret != 0)
+		if (mode == 4 && is_builtin(node->left_child->left_child->content.tab[0]))
+			exit_status = ret;
+		else if (ret != 0)
 		{
 			if (ret != -5)
 				exit_status = wait_for_pids(data);
 			clean_data(data);
 			return (-1);
 		}
-		if (mode == 4 && is_builtin(node->left_child->left_child->content.tab[0]))
-			exit_status = ret;
 		else
 		{
 			exit_status = wait_for_pids(data);
