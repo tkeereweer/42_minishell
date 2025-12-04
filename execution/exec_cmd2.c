@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 16:59:37 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/04 13:54:04 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/04 14:40:18 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,9 @@ char	*get_exe_path(t_data *data, char *cmd)
 
 void	cmd_not_found(char *cmd, t_data *data)
 {
-	ft_putstr_fd("minishell: command not found: ", 2);
-	ft_putstr_fd(cmd, 2);
-	ft_putstr_fd("\n", 2);
+	ft_putstr_fd("minishell: command not found: ", STDERR_FILENO);
+	ft_putstr_fd(cmd, STDERR_FILENO);
+	ft_putstr_fd("\n", STDERR_FILENO);
 	free_tree(data->tree);
 	free_split(data->env);
 	free(data->default_path);
@@ -68,9 +68,9 @@ void	cmd_not_found(char *cmd, t_data *data)
 
 void	permission_error(char *path, t_data *data)
 {
-	ft_putstr_fd("minishell:", 2);
-	ft_putstr_fd(path, 2);
-	ft_putstr_fd(": Permission denied\n", 2);
+	ft_putstr_fd("minishell:", STDERR_FILENO);
+	ft_putstr_fd(path, STDERR_FILENO);
+	ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
 	free_tree(data->tree);
 	free_split(data->env);
 	free(data->default_path);

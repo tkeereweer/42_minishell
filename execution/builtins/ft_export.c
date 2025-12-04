@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 12:16:15 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/04 13:59:43 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/04 14:40:13 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,9 +185,9 @@ int	ft_export(char *key_val, t_data *data)
 	key_len = get_key_len(key_val);
 	if (key_len == -1)
 	{
-		ft_putstr_fd("minishell: export: `", 2);
-		ft_putstr_fd(key_val, 2);
-		ft_putstr_fd("': not a valid identifier\n", 2);
+		ft_putstr_fd("minishell: export: `", STDERR_FILENO);
+		ft_putstr_fd(key_val, STDERR_FILENO);
+		ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
 		return (1);
 	}
 	key = ft_substr(key_val, 0, key_len);

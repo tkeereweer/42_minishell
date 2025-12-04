@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:48:21 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/03 16:56:30 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/04 14:04:38 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ static pid_t	*pid_arr_realloc(pid_t *arr, int size)
 	else
 		dst = (pid_t *)ft_calloc(size, sizeof(pid_t));
 	if (dst == NULL)
-		return (free(arr), NULL);
+		return (NULL);
 	if (!arr)
 		return (dst);
     i = 0;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/04 13:23:42 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/04 15:17:21 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,17 @@ static int	exec_child(t_node *cmd, t_data *data, int mode)
 			exec_fail(exec_path, cmd->left_child->content.tab[0], data);
 	}
 	else
+    {
 		run_builtins(cmd->left_child->content.tab, data, mode);
+        free_tree(data->tree);
+        if (data->line != NULL)
+            free(data->line);
+        if (data->prompt != NULL)
+            free(data->prompt);
+        free_split(data->env);
+        free(data->default_path);
+        rl_clear_history();
+    }
 	exit(0);
 }
 
@@ -206,7 +216,6 @@ int	exec_cmd(t_node *cmd, t_data *data, int mode)
 	if (mode != 4)
 	{
 		data->child_cnt++;
-		// change signal handler
 		data->pid_tab[data->cmd_cnt - 1] = fork();
 		if (data->pid_tab[data->cmd_cnt - 1] == -1)
 			return (-4); //fork error

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/04 13:24:07 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/04 15:12:02 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ typedef struct s_data
 {
 	char	**env;
 	char 	*default_path;
-	// char	**path_tab;
+	char    *line;
+    char    *prompt;
 	int		child_cnt;
 	int		cmd_cnt;
 	int		**pipe_tab;
@@ -177,6 +178,7 @@ int		clean_path_tab(char **path_tab);
 int		exec_tree(t_node *node, t_data *data);
 int		exec_cmd(t_node *cmd, t_data *data, int mode);
 int		is_builtin(char *name);
+void	clean_exit(t_data *data, char *line, char *prompt);
 
 
 char	*find_path(char **paths, char *cmd);

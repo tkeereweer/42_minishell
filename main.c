@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/04 13:28:54 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/04 15:16:43 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,6 +180,8 @@ t_data	init_data(char **envp)
 	data.cmd_cnt = 0;
 	data.pid_tab = NULL;
 	data.pipe_tab = NULL;
+    data.line = NULL;
+    data.prompt = NULL;
 	data.exit_status = 0;
 	return (data);
 }
@@ -217,38 +219,34 @@ char	*build_prompt(t_data *data, char **envp)
 	return (prompt);
 }
 
-void	handle_next_cmd(t_data *data, char **line, char **envp)
+void	handle_next_cmd(t_data *data, char **envp)
 {
-	char	*prompt;
-
-	prompt = build_prompt(data, envp);
-	if (prompt == NULL)
+	data->prompt = build_prompt(data, envp);
+	if (data->prompt == NULL)
 		clean_exit(data, NULL, NULL);
 	g_signum = 0;
 	if (handle_signals_parent(0) == 1)
-		clean_exit(data, *line, prompt);
-	*line = readline(prompt);
-	free(prompt);
+		clean_exit(data, data->line, data->prompt);
+	data->line = readline(data->prompt);
+	free(data->prompt);
 	if (handle_signals_parent(1) == 1)
-		clean_exit(data, *line, NULL);
-	if (run_line(*line, data) == 1)
-		clean_exit(data, *line, NULL);
+		clean_exit(data, data->line, NULL);
+	if (run_line(data->line, data) == 1)
+		clean_exit(data, data->line, NULL);
 }
 
 int	main(int argc, char *argv[], char **envp)
 {
 	t_data	data;
-	char	*line;
 
 	(void) argc;
 	(void) argv;
-	line = NULL;
 	data = init_data(envp);
-	handle_next_cmd(&data, &line, envp);
-	while (line != NULL)
+	handle_next_cmd(&data, envp);
+	while (data.line != NULL)
 	{
-		free(line);
-		handle_next_cmd(&data, &line, envp);
+		free(data.line);
+		handle_next_cmd(&data, envp);
 	}
 	ft_printf("exit\n");
 	free_split(data.env);

@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 17:46:51 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/03 18:30:25 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/04 14:59:43 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,32 +152,3 @@ int	create_cmd_trees(t_node *node)
 	}
 	return (0);
 }
-
-// int	main(void)
-// {
-// 	t_list		*lst;
-// 	t_list		*start_list;
-// 	t_node		*tree;
-// 	t_content	cont;
-
-// 	lst = ft_lstnew(node_new(cont, ARGS));
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, REDIR)));
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, PIPE)));
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, REDIR)));
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, ARGS)));
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, REDIR)));
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, REDIR)));
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(cont, REDIR)));
-// 	// ft_lstadd_back(&lst, ft_lstnew(node_new(cont, PIPE)));
-// 	// ft_lstadd_back(&lst, ft_lstnew(node_new(cont, ARGS)));
-// 	// ft_lstadd_back(&lst, ft_lstnew(node_new(cont, PIPE)));
-// 	// ft_lstadd_back(&lst, ft_lstnew(node_new(cont, ARGS)));
-// 	// ft_lstadd_back(&lst, ft_lstnew(node_new(cont, REDIR)));
-// 	tree = node_new(cont, PIPELINE);
-// 	start_list = lst;
-// 	populate_cmd_tree(&lst, tree);
-// 	draw_tree(tree);
-// 	free_pipeline_list(start_list);
-// 	free_tree(tree);
-// 	return (0);
-// }

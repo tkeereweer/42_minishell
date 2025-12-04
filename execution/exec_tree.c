@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tree.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:46:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/04 11:17:17 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/04 14:24:48 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,7 @@ int	exec_tree(t_node *node, t_data *data)
 			exit_status = ret;
 		else if (ret != 0)
 		{
-			if (ret != -5)
-				exit_status = wait_for_pids(data);
+			exit_status = wait_for_pids(data);
 			clean_data(data);
 			return (-1);
 		}
