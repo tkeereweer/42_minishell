@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 09:21:20 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/03 15:03:18 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/04 13:46:38 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,9 @@ int	ft_cd(char *path, t_data *data)
 	if (ret == 0)
 		return (update_env(buf, data));
 	if (ret == -1)
-		perror("cd");
+	{
+		write(STDERR_FILENO, "minishell: cd:", 11);
+		perror(path);
+	}
 	return (ret);
 }

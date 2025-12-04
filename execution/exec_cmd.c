@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/03 16:02:33 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/04 13:23:42 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,7 @@ static int	exec_child(t_node *cmd, t_data *data, int mode)
 	}
 	if (!is_builtin(cmd->left_child->content.tab[0]))
 	{
-		exec_path = get_exe_path(data->env, cmd->left_child->content.tab[0]);
+		exec_path = get_exe_path(data, cmd->left_child->content.tab[0]);
 		if (exec_path == NULL)
 			cmd_not_found(cmd->left_child->content.tab[0], data);
 		if (execve(exec_path, cmd->left_child->content.tab, data->env) == -1)

@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/03 09:48:20 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/04 13:24:07 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef struct s_node
 typedef struct s_data
 {
 	char	**env;
+	char 	*default_path;
 	// char	**path_tab;
 	int		child_cnt;
 	int		cmd_cnt;
@@ -179,7 +180,7 @@ int		is_builtin(char *name);
 
 
 char	*find_path(char **paths, char *cmd);
-char	*get_exe_path(char **env, char *cmd);
+char	*get_exe_path(t_data *data, char *cmd);
 void	cmd_not_found(char *cmd, t_data *data);
 void	permission_error(char *path, t_data *data);
 void	exec_fail(char *path, char *cmd, t_data *data);

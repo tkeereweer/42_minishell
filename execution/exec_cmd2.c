@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 16:59:37 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/01 17:08:03 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/04 13:54:04 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,15 @@ char	*find_path(char **paths, char *cmd)
 	return (NULL);
 }
 
-char	*get_exe_path(char **env, char *cmd)
+char	*get_exe_path(t_data *data, char *cmd)
 {
+	char 	*env_path;
 	char	**paths;
 
-	paths = ft_split(ft_getenv("$PATH", env), ':');
+	env_path = ft_getenv("$PATH", data->env);
+	if (env_path == NULL)
+		env_path = data->default_path;
+	paths = ft_split(env_path, ':');
 	if (!paths)
 		return (NULL);
 	return (find_path(paths, cmd));
@@ -51,9 +55,12 @@ char	*get_exe_path(char **env, char *cmd)
 
 void	cmd_not_found(char *cmd, t_data *data)
 {
-	ft_printf("minishell: command not found: %s\n", cmd);
+	ft_putstr_fd("minishell: command not found: ", 2);
+	ft_putstr_fd(cmd, 2);
+	ft_putstr_fd("\n", 2);
 	free_tree(data->tree);
 	free_split(data->env);
+	free(data->default_path);
 	free(data->pid_tab);
 	rl_clear_history();
 	exit(127);
@@ -61,9 +68,12 @@ void	cmd_not_found(char *cmd, t_data *data)
 
 void	permission_error(char *path, t_data *data)
 {
-	ft_printf("minishell: %s: Permission denied\n", path);
+	ft_putstr_fd("minishell:", 2);
+	ft_putstr_fd(path, 2);
+	ft_putstr_fd(": Permission denied\n", 2);
 	free_tree(data->tree);
 	free_split(data->env);
+	free(data->default_path);
 	free(data->pid_tab);
 	rl_clear_history();
 	exit(126);
@@ -78,6 +88,7 @@ void	exec_fail(char *path, char *cmd, t_data *data)
 	perror(cmd);
 	free_tree(data->tree);
 	free_split(data->env);
+	free(data->default_path);
 	free(data->pid_tab);
 	rl_clear_history();
 	exit(1);

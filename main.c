@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/03 21:01:44 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/04 13:28:54 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ void	clean_exit(t_data *data, char *line, char *prompt)
 	if (prompt != NULL)
 		free(prompt);
 	free_split(data->env);
+	free(data->default_path);
 	rl_clear_history();
 	exit(1);
 }
@@ -174,6 +175,7 @@ t_data	init_data(char **envp)
 
 	if (copy_env(&data, envp) == 1)
 		exit(1);
+	data.default_path = ft_strdup("/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:.");
 	data.child_cnt = 0;
 	data.cmd_cnt = 0;
 	data.pid_tab = NULL;
@@ -250,6 +252,7 @@ int	main(int argc, char *argv[], char **envp)
 	}
 	ft_printf("exit\n");
 	free_split(data.env);
+	free(data.default_path);
 	rl_clear_history();
 	return (0);
 }
