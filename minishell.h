@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/04 15:12:02 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/05 10:49:01 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ char	*remove_redir(char *str, int start, int end);
 int 	ft_cd(char *path, t_data *data);
 int 	ft_pwd(void);
 void	ft_echo(char **args);
-void	ft_exit(unsigned int n, t_data *data);
+void	ft_exit(char **argv, t_data *data);
 int		ft_export(char *key_val, t_data *data);
 void	ft_unset(char **tab, t_data *data);
 void	ft_env(t_data *data);
