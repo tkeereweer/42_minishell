@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tree.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:46:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/05 13:36:59 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/05 16:04:59 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,9 @@ int	exec_pipeline(t_node *node, t_data *data, t_node *pipeline_root)
 		if (expand_vars(&node->left_child->content.tab, data) == -1)
 			return (-1);
 		ret = exec_cmd(node, data, find_cmd_mode(node, pipeline_root));
-		// if (ret != 0)
-		// 	return (-1);
 		return (ret);
 	}
 	ret = exec_pipeline(node->right_child, data, pipeline_root);
-	// if (ret != 0)
-	// 	return (ret);
 	return (ret);
 }
 
@@ -143,5 +139,7 @@ int	exec_tree(t_node *node, t_data *data)
 		if (exec_tree(node->right_child, data) == -1)
 			return (-1);
 	}
+    // if (!(data->pid_tab == NULL && data->pipe_tab == NULL && data->cmd_cnt == 0 && data->child_cnt == 0))
+    //     clean_data(data);
 	return (0);
 }

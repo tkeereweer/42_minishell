@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/05 15:33:14 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/05 16:57:50 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static int	expand_heredoc(int fd, char *path, t_data *data)
 		return (1);
 	temp = get_next_line(fd);
 	if (!temp)
-		return (-2);//read/write error
+		return (1);//empty file
 	while (temp)
 	{
 		file = my_realloc(file, ft_strlen_gnl(file) + ft_strlen(temp) + 1);
@@ -73,9 +73,9 @@ static int	expand_heredoc(int fd, char *path, t_data *data)
 	close(fd);
 	fd = open(path, O_WRONLY | O_TRUNC);
 	if (write(fd, file, ft_strlen(file)) == -1)
-		return (free(temp), free(file), -2);
+		return (free(temp), free(file), -3);
 	close(fd);
-	open(path, O_RDONLY);//do we have functions for this like lseek ? or flags for open ?
+	open(path, O_RDONLY);
 	return (free(temp), free(file), 1);
 }
 
@@ -105,10 +105,16 @@ int	configure_redir(t_node *redir, t_data *data, int *in_redir, int *out_redir)
 			fd = open(redir->content.redir.path, O_RDONLY);
 			res = expand_heredoc(fd, redir->content.redir.path, data);
 			if (res < 0)
+            {
+                close(fd);
 				return (res);
+            }
 		}
 		if (dup_fds(fd, kind, in_redir, out_redir) == -1)
+        {
+            close(fd);
 			return (-2);
+        }
 		redir = redir->right_child;
 	}
 	return (1);
@@ -162,6 +168,8 @@ static int	exec_child(t_node *cmd, t_data *data, int mode)
 		res = configure_redir(cmd->right_child, data, &in, &out);
 		if (res == -2)
 			return(redir_error(cmd->right_child->content.redir.path, 0));
+        if (res == -3)
+            return (redir_error("heredoc", 0));
 		if (res < 0)
 			exit(res);
 	}
@@ -186,10 +194,10 @@ static int	exec_child(t_node *cmd, t_data *data, int mode)
 	if (!is_builtin(cmd->left_child->content.tab[0]))
 	{
 		exec_path = get_exe_path(data, cmd->left_child->content.tab[0]);
-        if (exec_path[0] == '\0')
-            exit(0);
 		if (exec_path == NULL)
 			cmd_not_found(cmd->left_child->content.tab[0], data);
+        if (exec_path[0] == '\0')
+            exit(0);
 		if (execve(exec_path, cmd->left_child->content.tab, data->env) == -1)
 			exec_fail(exec_path, cmd->left_child->content.tab[0], data);
 	}
