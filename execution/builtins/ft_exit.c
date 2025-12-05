@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 17:43:10 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/05 14:08:29 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:16:02 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 //fd1 and fd2 are the duplicated stdin and out from run_builtins
 //set to -1 if not in the context
-void	ft_exit(unsigned int n, t_data *data, int fd1, int fd2)
+void	ft_exit(char **argv, t_data *data, int fd1, int fd2)
 {
 	unsigned int	n;
 

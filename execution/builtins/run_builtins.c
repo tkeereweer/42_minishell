@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 10:20:16 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/05 14:08:43 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:16:38 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	run_builtins(char **argv, t_data *data, int fd1, int fd2)
 	else if (ft_strncmp(argv[0], "pwd", 4) == 0)
 		ret = ft_pwd();
 	else if (ft_strncmp(argv[0], "exit", 5) == 0)
-		ft_exit(0, data, fd1, fd2);
+		ft_exit(argv, data, fd1, fd2);
 	else if (ft_strncmp(argv[0], "env", 4) == 0)
 		ft_env(data);
 	else if (ft_strncmp(argv[0], "export", 7) == 0)
