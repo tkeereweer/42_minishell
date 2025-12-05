@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/05 14:20:41 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/05 15:33:14 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,8 @@ static int	exec_child(t_node *cmd, t_data *data, int mode)
 	if (!is_builtin(cmd->left_child->content.tab[0]))
 	{
 		exec_path = get_exe_path(data, cmd->left_child->content.tab[0]);
+        if (exec_path[0] == '\0')
+            exit(0);
 		if (exec_path == NULL)
 			cmd_not_found(cmd->left_child->content.tab[0], data);
 		if (execve(exec_path, cmd->left_child->content.tab, data->env) == -1)

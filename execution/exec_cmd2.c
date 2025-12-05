@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 16:59:37 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/05 09:57:35 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/05 15:29:39 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ char	*get_exe_path(t_data *data, char *cmd)
 	char 	*env_path;
 	char	**paths;
 
+	if (cmd[0] == '\0')
+		return (cmd);
 	env_path = ft_getenv("$PATH", data->env);
 	if (env_path == NULL)
 		env_path = data->default_path;
