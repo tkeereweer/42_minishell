@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/05 14:15:05 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:20:41 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,8 +197,6 @@ static int	exec_child(t_node *cmd, t_data *data, int mode)
         free_tree(data->tree);
         if (data->line != NULL)
             free(data->line);
-        if (data->prompt != NULL)
-            free(data->prompt);
         free_split(data->env);
         if (data->default_path != NULL)
 			free(data->default_path);

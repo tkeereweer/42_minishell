@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/05 14:17:29 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:30:34 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,7 @@ int		handle_signals_parent(int mode);
 int		handle_signals_child(void);
 char	**get_envvar_pointer(char *var, char **env);
 char	*my_realloc(char *ptr, size_t size);
+int     ft_strcmp(const char *s1, const char *s2);
 //heredoc
 char	**heredoc(char **path_tab, char *limiter, int quoted_heredoc);
 int     set_heredoc(char **line, int *j, char ***tab);

@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:48:21 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/05 10:25:10 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:30:41 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	is_builtin(char *name)
 	i = 0;
 	while (i < 7)
 	{
-		if (ft_strncmp(name, builtins[i], ft_strlen(builtins[i])) == 0)
+		if (ft_strcmp(name, builtins[i]) == 0)
 			return (1);
 		i++;
 	}
