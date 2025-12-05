@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 17:43:10 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/05 10:48:30 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:08:29 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,14 @@
 //set to -1 if not in the context
 void	ft_exit(unsigned int n, t_data *data, int fd1, int fd2)
 {
+	unsigned int	n;
+
+	n = 0;
+	if (argv[1] != NULL)
+		n = ft_atoi(argv[1]);
 	free_split(data->env);
-	free(data->default_path);
+	if (data->default_path != NULL)
+		free(data->default_path);
 	free(data->pid_tab);
 	free_tree(data->tree);
 	rl_clear_history();

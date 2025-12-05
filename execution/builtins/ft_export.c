@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 12:16:15 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/04 14:40:13 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/05 11:48:50 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,27 @@ int	get_key_len(char *key_val)
 		}
 		i++;
 	}
-	if (idx == 0)
-		return (-1);
-	else if (idx == -1)
+	// if (idx == 0)
+	// 	return (-1);
+	if (idx == -1)
 		return (i);
 	return (idx);
+}
+
+int	valid_key(char *key, int key_len)
+{
+	int	i;
+
+	i = 0;
+	if (key[0] == '=' || (!ft_isalpha(key[0]) &&  key[0] != '_'))
+		return (0);
+	while (key[i] != '\0' && i < key_len)
+	{
+		if (ft_isalnum(key[i]) == 0 && key[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 int	add_key(char *key_val, t_data *data)
@@ -174,16 +190,14 @@ int	print_sort_env(t_data *data)
 	return (0);
 }
 
-int	ft_export(char *key_val, t_data *data)
+int	ft_export_var(char *key_val, t_data *data)
 {
 	char	*key;
 	int		key_len;
 	char	**curr_key_val;
 
-	if (key_val == NULL)
-		return (print_sort_env(data));
 	key_len = get_key_len(key_val);
-	if (key_len == -1)
+	if (valid_key(key_val, key_len) == 0)
 	{
 		ft_putstr_fd("minishell: export: `", STDERR_FILENO);
 		ft_putstr_fd(key_val, STDERR_FILENO);
@@ -198,4 +212,22 @@ int	ft_export(char *key_val, t_data *data)
 	if (curr_key_val != NULL)
 		return (key_already_exists(curr_key_val, key_val));
 	return (add_key(key_val, data));
+}
+
+int	ft_export(char **argv, t_data *data)
+{
+	int	i;
+	int	ret;
+
+	i = 1;
+	ret = 0;
+	if (argv[1] == NULL)
+		return (print_sort_env(data));
+	while (argv[i] != NULL)
+	{
+		if (ft_export_var(argv[i], data) == 1)
+			ret = 1;
+		i++;
+	}
+	return (ret);
 }

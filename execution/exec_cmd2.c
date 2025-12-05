@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 16:59:37 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/04 14:40:18 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/05 09:57:35 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ void	cmd_not_found(char *cmd, t_data *data)
 	ft_putstr_fd("\n", STDERR_FILENO);
 	free_tree(data->tree);
 	free_split(data->env);
-	free(data->default_path);
+	if (data->default_path != NULL)
+		free(data->default_path);
 	free(data->pid_tab);
 	rl_clear_history();
 	exit(127);
@@ -73,7 +74,8 @@ void	permission_error(char *path, t_data *data)
 	ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
 	free_tree(data->tree);
 	free_split(data->env);
-	free(data->default_path);
+	if (data->default_path != NULL)
+		free(data->default_path);
 	free(data->pid_tab);
 	rl_clear_history();
 	exit(126);
@@ -88,7 +90,8 @@ void	exec_fail(char *path, char *cmd, t_data *data)
 	perror(cmd);
 	free_tree(data->tree);
 	free_split(data->env);
-	free(data->default_path);
+	if (data->default_path != NULL)
+		free(data->default_path);
 	free(data->pid_tab);
 	rl_clear_history();
 	exit(1);

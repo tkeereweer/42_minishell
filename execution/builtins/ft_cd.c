@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 09:21:20 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/04 13:46:38 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/05 12:06:03 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	update_env(char *old_pwd, t_data *data)
 		return (-1);
 	ft_strlcpy(key_val, "OLDPWD=", 8);
 	ft_strcat(key_val, old_pwd);
-	ret = ft_export(key_val, data);
+	ret = ft_export_var(key_val, data);
 	free(key_val);
 	if (ret == 1)
 		return (-1);
@@ -53,7 +53,7 @@ int	update_env(char *old_pwd, t_data *data)
 		return (-1);
 	ft_strlcpy(key_val, "PWD=", 5);
 	ft_strcat(key_val, buf);
-	ret = ft_export(key_val, data);
+	ret = ft_export_var(key_val, data);
 	free(key_val);
 	if (ret == 1)
 		return (-1);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/05 11:22:42 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:15:05 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,13 @@ static int	dup_fds(int fd, t_redir_type kind, int *in_redir, int *out_redir)
 	return (1);
 }
 
-static int	redir_error(char *path)
+static int	redir_error(char *path, int mode)
 {
 	write(STDERR_FILENO, "minishell: ", 11);
 	perror(path);
-	exit(1);
+	if (mode == 4)
+		return (1);
+	exit(1); // clean everything??
 }
 
 static int	ambig_redirect(void)
@@ -106,14 +108,14 @@ int	configure_redir(t_node *redir, t_data *data, int *in_redir, int *out_redir)
 				return (res);
 		}
 		if (dup_fds(fd, kind, in_redir, out_redir) == -1)
-			return (redir_error(redir->content.redir.path));
+			return (-2);
 		redir = redir->right_child;
 	}
 	return (1);
 }
 
 //need read end of previous for stdin and write end of current for stdout
-static int	exec_builtin(t_node *cmd, t_data *data)
+static int	exec_builtin(t_node *cmd, t_data *data, int mode)
 {
 	int	out;
 	int	in;
@@ -132,6 +134,8 @@ static int	exec_builtin(t_node *cmd, t_data *data)
 	if (cmd->right_child)
 	{
 		ret = configure_redir(cmd->right_child, data, &in, &out);
+		if (ret == -2)
+			return(redir_error(cmd->right_child->content.redir.path, mode));
 		if (ret < 0)
 			return (ret);
 	}
@@ -156,6 +160,8 @@ static int	exec_child(t_node *cmd, t_data *data, int mode)
 	if (cmd->right_child)
 	{
 		res = configure_redir(cmd->right_child, data, &in, &out);
+		if (res == -2)
+			return(redir_error(cmd->right_child->content.redir.path, 0));
 		if (res < 0)
 			exit(res);
 	}
@@ -186,17 +192,20 @@ static int	exec_child(t_node *cmd, t_data *data, int mode)
 			exec_fail(exec_path, cmd->left_child->content.tab[0], data);
 	}
 	else
-	{
+    {
 		res = run_builtins(cmd->left_child->content.tab, data, -2, -2);
-		free_tree(data->tree);
-		if (data->line != NULL)
-			free(data->line);
-		free_split(data->env);
-		free(data->default_path);
-		rl_clear_history();
+        free_tree(data->tree);
+        if (data->line != NULL)
+            free(data->line);
+        if (data->prompt != NULL)
+            free(data->prompt);
+        free_split(data->env);
+        if (data->default_path != NULL)
+			free(data->default_path);
+        rl_clear_history();
 		clean_data(data);
 		exit(res);
-	}
+    }
 	exit(0);
 }
 
@@ -214,7 +223,7 @@ int	exec_cmd(t_node *cmd, t_data *data, int mode)
 	if (is_builtin(cmd->left_child->content.tab[0]) && mode == 4)
 	{
 		data->pid_tab[data->cmd_cnt - 1] = -1;
-		return (exec_builtin(cmd, data));
+		return (exec_builtin(cmd, data, mode));
 	}
 	if (mode != 4)
 	{

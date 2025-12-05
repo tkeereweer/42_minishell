@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/05 13:11:37 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:11:46 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,8 @@ int 	ft_cd(char *path, t_data *data);
 int 	ft_pwd(void);
 void	ft_echo(char **args);
 void	ft_exit(unsigned int n, t_data *data, int fd1, int fd2);
-int		ft_export(char *key_val, t_data *data);
+int		ft_export(char **argv, t_data *data);
+int		ft_export_var(char *key_val, t_data *data);
 void	ft_unset(char **tab, t_data *data);
 void	ft_env(t_data *data);
 int		run_builtins(char **argv, t_data *data, int fd1, int fd2);

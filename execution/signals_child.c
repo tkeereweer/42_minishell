@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 11:56:55 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/03 15:56:16 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/05 10:52:50 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	signal_handler_child(int signal)
 {
 	if (signal == SIGINT || signal == SIGQUIT)
 	{
-		ft_printf("%c", '\n');
 		exit(signal);
 	}
 }
