@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 09:56:21 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/24 14:44:28 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/04 16:47:17 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int increment_subpipe(char ***subpipe, char *line, int *i, int *j)
 	if (!*subpipe)
 		return (0);
 	len = tab_len(*subpipe);
-	(*subpipe)[len] = ft_substr(line, *j, *i - *j);
+	(*subpipe)[len] = ft_substr(line, *j, *i - *j);//duplicates part of line before pipe
 	if (!(*subpipe)[len])
 		return (subpipe_error(-1, *subpipe));
 	(*subpipe)[len + 1] = ft_strdup("|");

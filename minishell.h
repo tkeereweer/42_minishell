@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/04 15:12:02 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/05 13:11:37 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,13 +98,13 @@ t_node	*create_logic_tree(t_list *list);
 int		create_cmd_trees(t_node *node);
 void	free_tree(t_node *tree);
 //parsing
-t_list	*clean_node_list(char *line, char ***path_tab);
+t_list	*clean_node_list(char **line, char ***path_tab);
 int 	open_par_token(t_list **list);
 int 	close_par_token(t_list **list);
 int		pipeline_token(char *str, t_list **list);
 int		and_token(t_list **list);
 int		or_token(t_list **list);
-int 	build_node_list(char *line, t_list **list, char ***path_tab);
+int 	build_node_list(char **line, t_list **list, char ***path_tab);
 char	is_sep(char *str);
 char	is_logic(char *str);
 char	is_redir(char *str);
@@ -158,11 +158,11 @@ char	*remove_redir(char *str, int start, int end);
 int 	ft_cd(char *path, t_data *data);
 int 	ft_pwd(void);
 void	ft_echo(char **args);
-void	ft_exit(unsigned int n, t_data *data);
+void	ft_exit(unsigned int n, t_data *data, int fd1, int fd2);
 int		ft_export(char *key_val, t_data *data);
 void	ft_unset(char **tab, t_data *data);
 void	ft_env(t_data *data);
-int		run_builtins(char **argv, t_data *data, int mode);
+int		run_builtins(char **argv, t_data *data, int fd1, int fd2);
 //utils
 char	*ft_strcat(char *dst, char *src);
 char	*ft_getenv(char *var, char **env);
@@ -179,7 +179,7 @@ int		exec_tree(t_node *node, t_data *data);
 int		exec_cmd(t_node *cmd, t_data *data, int mode);
 int		is_builtin(char *name);
 void	clean_exit(t_data *data, char *line, char *prompt);
-
+void	clean_data(t_data *data);
 
 char	*find_path(char **paths, char *cmd);
 char	*get_exe_path(t_data *data, char *cmd);

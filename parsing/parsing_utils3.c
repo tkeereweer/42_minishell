@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:39:11 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/02 18:02:38 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/04 17:25:39 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ int return_1_subpipe(char ***subpipe, char *line)
 	*subpipe = tab_realloc(*subpipe, 1);
 	if (!*subpipe)
 		return (-1);
-	(*subpipe)[0] = line;
+	(*subpipe)[0] = ft_strdup(line);
 	(*subpipe)[1] = NULL;
 	return (1);
 }

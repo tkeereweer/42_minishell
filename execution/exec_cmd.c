@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/04 15:17:21 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/05 11:22:42 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ int	configure_redir(t_node *redir, t_data *data, int *in_redir, int *out_redir)
 }
 
 //need read end of previous for stdin and write end of current for stdout
-static int	exec_builtin(t_node *cmd, t_data *data, int mode)
+static int	exec_builtin(t_node *cmd, t_data *data)
 {
 	int	out;
 	int	in;
@@ -123,6 +123,8 @@ static int	exec_builtin(t_node *cmd, t_data *data, int mode)
 
 	out = 0;
 	in = 0;
+	old_stdin = -1;
+	old_stdout = -1;
 	old_stdin = dup(STDIN_FILENO);
 	old_stdout = dup(STDOUT_FILENO);
 	if (old_stdin == -1 || old_stdout == -1)
@@ -133,7 +135,7 @@ static int	exec_builtin(t_node *cmd, t_data *data, int mode)
 		if (ret < 0)
 			return (ret);
 	}
-	ret = run_builtins(cmd->left_child->content.tab, data, mode);
+	ret = run_builtins(cmd->left_child->content.tab, data, old_stdin, old_stdout);
 	dup2(old_stdin, STDIN_FILENO);
 	close(old_stdin);
 	dup2(old_stdout, STDOUT_FILENO);
@@ -172,6 +174,7 @@ static int	exec_child(t_node *cmd, t_data *data, int mode)
 			if (!out)
 				dup2(data->pipe_tab[data->cmd_cnt - 1][1], STDOUT_FILENO);
 			close(data->pipe_tab[data->cmd_cnt - 1][1]);
+			close(data->pipe_tab[data->cmd_cnt - 1][0]);
 		}
 	}
 	if (!is_builtin(cmd->left_child->content.tab[0]))
@@ -183,17 +186,17 @@ static int	exec_child(t_node *cmd, t_data *data, int mode)
 			exec_fail(exec_path, cmd->left_child->content.tab[0], data);
 	}
 	else
-    {
-		run_builtins(cmd->left_child->content.tab, data, mode);
-        free_tree(data->tree);
-        if (data->line != NULL)
-            free(data->line);
-        if (data->prompt != NULL)
-            free(data->prompt);
-        free_split(data->env);
-        free(data->default_path);
-        rl_clear_history();
-    }
+	{
+		res = run_builtins(cmd->left_child->content.tab, data, -2, -2);
+		free_tree(data->tree);
+		if (data->line != NULL)
+			free(data->line);
+		free_split(data->env);
+		free(data->default_path);
+		rl_clear_history();
+		clean_data(data);
+		exit(res);
+	}
 	exit(0);
 }
 
@@ -211,7 +214,7 @@ int	exec_cmd(t_node *cmd, t_data *data, int mode)
 	if (is_builtin(cmd->left_child->content.tab[0]) && mode == 4)
 	{
 		data->pid_tab[data->cmd_cnt - 1] = -1;
-		return (exec_builtin(cmd, data, mode));
+		return (exec_builtin(cmd, data));
 	}
 	if (mode != 4)
 	{

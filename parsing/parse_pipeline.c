@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 20:16:56 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/03 18:34:41 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/04 17:22:50 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,15 +83,22 @@ static int	tokenize_pipe(char *line, t_list **lst)
 	while (line[i] && ft_is_whitespace(line[i]))
 		i++;
 	if (!line[i])
-		return (0);//exit code 1
+		return (0);
 	if (line[i] == '|')
-		return (-2);//"syntax error near '|'"
+		return (-2);
 	result = build_subpipe(&subpipe, line, &i);
 	if (result <= 0)
 		return (result);
 	result = tokenize_subpipe(subpipe, lst);
 	if (result <= 0)
 		return (result);
+    i = 0;
+    while (subpipe[i])
+    {
+        if (subpipe[i][0] == '|')
+            free(subpipe[i]);
+        i++;
+    }
     free(subpipe);
 	return (1);
 }

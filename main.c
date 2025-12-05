@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/04 15:16:43 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/05 13:13:05 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,17 +133,17 @@ int	only_whitespace(char *line)
 	return (1);
 }
 
-int	run_line(char *line, t_data *data)
+int	run_line(char **line, t_data *data)
 {
 	t_list	*list;
 	char	**temp;
 	int		res;
 
 	temp = NULL;
-	if (line != NULL && ft_strlen_gnl(line) != 0)
+	if (*line != NULL && ft_strlen_gnl(*line) != 0)
 	{
-		add_history(line);
-		if (only_whitespace(line) == 1)
+		add_history(*line);
+		if (only_whitespace(*line) == 1)
 			return (0);
 		list = clean_node_list(line, &temp);
 		if (list == NULL)
@@ -231,7 +231,7 @@ void	handle_next_cmd(t_data *data, char **envp)
 	free(data->prompt);
 	if (handle_signals_parent(1) == 1)
 		clean_exit(data, data->line, NULL);
-	if (run_line(data->line, data) == 1)
+	if (run_line(&(data->line), data) == 1)
 		clean_exit(data, data->line, NULL);
 }
 

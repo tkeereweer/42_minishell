@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 08:25:50 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/02 19:23:12 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/05 12:05:30 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,40 +51,23 @@ static char	**try_filepath(char **filepath, int count)
 	return (filepath);	
 }
 
-static char	*set_temp_limiter(char *limiter)
-{
-	char	*tmp_lim;
-
-	tmp_lim = (char *)malloc(sizeof(char) * (ft_strlen(limiter) + 2));
-	if (!tmp_lim)
-		return (NULL);
-	tmp_lim[0] = '\0';
-	tmp_lim = ft_strncat(tmp_lim, limiter, ft_strlen(limiter));
-	tmp_lim = ft_strncat(tmp_lim, "\n", 1);
-	return (tmp_lim);
-}
 static int	write_heredoc(char *limiter, int fd)
 {
 	char	*line;
-	char	*tmp_lim;
 
-	tmp_lim = set_temp_limiter(limiter);
-	if (!tmp_lim)
-		return (0);
-	write(STDIN_FILENO, "heredoc> ", 9);
-	line = get_next_line(STDIN_FILENO);
+    line = readline(">");
 	if (!line)
-		return (free(tmp_lim), -1);
-	while (line && ft_strncmp(line, tmp_lim, ft_strlen(tmp_lim)))//line != eof sent by ctrl D
+		return (free(limiter), -1);
+	while (line && ft_strncmp(line, limiter, ft_strlen(limiter)))//line != eof sent by ctrl D
 	{
 		ft_putstr_fd(line, fd);
+        ft_putstr_fd("\n", fd);
 		free(line);
-		write(STDIN_FILENO, "heredoc> ", 9);
-		line = get_next_line(STDIN_FILENO);
+        line = readline(">");
 	}
-	if (line)
-		free(line);
-	free(tmp_lim);
+    if (line)
+	    free(line);
+    close (fd);
 	return (1);
 }
 //function called when heredoc and valid limiter are found
@@ -112,6 +95,5 @@ char	**heredoc(char **path_tab, char *limiter, int quoted_heredoc)
 		return (free(path_tab), NULL);
 	if (!write_heredoc(limiter, fd))
 		return (free(path_tab), NULL);
-	close(fd);
 	return (path_tab);
 }
