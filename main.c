@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/05 10:17:35 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/05 12:08:28 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ int	run_line(char *line, t_data *data)
 			return (0);
 		list = clean_node_list(line, &temp);
 		if (list == NULL)
-			return (1);
+			return (0);
 		data->tree = create_logic_tree(list);
 		res = create_cmd_trees(data->tree);
 		if (res == 1)
