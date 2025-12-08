@@ -6,69 +6,52 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 10:14:03 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 17:00:30 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 21:28:22 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-char	*ft_getenv(char *var, char **env)
+static int build_new_str(char **expanded, char **str, char *envvar, int env_pos)
 {
-	int	i;
+	char	*new_str;
 
-	i = 0;
-	var++;
-	while (env[i] != NULL)
-	{
-		if (ft_strncmp(var, env[i], ft_strlen(var)) == 0 && env[i][ft_strlen(var)] == '=')
-			return (&env[i][ft_strlen(var) + 1]);
-		i++;
-	}
-	return (NULL);
+	if (!*expanded)
+		*expanded = ft_strdup("");
+	new_str = (char *) malloc((ft_strlen(*str) + ft_strlen_gnl(*expanded) - envvar_len(&(*str)[env_pos]) + 1) * sizeof(char));
+	if (new_str == NULL)
+		return (1);
+	new_str[0] = '\0';
+	ft_strncpy(new_str, *str, env_pos);
+	ft_strcat(new_str, *expanded);
+	ft_strcat(new_str, &(*str)[env_pos + envvar_len(&(*str)[env_pos])]);
+	if (envvar[1] == '?' && ft_strlen(envvar) == 2)
+		free(*expanded);
+	free(envvar);
+	free(*str);
+	*str = new_str;
+	return (0);
 }
 
-int	has_envvar(char *str, int i, int mode)
+static int return_variable(char **expanded, char *envvar, t_data *data)
 {
-	if (mode == 0)
-	{
-		while (str[i] != '\0' && str[i] != '"')
-		{
-			if (str[i] == '$')
-				return (i);
-			i++;
-		}
-	}
-	else
-	{
-		while (str[i] != '\0')
-		{
-			if (str[i] == '$')
-				return (i);
-			i++;
-		}		
-	}
-	return (-1);
-}
+	char	*itoa;
 
-int	envvar_len(char *str)
-{
-	int	i;
-
-	i = 1;
-	if (str[1] == '?')
-		return (i + 1);
-	while (str[i] != '\0' && (ft_isalnum(str[i]) == 1 || str[i] == '_'))
-		i++;
-	return (i);
+	itoa = ft_itoa(data->exit_status);
+	if (!itoa)
+		return (free(envvar), 1);
+	*expanded = ft_strdup(itoa);
+	free (itoa);
+	if (*expanded == NULL)
+		return (free(envvar), 1);
+	return (0);
 }
 
 int	expand_envvar_str(char **str, int i, t_data *data, int mode)
 {
 	int		env_pos;
-	char    *itoa;
 	char	*envvar;
 	char	*expanded;
-	char	*new_str;
 
 	env_pos = has_envvar(*str, i, mode);
 	if (env_pos == -1)
@@ -80,30 +63,13 @@ int	expand_envvar_str(char **str, int i, t_data *data, int mode)
 		return (free(envvar), 0);
 	if (envvar[1] == '?' && ft_strlen(envvar) == 2)
 	{
-		itoa = ft_itoa(data->exit_status);
-		if (!itoa)
-			return (free(envvar), 1);
-		expanded = ft_strdup(itoa);
-		free (itoa);
-		if (expanded == NULL)
-			return (free(envvar), 1);
+		if (return_variable(&expanded, envvar, data))
+			return (1);
 	}
 	else
 		expanded = ft_getenv(envvar, data->env);
-	if (!expanded)
-		expanded = ft_strdup("");
-	new_str = (char *) malloc((ft_strlen(*str) + ft_strlen_gnl(expanded) - envvar_len(&(*str)[env_pos]) + 1) * sizeof(char));
-	if (new_str == NULL)
+	if (build_new_str(&expanded, str, envvar, env_pos))
 		return (1);
-	new_str[0] = '\0';
-	ft_strncpy(new_str, *str, env_pos);
-	ft_strcat(new_str, expanded);
-	ft_strcat(new_str, &(*str)[env_pos + envvar_len(&(*str)[env_pos])]);
-	if (envvar[1] == '?' && ft_strlen(envvar) == 2)
-		free(expanded);
-	free(envvar);
-	free(*str);
-	*str = new_str;
 	return (expand_envvar_str(str, i, data, mode));
 }
 
@@ -136,20 +102,6 @@ int	expand_envvars(char **str, t_data *data)
 				i++;
 			continue ;
 		}
-		i++;
-	}
-	return (0);
-}
-
-static int is_ambiguous(char *str)
-{
-	int i;
-
-	i = 0;
-	while (str[i] && str[i] != '\'' && str[i] != '"')
-	{
-		if (ft_is_whitespace(str[i]))
-			return (-1);
 		i++;
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 17:46:51 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 14:58:03 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 20:59:54 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,17 +35,6 @@ void	add_cmd_children(t_node *cmd, t_list **pipeline)
 	}
 	if (*pipeline != NULL)
 		*pipeline = (*pipeline)->next;
-}
-
-int	is_last_pipe(t_list *pipeline)
-{
-	while (pipeline != NULL)
-	{
-		if (pipeline->content->type == PIPE)
-			return (0);
-		pipeline = pipeline->next;
-	}
-	return (1);
 }
 
 static int  new_pipeline_node(t_node *node, t_content cont, t_list **pipeline)
@@ -87,34 +76,6 @@ int	populate_cmd_tree(t_list **pipeline, t_node *node)
 		}
 	}
 	return (0);
-}
-
-void	free_pipeline_list(t_list *pipeline)
-{
-	t_list	*next;
-
-	while (pipeline != NULL)
-	{
-		next = pipeline->next;
-		if (pipeline->content->type == PIPE)
-			free(pipeline->content);
-		free(pipeline);
-		pipeline = next;
-	}
-}
-
-void	handle_error_pipeline_list(t_node *node)
-{
-	if (node->parent == NULL || node->parent->right_child == node)
-		ft_putstr_fd("minishell: syntax error near unexpected token: 'newline'\n", STDERR_FILENO);
-	else
-	{
-		ft_putstr_fd("minishell: syntax error near unexpected token: '", STDERR_FILENO);
-		if (node->parent->content.logic == AND)
-			ft_putstr_fd("&&'\n", STDERR_FILENO);
-		else
-			ft_putstr_fd("||'\n", STDERR_FILENO);
-	}
 }
 
 static int	pipeline_error(int res, t_node *node, t_list *pipeline)

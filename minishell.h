@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 14:51:33 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 21:30:51 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,10 @@ t_list	*syntax_error(t_list **lst);
 int     check_unclosed_par(t_list **list);
 int		tab_len(char **tab);
 char	**args_tab(char *str);
+char	*replace_with_path(char *dest, char *path, int start, int end);
+void	free_pipeline_list(t_list *pipeline);
+void	handle_error_pipeline_list(t_node *node);
+int     is_last_pipe(t_list *pipeline);
 //parsing end
 // variable expansion
 int		expand_envvars(char **str, t_data *data);
@@ -148,6 +152,11 @@ int		expand_wildcards_redir(char **path, char *pat);
 int		expand_vars(char ***tab, t_data *data);
 int		expand_vars_redir(char **path, t_data *data);
 int     remove_quotes(char **str);
+char	*ft_getenv(char *var, char **env);
+int     has_envvar(char *str, int i, int mode);
+int     envvar_len(char *str);
+int     is_ambiguous(char *str);
+int     in_quotes(char *str, int idx);
 //testing
 void	draw_tree(t_node *root);
 void	free_split(char **tab);
@@ -164,6 +173,12 @@ int		ft_export_var(char *key_val, t_data *data);
 void	ft_unset(char **tab, t_data *data);
 void	ft_env(t_data *data);
 int		run_builtins(char **argv, t_data *data, int fd1, int fd2);
+char	**get_envvar_pointer(char *var, char **env);
+int     get_key_len(char *key_val);
+int     valid_key(char *key, int key_len);
+int     add_key(char *key_val, t_data *data);
+int     key_already_exists(char **curr_key_val, char *key_val);
+int     has_wc(char *str);
 //utils
 char	*ft_strcat(char *dst, char *src);
 char	*ft_getenv(char *var, char **env);
@@ -172,6 +187,7 @@ int		handle_signals_child(void);
 char	**get_envvar_pointer(char *var, char **env);
 char	*my_realloc(char *ptr, size_t size);
 int     ft_strcmp(const char *s1, const char *s2);
+char	*str_realloc(char *ptr, size_t size);
 //heredoc
 char	**heredoc(char **path_tab, char *limiter, int quoted_heredoc);
 int     set_heredoc(char **line, int *j, char ***tab);
@@ -194,5 +210,9 @@ int		create_pid(t_node *arg, t_data *data);
 int		**int_tab_realloc(int **tab, int size);
 int		**new_int_tab(int size);
 int		valid_char(char *str);
+int     redir_error(char *path, int mode);
+int     ambig_redirect(void);
+int     exec_child(t_node *cmd, t_data *data, int mode);
+void    dup_old_streams(int old_stdin, int old_stdout);
 #endif
 

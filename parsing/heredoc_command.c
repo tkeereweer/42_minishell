@@ -6,51 +6,11 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 14:29:27 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/08 15:11:02 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 20:51:51 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	clean_path_tab(char **path_tab)
-{
-	int i;
-
-	if (!path_tab)
-		return;
-	i = 0;
-	while(path_tab[i])
-	{
-		if (unlink(path_tab[i]) == -1)
-		{
-			ft_putstr_fd("failed to delete temp file: ", STDERR_FILENO);
-			ft_putstr_fd(path_tab[i], STDERR_FILENO);
-			write(STDERR_FILENO, "\n", 1);
-		}
-		free(path_tab[i]);
-		path_tab[i] = NULL;
-		i++;
-	}
-	free(path_tab);
-	return;
-}
-
-//start and end are indexes in the main line
-//remove end - start + 1 and add ft_strlen(path)
-char	*replace_with_path(char *dest, char *path, int start, int end)
-{
-	char    *temp;
-	size_t  new_len;
-
-	new_len = ft_strlen(dest) - ( end - start + 1) + ft_strlen(path) + 1;
-	temp = (char *)ft_calloc(sizeof(char), new_len + 1);
-	if (!temp)
-		return (NULL);
-	ft_strncat(temp, dest, start);
-	ft_strncat(temp, path, ft_strlen(path));
-	ft_strncat(temp, &dest[end], ft_strlen(&dest[end]));
-	return (temp);
-}
 
 static char *is_heredoc_quoted(char **line, int *j, int *quoted_heredoc, int *end)
 {

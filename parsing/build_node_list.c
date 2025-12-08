@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 11:50:24 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/08 18:24:59 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 21:02:38 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,54 +112,3 @@ int build_node_list(char **line, t_list **list, char ***path_tab)
     return(logic_check(temp));
 }
 
-static int  check_par_usage(t_list **temp)
-{
-	while ((*temp))
-	{
-		if ((*temp)->content->type == PAR && (*temp)->content->content.parenthesis == '(')
-		{
-			if ((*temp)->next && (*temp)->next->content->content.parenthesis == ')')
-				return (-3);
-			if ((*temp)->prev && (*temp)->prev->content->type == PIPELINE)
-				return (-1);
-		}
-		if ((*temp)->content->type == PAR && (*temp)->content->content.parenthesis == ')')
-		{
-			if ((*temp)->next && (*temp)->next->content->content.parenthesis == '(')
-				return (-3);
-			if ((*temp)->next && (*temp)->next->content->type == PIPELINE)
-				return (-2);
-		}
-		(*temp) = (*temp)->next;
-	}
-	return (1);
-}
-
-t_list	*clean_node_list(char **line, char ***path_tab)
-{
-	int     result;
-	t_list	*list;
-	t_list	*temp;
-
-	list = NULL;
-	result = build_node_list(line, &list, path_tab);
-	if (result == 0)
-		return (list_error(&list, "minishell: unclosed quotes\n", NULL));
-	if (result == -1)
-		return (list_error(&list, "minishell: malloc fail somewhere\n", NULL));
-	if (result == -2)
-		return (list_error(&list, "minishell: dangling logical operator\n", NULL));
-	if (result == -3)
-		return (syntax_error(&list)); 
-	if (check_unclosed_par(&list) == -1)
-		return (list_error(&list, "minishell: unclosed parenthesis\n", NULL));
-	temp = list;
-	result = check_par_usage(&temp);
-	if (result == -1)
-		return (list_error(&list, "minishell: wrong parentheses usage\n", NULL));
-	if (result == -2)
-		return (list_error(&list, "minishell: syntax error\n", &temp));
-	if (result == -3)
-		return (list_error(&list, "minishell: syntax error near unexpected token: ')'\n", &temp));
-	return (list);
-}

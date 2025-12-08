@@ -6,30 +6,11 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 09:21:20 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 16:52:37 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 21:06:27 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
-
-char	*str_realloc(char *ptr, size_t size)
-{
-	char	*out;
-
-	out = (char *) malloc(size);
-	if (out == NULL)
-	{
-		if (ptr)
-			free(ptr);
-		return (NULL);
-	}
-	if (ptr)
-	{
-		ft_strlcpy(out, ptr, size);
-		free(ptr);
-	}
-	return (out);
-}
 
 int	update_env(char *old_pwd, t_data *data)
 {

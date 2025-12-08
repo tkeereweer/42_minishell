@@ -6,37 +6,11 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:21:39 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 17:57:09 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 20:56:22 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-t_node	*node_new(t_content content, t_type type)
-{
-	t_node	*new;
-
-	new = (t_node *) malloc(sizeof(t_node));
-	if (new == NULL)
-		return (NULL);
-	new->type = type;
-	if (type == LOGIC)
-		new->content.logic = content.logic;
-	else if (type == PIPELINE)
-		new->content.str = content.str;
-	else if (type == CMD)
-		new->content.str = content.str;
-	else if (type == ARGS)
-		new->content.str = content.str;
-	else if (type == REDIR)
-		new->content.redir = content.redir;
-	else
-		new->content = content;
-	new->left_child = NULL;
-	new->right_child = NULL;
-	new->parent = NULL;
-	return (new);
-}
 
 void	clean_par(t_list **list)
 {
@@ -61,7 +35,7 @@ void	clean_par(t_list **list)
 	free(tmp);
 }
 
-void	cut_at_eob(t_list **list)
+static void	cut_at_eob(t_list **list)
 {
 	int	par_cnt;
 
@@ -131,17 +105,4 @@ t_node	*create_logic_tree(t_list *list)
 		free(tmp);
 	}
 	return (ret);
-}
-// free malloced pointers in tree->content
-void	free_tree(t_node *tree)
-{
-	if (tree == NULL)
-		return ;
-	free_tree(tree->left_child);
-	free_tree(tree->right_child);
-	if (tree->type == ARGS)
-		free_split(tree->content.tab);
-	else if (tree->type == REDIR)
-		free(tree->content.redir.path);
-	free(tree);
 }
