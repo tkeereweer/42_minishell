@@ -3,54 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/05 14:10:29 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/08 14:04:14 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 volatile sig_atomic_t	g_signum = 0;
-
-// void	print_tree(t_node *node)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	if (node == NULL)
-// 		return ;
-// 	print_tree(node->left_child);
-// 	if (node->type == PIPELINE)
-// 		ft_printf("%s\n", "PIPELINE");
-// 	else if (node->type == CMD)
-// 		ft_printf("%s\n", "CMD");
-// 	else if (node->type == LOGIC)
-// 	{
-// 		if (node->content.logic == AND)
-// 			ft_printf("%s\n", "AND");
-// 		else if (node->content.logic == OR)
-// 			ft_printf("%s\n", "OR");
-// 	}
-// 	else if (node->type == ARGS)
-// 	{
-// 		ft_printf("%s: ", "ARGS");
-// 		while (node->content.tab[i] != NULL)
-// 		{
-// 			ft_printf("%s; ", node->content.tab[i]);
-// 			i++;
-// 		}
-// 		ft_printf("%c", '\n');
-// 	}
-// 	else if (node->type == REDIR)
-// 	{
-// 		ft_printf("%s: ", "REDIR");
-// 		ft_printf("%s; ", "**kind**");
-// 		ft_printf("%s;\n", node->content.redir.path);
-// 	}
-// 	print_tree(node->right_child);
-// }
 
 int	set_minimal_env(t_data *data)
 {
@@ -209,7 +171,11 @@ char	*build_prompt(t_data *data, char **envp)
 	}
 	user = ft_getenv("$USER", data->env);
 	if (user == NULL)
-		return (NULL);
+    {
+		user = ft_strdup("");
+        if (!user)
+            return (NULL);
+    }
 	if (getcwd(buf, PATH_MAX) == NULL)
 		return (NULL);
 	prompt = (char *) malloc((ft_strlen(user) + ft_strlen(buf) + 4)

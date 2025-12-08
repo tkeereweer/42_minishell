@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 15:24:33 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/02 15:35:10 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 11:15:36 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,7 +205,7 @@ int	expand_wildcards_redir(char **path, char *pat)
     {
         if (closedir(dir_stream) == -1)
             return (-1);
-        return (-2);        
+        return (-4);        
     }
 	return (closedir(dir_stream));
 }

@@ -6,11 +6,21 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 16:59:37 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 09:42:10 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 10:05:02 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+static char	*init_path(int *i, char **ret, char **temp1, char *cmd)
+{
+	*i = 0;
+	*ret = NULL;
+	*temp1 = ft_strjoin("/", cmd);
+	if (!*temp1)
+		return (NULL);
+	return (cmd);
+}
 
 char	*find_path(char **paths, char *cmd)
 {
@@ -19,12 +29,9 @@ char	*find_path(char **paths, char *cmd)
 	char	*temp1;
 	char	*ret;
 
-	i = 0;
-	ret = NULL;
 	if (cmd[0] == '/')
 		return (ft_strdup(cmd));
-	temp1 = ft_strjoin("/", cmd);
-	if (!temp1)
+	if (!init_path(&i, &ret, &temp1, cmd))
 		return (NULL);
 	while (paths[i])
 	{
@@ -40,9 +47,7 @@ char	*find_path(char **paths, char *cmd)
 		free(temp);
 		i++;
 	}
-	free(temp1);
-	free_split(paths);
-	return (ret);
+	return (free(temp1), free_split(paths), ret);
 }
 
 //the + 1 in the substr is to include a / before the join
@@ -50,19 +55,23 @@ static char *find_local_path(t_data *data, char *cmd)
 {
 	char    *ret;
 	char    *pwd;
-	char    *curr_wd;
-	int     i;
 
-	if (!ft_strncmp(cmd, "./", 2))
-	{
-		pwd = ft_getenv("$PWD", data->env);
-		if (!pwd)
-			return (NULL);
-		ret = ft_strjoin(pwd, &cmd[1]);
-		if (!ret)
-			return (NULL);
-		return (ret);
-	}
+	pwd = ft_getenv("$PWD", data->env);
+	if (!pwd)
+		return (NULL);
+	ret = ft_strjoin(pwd, &cmd[1]);
+	if (!ret)
+		return (NULL);
+	return (ret);
+}
+
+static char *find_relative_path(char *cmd)
+{
+	int     i;
+	char    *pwd;
+	char    *curr_wd;
+	char    *ret;
+	
 	i = 1;
 	while (cmd[ft_strlen(cmd) - i] != '/')
 		i++;
@@ -87,8 +96,10 @@ char	*get_exe_path(t_data *data, char *cmd)
 	char 	*env_path;
 	char	**paths;
 
-	if (!ft_strncmp(cmd, "./", 2) || !ft_strncmp(cmd, "../", 3))
+	if (!ft_strncmp(cmd, "./", 2))
 		return (find_local_path(data, cmd));
+	if (!ft_strncmp(cmd, "../", 3))
+		return (find_relative_path(cmd));
 	if (cmd[0] == '\0')
 		return (cmd);
 	env_path = ft_getenv("$PATH", data->env);

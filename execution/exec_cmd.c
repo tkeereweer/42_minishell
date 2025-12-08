@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/05 16:57:50 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 11:16:33 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int	ambig_redirect(void)
 {
 	write(STDERR_FILENO, "minishell: ", ft_strlen("minishell: "));
 	write(STDERR_FILENO, "ambiguous redirect\n", ft_strlen(" ambiguous redirect\n"));
-	return (-2);
+	return (-4);
 }
 
 //check for env variable expansion in heredoc
@@ -79,6 +79,29 @@ static int	expand_heredoc(int fd, char *path, t_data *data)
 	return (free(temp), free(file), 1);
 }
 
+static int  open_redir(int *fd, t_redir_type kind, t_node *redir, t_data *data)
+{
+    int res;
+
+	if (kind == WRITE)
+		*fd = open(redir->content.redir.path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	else if (kind == APPEND)
+		*fd = open(redir->content.redir.path, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	else if (kind == READ)
+		*fd = open(redir->content.redir.path, O_RDONLY);
+	else if (kind == HEREDOC)
+	{
+		*fd = open(redir->content.redir.path, O_RDONLY);
+		res = expand_heredoc(*fd, redir->content.redir.path, data);
+		if (res < 0)
+        {
+            close(*fd);
+	    	return (res);
+        }
+    }
+    return (1);
+}
+
 int	configure_redir(t_node *redir, t_data *data, int *in_redir, int *out_redir)
 {
 	int				fd;
@@ -91,25 +114,12 @@ int	configure_redir(t_node *redir, t_data *data, int *in_redir, int *out_redir)
 		res = expand_vars_redir(&(redir->content.redir.path), data);
 		if (res == -1)
 			return (-1);
-		if (res == -2)
+		if (res == -4)
 			return (ambig_redirect());
 		kind = redir->content.redir.kind;
-		if (kind == WRITE)
-			fd = open(redir->content.redir.path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else if (kind == APPEND)
-			fd = open(redir->content.redir.path, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		else if (kind == READ)
-			fd = open(redir->content.redir.path, O_RDONLY);
-		else if (kind == HEREDOC)
-		{
-			fd = open(redir->content.redir.path, O_RDONLY);
-			res = expand_heredoc(fd, redir->content.redir.path, data);
-			if (res < 0)
-            {
-                close(fd);
-				return (res);
-            }
-		}
+        res = open_redir(&fd, kind, redir, data);
+        if (res < 0)
+            return (res);
 		if (dup_fds(fd, kind, in_redir, out_redir) == -1)
         {
             close(fd);
@@ -118,6 +128,14 @@ int	configure_redir(t_node *redir, t_data *data, int *in_redir, int *out_redir)
 		redir = redir->right_child;
 	}
 	return (1);
+}
+
+static void dup_old_streams(int old_stdin, int old_stdout)
+{
+	dup2(old_stdin, STDIN_FILENO);
+	close(old_stdin);
+	dup2(old_stdout, STDOUT_FILENO);
+	close(old_stdout);
 }
 
 //need read end of previous for stdin and write end of current for stdout
@@ -146,10 +164,7 @@ static int	exec_builtin(t_node *cmd, t_data *data, int mode)
 			return (ret);
 	}
 	ret = run_builtins(cmd->left_child->content.tab, data, old_stdin, old_stdout);
-	dup2(old_stdin, STDIN_FILENO);
-	close(old_stdin);
-	dup2(old_stdout, STDOUT_FILENO);
-	close(old_stdout);
+    dup_old_streams(old_stdin, old_stdout);
 	return (ret);
 }
 

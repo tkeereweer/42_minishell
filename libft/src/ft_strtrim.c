@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 10:17:54 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/18 17:03:40 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 11:09:22 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,9 @@ char	*ft_strtrim(const char *str, const char *set)
 		i++;
 	len = ft_strlen(str);
 	j = 0;
-	while (str[len - 1 - j] && is_in_set(str[len - 1 - j], set))
+	while (j < len - 1 && is_in_set(str[len - 1 - j], set))
 		j++;
 	if (i >= len - j)
 		return (ft_strdup(""));
 	return (ft_substr(str, i, len - j - i));
 }
-/*
-int main(void)
-{
-	char *test = "  \t \t \n   \n\n\n\t";
-	char *set = " \n\t";
-	char *dest = ft_strtrim(test, set);
-	printf("str: %s, set: %s, result: %s", test, set, dest);
-	free(dest);
-}*/
