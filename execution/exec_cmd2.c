@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 16:59:37 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/05 18:20:39 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 09:42:10 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ static char *find_local_path(t_data *data, char *cmd)
 {
 	char    *ret;
 	char    *pwd;
+	char    *curr_wd;
 	int     i;
 
 	if (!ft_strncmp(cmd, "./", 2))
@@ -70,8 +71,15 @@ static char *find_local_path(t_data *data, char *cmd)
 		return (NULL);
 	if (chdir(pwd) == -1)
 		return (free(pwd), NULL);
-	ret = ft_strjoin(pwd, &cmd[ft_strlen(cmd) - i]);
-	return (free(pwd), ret);
+	curr_wd = getcwd(NULL, 0);
+	free(pwd);
+	if (!curr_wd)
+		return (NULL);
+	ret = ft_strjoin(curr_wd, "/");
+	if (!ret)
+		return (NULL);
+	curr_wd = ft_strjoin(ret, &cmd[ft_strlen(cmd) - i + 1]);
+	return (free(ret), curr_wd);
 }
 
 char	*get_exe_path(t_data *data, char *cmd)
