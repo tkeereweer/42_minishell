@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   logic_tree.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:21:39 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/01 17:30:03 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/08 17:57:09 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,12 @@ void	cut_at_eob(t_list **list)
 	}
 }
 
+static void move_list(t_node **node, t_list **list)
+{
+	(*node)->right_child = (*list)->content;
+	(*list) = (*list)->next;
+}
+
 t_node	*populate_logic_tree(t_list *list)
 {
 	t_node	*node;
@@ -104,10 +110,7 @@ t_node	*populate_logic_tree(t_list *list)
 			node->right_child = populate_logic_tree(start_of_block);
 		}
 		else if (list->content->type == PIPELINE)
-		{
-			node->right_child = list->content;
-			list = list->next;
-		}
+			move_list(&node, &list);
 		node->right_child->parent = node;
 	}
 	return (node);
@@ -129,7 +132,7 @@ t_node	*create_logic_tree(t_list *list)
 	}
 	return (ret);
 }
-
+// free malloced pointers in tree->content
 void	free_tree(t_node *tree)
 {
 	if (tree == NULL)
@@ -140,55 +143,5 @@ void	free_tree(t_node *tree)
 		free_split(tree->content.tab);
 	else if (tree->type == REDIR)
 		free(tree->content.redir.path);
-	// free malloced pointers in tree->content
 	free(tree);
 }
-
-// int	main(void)
-// {
-// 	t_content	content;
-// 	t_list		*lst;
-// 	t_node		*tree;
-
-// 	// content.parenthesis = '(';
-// 	// lst = ft_lstnew(node_new(content, PAR));
-// 	// content.parenthesis = '1';
-// 	// ft_lstadd_back(&lst, ft_lstnew(node_new(content, PIPELINE)));
-// 	// content.logic = AND;
-// 	// ft_lstadd_back(&lst, ft_lstnew(node_new(content, LOGIC)));
-// 	// content.parenthesis = '2';
-// 	// ft_lstadd_back(&lst, ft_lstnew(node_new(content, PIPELINE)));
-// 	// content.parenthesis = ')';
-// 	// ft_lstadd_back(&lst, ft_lstnew(node_new(content, PAR)));
-// 	// content.logic = OR;
-// 	// ft_lstadd_back(&lst, ft_lstnew(node_new(content, LOGIC)));
-// 	// content.parenthesis = '3';
-// 	// ft_lstadd_back(&lst, ft_lstnew(node_new(content, PIPELINE)));
-
-// 	content.parenthesis = '1';
-// 	lst = ft_lstnew(node_new(content, PIPELINE));
-// 	content.logic = OR;
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, LOGIC)));
-// 	content.parenthesis = '(';
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PAR)));
-// 	content.parenthesis = '(';
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PAR)));
-// 	content.parenthesis = '2';
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PIPELINE)));
-// 	content.logic = AND;
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, LOGIC)));
-// 	content.parenthesis = '3';
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PIPELINE)));
-// 	content.parenthesis = ')';
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PAR)));
-// 	content.logic = AND;
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, LOGIC)));
-// 	content.parenthesis = '4';
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PIPELINE)));
-// 	content.parenthesis = ')';
-// 	ft_lstadd_back(&lst, ft_lstnew(node_new(content, PAR)));
-// 	tree = create_logic_tree(lst);
-// 	// populate_cmd_trees(tree);
-// 	free_tree(tree);
-// 	return (0);
-// }

@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 17:46:51 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/04 14:59:43 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 14:58:03 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,18 @@ int	is_last_pipe(t_list *pipeline)
 	return (1);
 }
 
+static int  new_pipeline_node(t_node *node, t_content cont, t_list **pipeline)
+{
+	node->right_child = node_new(cont, PIPELINE);
+	if (node->right_child == NULL)
+		return (1);
+	node->right_child->parent = node;
+		node = node->right_child;
+	if (populate_cmd_tree(pipeline, node) == 1)
+		return (1);
+	return (0);
+}
+
 int	populate_cmd_tree(t_list **pipeline, t_node *node)
 {
 	t_content	cont;
@@ -63,15 +75,7 @@ int	populate_cmd_tree(t_list **pipeline, t_node *node)
 		if (*pipeline != NULL)
 		{
 			if (is_last_pipe(*pipeline) == 0)
-			{
-				node->right_child = node_new(cont, PIPELINE);
-				if (node->right_child == NULL)
-					return (1);
-				node->right_child->parent = node;
-				node = node->right_child;
-				if (populate_cmd_tree(pipeline, node) == 1)
-					return (1);
-			}
+				return (new_pipeline_node(node, cont, pipeline));
 			else
 			{
 				node->right_child = node_new(cont, CMD);
@@ -113,6 +117,17 @@ void	handle_error_pipeline_list(t_node *node)
 	}
 }
 
+static int	pipeline_error(int res, t_node *node, t_list *pipeline)
+{
+	if (res == -1)
+		handle_error_pipeline_list(node);
+	free_pipeline_list(pipeline);
+    if (res == 0)
+	    return (1);
+    else
+	    return (2);
+}
+
 int	create_cmd_trees(t_node *node)
 {
 	t_list	*pipeline;
@@ -132,22 +147,11 @@ int	create_cmd_trees(t_node *node)
 	{
 		res = pipeline_list(node->content.str, &pipeline);
 		if (res <= 0)
-		{
-			if (res == -1)
-				handle_error_pipeline_list(node);
-			free_pipeline_list(pipeline);
-            if (res == 0)
-			    return (1);
-            else
-                return (2);
-		}
+			return (pipeline_error(res, node, pipeline));
 		start_list = pipeline;
 		free(node->content.str);
 		if (populate_cmd_tree(&pipeline, node) == 1)
-		{
-			free_pipeline_list(start_list);
-			return (1);
-		}
+			return (free_pipeline_list(start_list), 1);
 		free_pipeline_list(start_list);
 	}
 	return (0);

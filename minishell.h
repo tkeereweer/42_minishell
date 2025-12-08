@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 14:09:17 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 14:51:33 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,14 +175,14 @@ int     ft_strcmp(const char *s1, const char *s2);
 //heredoc
 char	**heredoc(char **path_tab, char *limiter, int quoted_heredoc);
 int     set_heredoc(char **line, int *j, char ***tab);
-int		clean_path_tab(char **path_tab);
+void	clean_path_tab(char **path_tab);
 // execution
 int		exec_tree(t_node *node, t_data *data);
 int		exec_cmd(t_node *cmd, t_data *data, int mode);
 int		is_builtin(char *name);
 void	clean_exit(t_data *data, char *line, char *prompt);
 void	clean_data(t_data *data);
-
+int	    populate_cmd_tree(t_list **pipeline, t_node *node);
 char	*find_path(char **paths, char *cmd);
 char	*get_exe_path(t_data *data, char *cmd);
 void	cmd_not_found(char *cmd, t_data *data);

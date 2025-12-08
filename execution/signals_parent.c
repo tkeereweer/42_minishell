@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals_parent.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 11:56:55 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/05 11:05:49 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/08 16:39:49 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,3 @@ int	handle_signals_parent(int mode)
 		return (1);
 	return (0);
 }
-
-// int	main(void)
-// {
-// 	handle_termios();
-// 	set_signal_parent();
-// 	while (1)
-// 		continue;
-// 	return (0);
-// }

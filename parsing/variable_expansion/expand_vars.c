@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 10:50:02 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 13:45:35 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 17:50:36 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	expand_vars(char ***tab, t_data *data)
 int	expand_vars_redir(char **path, t_data *data)
 {
     int res;
-    //expand functions return -2 on ambig redirect
+    
 	res = expand_envvars_redir(path, data);
     if (res < 0)
 		return (res);
@@ -77,3 +77,22 @@ int	expand_vars_redir(char **path, t_data *data)
 		return (-1);
 	return (0);
 }
+
+char	*ft_strcat(char *dst, char *src)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (dst[i] != '\0')
+		i++;
+	while (src[j] != '\0')
+	{
+		dst[i + j] = src[j];
+		j++;
+	}
+	dst[i + j] = '\0';
+	return (dst);
+}
+

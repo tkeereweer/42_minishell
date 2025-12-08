@@ -6,11 +6,20 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 11:50:24 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/05 13:22:17 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 18:24:59 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+static void increment_quote(char **line, int *j, int *quote_big, int *quote_small)
+{
+	if ((*line)[*j] == '\'' && (*quote_big % 2 == 0))
+		*quote_small += 1;
+	if ((*line)[*j] == '"' && (*quote_small % 2 == 0))
+		*quote_big += 1;
+    return;
+}
 
 int  check_quote_balance(char **line, int *j, char ***tab)
 {
@@ -25,12 +34,7 @@ int  check_quote_balance(char **line, int *j, char ***tab)
 		if (is_sep(&(*line)[*j]) && (quote_small % 2 == 0) && (quote_big % 2 == 0))
 			break;
 		if ((*line)[*j] == '\'' || (*line)[*j] == '"')
-		{
-			if ((*line)[*j] == '\'' && (quote_big % 2 == 0))
-				quote_small++;
-			if ((*line)[*j] == '"' && (quote_small % 2 == 0))
-				quote_big++;
-		}
+            increment_quote(line, j, &quote_big, &quote_small);
 		if ((*line)[*j] == '<' && (*line)[*j +  1] && (*line)[*j + 1] == '<')
 		{
 			res = set_heredoc(line, j, tab);
@@ -42,7 +46,7 @@ int  check_quote_balance(char **line, int *j, char ***tab)
 		*j += 1;
 	}
 	if ((quote_small % 2 == 1) || (quote_big % 2 == 1))
-		return (0); //unclosed quote error RETURN CHARACTER WITH UNCLOSED TOKEN
+		return (0);
 	return (1);
 }
 
@@ -65,6 +69,16 @@ static int	tokenize_pipeline(char **line, int *i, t_list **list, char ***tab)
 	return (1);
 }
 
+static int logic_check(t_list *temp)
+{
+	if (temp->content->type == LOGIC)
+	{
+		if (!temp->prev)
+			return (-3);
+		return (-2);
+	}
+	return (1); 
+}
 
 //i is static to output a node once i find it, then go back to the parsing
 // metachar detection
@@ -91,17 +105,11 @@ int build_node_list(char **line, t_list **list, char ***path_tab)
 		{
 			result = tokenize_pipeline(line, &i, list, path_tab);
 			if (result <= 0)
-				return (result);//returns 0 means unclosed quotes
+				return (result);
 		}
 		temp = set_temp(list, temp);
 	}
-	if (temp->content->type == LOGIC)
-	{
-		if (!temp->prev)
-			return (-3);
-		return (-2);
-	}
-	return (1);
+    return(logic_check(temp));
 }
 
 static int  check_par_usage(t_list **temp)
@@ -113,14 +121,14 @@ static int  check_par_usage(t_list **temp)
 			if ((*temp)->next && (*temp)->next->content->content.parenthesis == ')')
 				return (-3);
 			if ((*temp)->prev && (*temp)->prev->content->type == PIPELINE)
-				return (-1);//wrong par usage
+				return (-1);
 		}
 		if ((*temp)->content->type == PAR && (*temp)->content->content.parenthesis == ')')
 		{
 			if ((*temp)->next && (*temp)->next->content->content.parenthesis == '(')
 				return (-3);
 			if ((*temp)->next && (*temp)->next->content->type == PIPELINE)
-				return (-2);//syntax error near **first word of next token**
+				return (-2);
 		}
 		(*temp) = (*temp)->next;
 	}

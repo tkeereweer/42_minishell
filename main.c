@@ -6,13 +6,22 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 14:04:14 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 14:40:30 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 volatile sig_atomic_t	g_signum = 0;
+
+static void min_env_shlvl(t_data *data, char **temp, char *buf)
+{
+	ft_strcat(*temp, "PWD=");
+	ft_strcat(*temp, buf);
+	data->env[0] = *temp;
+	data->env[1] = ft_strdup("SHLVL=1");
+    return ;
+}
 
 int	set_minimal_env(t_data *data)
 {
@@ -29,10 +38,7 @@ int	set_minimal_env(t_data *data)
 	temp = (char *)malloc(len);
 	if (!temp)
 		return (free(data->env), 1);
-	ft_strcat(temp, "PWD=");
-	ft_strcat(temp, buf);
-	data->env[0] = temp;
-	data->env[1] = ft_strdup("SHLVL=1");
+    min_env_shlvl(data, &temp, buf);
 	if (!data->env[1])
 		return (free_split(data->env), 1);
 	data->env[2] = ft_strdup("_=/usr/bin/env");
@@ -99,13 +105,12 @@ int	only_whitespace(char *line)
 	return (1);
 }
 
-int	run_line(char **line, t_data *data)
+//temp is initialized to NULL outside of here to save two lines
+int	run_line(char **line, t_data *data, char **temp)
 {
 	t_list	*list;
-	char	**temp;
 	int		res;
 
-	temp = NULL;
 	if (*line != NULL && ft_strlen_gnl(*line) != 0)
 	{
 		add_history(*line);
@@ -117,11 +122,7 @@ int	run_line(char **line, t_data *data)
 		data->tree = create_logic_tree(list);
 		res = create_cmd_trees(data->tree);
 		if (res == 1)
-		{
-			free_tree(data->tree);
-			clean_path_tab(temp);
-			return (1);
-		}
+			return (free_tree(data->tree), clean_path_tab(temp), 1);
 		if (res == 2)
 			return (0);
 		if (g_signum == 0)
@@ -129,8 +130,7 @@ int	run_line(char **line, t_data *data)
 		else
 			data->exit_status = 128 + g_signum;
 		free_tree(data->tree);
-		if (clean_path_tab(temp) == -1)
-			return (1);
+		clean_path_tab(temp);
 	}
 	return (0);
 }
@@ -152,6 +152,21 @@ t_data	init_data(char **envp)
 	return (data);
 }
 
+static char *empty_env_prompt()
+{
+    char    *prompt;
+    char	buf[PATH_MAX];
+
+	getcwd(buf, PATH_MAX);
+	prompt = (char *)malloc(ft_strlen("empty_env:") + ft_strlen(buf) + 3);
+	if (!prompt)
+		return (NULL);
+	ft_strncpy(prompt, "empty_env:", ft_strlen("empty_env:"));
+	ft_strcat(prompt, buf);
+	ft_strcat(prompt, ": ");
+	return (prompt);
+}
+
 char	*build_prompt(t_data *data, char **envp)
 {
 	char	*user;
@@ -159,16 +174,7 @@ char	*build_prompt(t_data *data, char **envp)
 	char	*prompt;
 
 	if (!*envp)
-	{
-		getcwd(buf, PATH_MAX);
-		prompt = (char *)malloc(ft_strlen("empty_env:") + ft_strlen(buf) + 3);
-		if (!prompt)
-			return (NULL);
-		ft_strncpy(prompt, "empty_env:", ft_strlen("empty_env:"));
-		ft_strcat(prompt, buf);
-		ft_strcat(prompt, ": ");
-		return (prompt);
-	}
+        return (empty_env_prompt());
 	user = ft_getenv("$USER", data->env);
 	if (user == NULL)
     {
@@ -191,6 +197,9 @@ char	*build_prompt(t_data *data, char **envp)
 
 void	handle_next_cmd(t_data *data, char **envp)
 {
+    char    **temp;
+
+    temp = NULL;
 	data->prompt = build_prompt(data, envp);
 	if (data->prompt == NULL)
 		clean_exit(data, NULL, NULL);
@@ -201,7 +210,7 @@ void	handle_next_cmd(t_data *data, char **envp)
 	free(data->prompt);
 	if (handle_signals_parent(1) == 1)
 		clean_exit(data, data->line, NULL);
-	if (run_line(&(data->line), data) == 1)
+	if (run_line(&(data->line), data, temp) == 1)
 		clean_exit(data, data->line, NULL);
 }
 

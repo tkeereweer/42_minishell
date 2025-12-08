@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 20:16:56 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/04 17:22:50 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 15:15:18 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,20 @@ static int	tokenize_subpipe(char **subpipe, t_list **lst)
 	return (1);
 }
 
+static void free_subpipe(char **subpipe)
+{
+    int i;
+
+    i = 0;
+    while (subpipe[i])
+    {
+        if (subpipe[i][0] == '|')
+            free(subpipe[i]);
+        i++;
+    }
+    free(subpipe);
+}
+
 //parse and find pipes, caution quotes
 static int	tokenize_pipe(char *line, t_list **lst)
 {
@@ -92,14 +106,7 @@ static int	tokenize_pipe(char *line, t_list **lst)
 	result = tokenize_subpipe(subpipe, lst);
 	if (result <= 0)
 		return (result);
-    i = 0;
-    while (subpipe[i])
-    {
-        if (subpipe[i][0] == '|')
-            free(subpipe[i]);
-        i++;
-    }
-    free(subpipe);
+    free_subpipe(subpipe);
 	return (1);
 }
 

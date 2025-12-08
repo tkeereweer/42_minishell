@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 21:04:31 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/01 14:30:54 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 16:20:14 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,21 @@ int	arg_token(char *word, t_list **lst)
 	return (1);	
 }
 
+static int	iterate_over_word(char *line, int *j)
+{
+	if (line[*j] == '\'' || line[*j] == '"')
+	{
+		if (!iterate_over_quotes(line, j))
+			return (0);
+	}
+	else
+	{
+		while (line[*j] && valid_char(&line[*j]))    
+			*j += 1;
+	}
+	return (1);
+}
+
 //only handle quotes if at begining of filepath
 //space defines offset to start after > or >>
 //spaces or redir in file names are accepted if in quotes
@@ -47,16 +62,8 @@ int	tokenize_word(char *line, int *i, char **str, int space)
 	*i += space;
 	if (empty_end(line, &j, i) == -1)
 		return (-1);//eol after redir --> syntax error near NEXT TOKEN !! ie newline or |, etc
-	if (line[j] == '\'' || line[j] == '"')
-	{
-		if (!iterate_over_quotes(line, &j))
-			return (tokenizer_error("unclosed quotes\n"));
-	}
-	else
-	{
-		while (line[j] && valid_char(&line[j]))    
-			j++;
-	}
+	if (!iterate_over_word(line, &j))
+		return (tokenizer_error("unclosed quotes\n"));
 	if (line[j] != '\'' && line[j] !='"')
 		j--;
 	*str = ft_substr(&line[*i], 0, j - *i + 1);

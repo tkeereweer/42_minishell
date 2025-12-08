@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 09:21:20 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/05 12:06:03 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/08 16:52:37 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,42 +60,56 @@ int	update_env(char *old_pwd, t_data *data)
 	return (0);
 }
 
+static int tilde_case(char **home, int *ret, char *path)
+{
+	char    *new_str;
+
+	*home = getenv("HOME");
+	if (*home != NULL)
+	{
+		new_str = (char *) malloc((ft_strlen(*home) + ft_strlen(&path[1]) + 1) * sizeof(char));
+		if (new_str == NULL)
+			return (-1);
+		ft_strlcpy(new_str, *home, ft_strlen(*home) + ft_strlen(&path[1]) + 1);
+		ft_strlcat(new_str, &path[1], ft_strlen(*home) + ft_strlen(&path[1]) + 1);
+		*ret = chdir(new_str);
+		free(new_str);
+	}
+	else
+		*ret = chdir(&path[1]);
+	return (1);
+}
+
+static int set_home(char **home, char *path, int *ret)
+{
+	if (path == NULL)
+	{
+		*home = getenv("HOME");
+		if (*home != NULL)
+			*ret = chdir(*home);
+	}
+	else if (path[0] == '~')
+	{
+		if (tilde_case(home, ret, path) == -1)
+			return (-1);
+	}
+	else
+		*ret = chdir(path);
+	return (1);
+}
+
 int	ft_cd(char *path, t_data *data)
 {
 	int		ret;
 	char	*home;
-	char	*new_str;
+	// char	*new_str;
 	char	buf[PATH_MAX];
 
 	ret = -1;
 	if (getcwd(buf, PATH_MAX) == NULL)
 		return (-1);
-	if (path == NULL)
-	{
-		home = getenv("HOME");
-		// maybe still execute if HOME is empty
-		if (home != NULL)
-			ret = chdir(home);
-	}
-	// maybe not necessary to handle ~ expansion
-	else if (path[0] == '~')
-	{
-		home = getenv("HOME");
-		if (home != NULL)
-		{
-			new_str = (char *) malloc((ft_strlen(home) + ft_strlen(&path[1]) + 1) * sizeof(char));
-			if (new_str == NULL)
-				return (-1);
-			ft_strlcpy(new_str, home, ft_strlen(home) + ft_strlen(&path[1]) + 1);
-			ft_strlcat(new_str, &path[1], ft_strlen(home) + ft_strlen(&path[1]) + 1);
-			ret = chdir(new_str);
-			free(new_str);
-		}
-		else
-			ret = chdir(&path[1]);
-	}
-	else
-		ret = chdir(path);
+	if (set_home(&home, path, &ret) == -1)
+		return (-1);
 	if (ret == 0)
 		return (update_env(buf, data));
 	if (ret == -1)

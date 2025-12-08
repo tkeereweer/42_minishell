@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 11:42:17 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/05 11:21:07 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/08 16:52:56 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,3 @@ void	ft_echo(char **args)
 	if (mode != 1)
 		ft_printf("%c", '\n');
 }
-
-// int	main(int argc, char *argv[])
-// {
-// 	if (argc < 2)
-// 		return (1);
-// 	echo(argv);
-// 	perror("echo");
-// 	return (0);
-// }

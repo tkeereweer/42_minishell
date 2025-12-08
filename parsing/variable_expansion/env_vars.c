@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 10:14:03 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 13:35:19 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 17:00:30 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,24 +60,6 @@ int	envvar_len(char *str)
 	while (str[i] != '\0' && (ft_isalnum(str[i]) == 1 || str[i] == '_'))
 		i++;
 	return (i);
-}
-
-char	*ft_strcat(char *dst, char *src)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (dst[i] != '\0')
-		i++;
-	while (src[j] != '\0')
-	{
-		dst[i + j] = src[j];
-		j++;
-	}
-	dst[i + j] = '\0';
-	return (dst);
 }
 
 int	expand_envvar_str(char **str, int i, t_data *data, int mode)
