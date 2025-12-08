@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 14:40:30 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 18:31:30 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,10 +125,10 @@ int	run_line(char **line, t_data *data, char **temp)
 			return (free_tree(data->tree), clean_path_tab(temp), 1);
 		if (res == 2)
 			return (0);
-		if (g_signum == 0)
-			exec_tree(data->tree, data);
-		else
-			data->exit_status = 128 + g_signum;
+		// if (g_signum == 0)
+		exec_tree(data->tree, data);
+		// else
+		// 	data->exit_status = 128 + g_signum;
 		free_tree(data->tree);
 		clean_path_tab(temp);
 	}
@@ -206,7 +206,8 @@ void	handle_next_cmd(t_data *data, char **envp)
 	g_signum = 0;
 	if (handle_signals_parent(0) == 1)
 		clean_exit(data, data->line, data->prompt);
-	data->line = readline(data->prompt);
+	if (g_signum != SIGINT)
+		data->line = readline(data->prompt);
 	free(data->prompt);
 	if (handle_signals_parent(1) == 1)
 		clean_exit(data, data->line, NULL);
