@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tree.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:46:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/05 16:04:59 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 18:25:57 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,14 +122,14 @@ int	exec_tree(t_node *node, t_data *data)
 		else
 		{
 			exit_status = wait_for_pids(data);
-			if (WIFEXITED(exit_status))
-				exit_status = WEXITSTATUS(exit_status);
-			else if (WIFSIGNALED(exit_status))
+			
+			if (WIFSIGNALED(exit_status))
 			{
-				if (exit_status < 131)
-					exit_status = 130;
+				exit_status = WTERMSIG(exit_status) + 128;
 				ft_printf("\n");
 			}
+			else if (WIFEXITED(exit_status))
+				exit_status = WEXITSTATUS(exit_status);
 		}
 		data->exit_status = exit_status;
 		clean_data(data);
@@ -139,7 +139,5 @@ int	exec_tree(t_node *node, t_data *data)
 		if (exec_tree(node->right_child, data) == -1)
 			return (-1);
 	}
-    // if (!(data->pid_tab == NULL && data->pipe_tab == NULL && data->cmd_cnt == 0 && data->child_cnt == 0))
-    //     clean_data(data);
 	return (0);
 }
