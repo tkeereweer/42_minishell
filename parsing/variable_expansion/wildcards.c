@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 15:24:33 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 21:29:13 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 09:10:38 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,12 +184,12 @@ int	add_to_redir_path(char **path, int first, char *filename)
 	return (0);
 }
 
-// static int	when_first_neg(DIR *dir_stream)
-// {
-// 	if (closedir(dir_stream) == -1)
-// 		return (-1);
-// 	return (-4); 
-// }
+static int	when_first_neg(DIR *dir_stream)
+{
+	if (closedir(dir_stream) == -1)
+		return (-1);
+	return (-4); 
+}
 
 // static int	iterate_dir_redir(DIR *dir_stream, struct dirent *dir_entry,
 // 								char *pat, char **path)
@@ -231,9 +231,6 @@ int	expand_wildcards_redir(char **path, char *pat)
 	if (dir_stream == NULL)
 		return (-1);
 	dir_entry = readdir(dir_stream);
-	// ret = iterate_dir_redir(dir_stream, dir_entry, pat, path);
-	// if (ret < 0)
-	// 	return (ret);
 	first = 1;
 	while (dir_entry != NULL)
 	{
@@ -248,13 +245,7 @@ int	expand_wildcards_redir(char **path, char *pat)
 		}
 		dir_entry = readdir(dir_stream);
 	}
-    if (first < 0) //ambig redirect
-    {
-        if (closedir(dir_stream) == -1)
-            return (-1);
-        return (-4);        
-    }
+	if (first < 0)
+		return (when_first_neg(dir_stream));
 	return (closedir(dir_stream));
 }
-	// if (first < 0)
-	// 	return (when_first_neg(dir_stream));

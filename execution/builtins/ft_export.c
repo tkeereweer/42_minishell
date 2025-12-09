@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 12:16:15 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 21:08:04 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 09:17:32 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,24 +36,6 @@ char	**tab_cpy(char **tab)
 	}
 	tab_cpy[i] = NULL;
 	return (tab_cpy);
-}
-
-int	ft_strcmp(const char *s1, const char *s2)
-{
-	size_t			i;
-	unsigned char	*str1;
-	unsigned char	*str2;
-
-	str1 = (unsigned char *) s1;
-	str2 = (unsigned char *) s2;
-	i = 0;
-	while (*str1 && *str2 && *str1 == *str2)
-	{
-		str1++;
-		str2++;
-		i++;
-	}
-	return (*str1 - *str2);
 }
 
 void	sort_tab(char **tab)

@@ -16,6 +16,7 @@ SRCS = parsing/logic_tree.c \
 	parsing/variable_expansion/wildcards.c \
 	parsing/variable_expansion/expand_vars.c \
 	parsing/variable_expansion/expansion_utils.c \
+	parsing/variable_expansion/expansion_utils2.c \
 	execution/builtins/ft_export.c \
 	execution/builtins/ft_unset.c \
 	execution/builtins/ft_env.c \
@@ -38,6 +39,7 @@ SRCS = parsing/logic_tree.c \
 	execution/create_pipe_and_fork.c \
 	execution/int_tab_realloc.c \
 	execution/exec_utils.c \
+	main_utils.c \
 	main.c
 
 OBJ_DIR = objects

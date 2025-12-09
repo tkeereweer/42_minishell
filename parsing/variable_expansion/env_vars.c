@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 10:14:03 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 21:28:22 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 09:07:26 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,19 +81,12 @@ int	expand_envvars(char **str, t_data *data)
 	while ((*str)[i] != '\0')
 	{
 		if ((*str)[i] == '\'')
-		{
-			i++;
-			while ((*str)[i] != '\'')
-				i++;
-		}
+            if_small_quote(&i, str);
 		else if ((*str)[i] == '"')
-		{
-			i++;
-			if (expand_envvar_str(str, i, data, 0) == 1)
-				return (-1);
-			while ((*str)[i] != '"')
-				i++;
-		}
+        {
+            if (expand_env_in_big_quotes(str, &i, data) == -1)
+                return (-1);
+        }
 		else if ((*str)[i] == '$')
 		{
 			if (expand_envvar_str(str, i, data, 0) == 1)
@@ -115,18 +108,11 @@ int	expand_envvars_redir(char **str, t_data *data)
 	while ((*str)[i] != '\0')
 	{
 		if ((*str)[i] == '\'')
-		{
-			i++;
-			while ((*str)[i] != '\'')
-				i++;
-		}
+            if_small_quote(&i, str);
 		else if ((*str)[i] == '"')
 		{
-			i++;
-			if (expand_envvar_str(str, i, data, 0) == 1)
-				return (-1);
-			while ((*str)[i] != '"')
-				i++;
+            if (expand_env_in_big_quotes(str, &i, data) == -1)
+                return (-1);
 		}
 		else if ((*str)[i] == '$')
 		{
