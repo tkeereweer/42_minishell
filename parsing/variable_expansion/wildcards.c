@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 15:24:33 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/09 08:40:40 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/09 10:17:38 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,20 +181,24 @@ int	add_to_redir_path(char **path, int first, char *filename)
 	return (0);
 }
 
-int	expand_wildcards_redir(char **path, char *pat)
+int	expand_wildcards_redir(char **path, char *pattern)
 {
 	char			buf[PATH_MAX];
 	DIR				*dir_stream;
 	struct dirent	*dir_entry;
 	int				first;
+	char			*pat;
 
-	if (has_wc(pat) == -1)
-		return (0);
-	if (getcwd(buf, PATH_MAX) == NULL)
+	pat = ft_strdup(pattern);
+	if (pat == NULL)
 		return (-1);
+	if (has_wc(pat) == -1)
+		return (free(pat), 0);
+	if (getcwd(buf, PATH_MAX) == NULL)
+		return (free(pat), -1);
 	dir_stream = opendir(buf);
 	if (dir_stream == NULL)
-		return (-1);
+		return (free(pat), -1);
 	dir_entry = readdir(dir_stream);
 	first = 1;
 	while (dir_entry != NULL)
@@ -202,7 +206,7 @@ int	expand_wildcards_redir(char **path, char *pat)
 		if (match_pat(dir_entry->d_name, pat) == 1)
 		{
 			if (add_to_redir_path(path, first, dir_entry->d_name) == 1)
-				return (-1); // handle error
+				return (free(pat), -1); // handle error
 			first--;
 		}
 		dir_entry = readdir(dir_stream);
@@ -210,9 +214,10 @@ int	expand_wildcards_redir(char **path, char *pat)
     if (first < 0) //ambig redirect
     {
         if (closedir(dir_stream) == -1)
-            return (-1);
-        return (-4);        
+            return (free(pat), -1);
+        return (free(pat), -4);        
     }
+	free(pat);
 	return (closedir(dir_stream));
 }
 

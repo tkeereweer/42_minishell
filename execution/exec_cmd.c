@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/08 16:36:14 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 10:24:29 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,8 @@ static int	exec_builtin(t_node *cmd, t_data *data, int mode)
 		ret = configure_redir(cmd->right_child, data, &in, &out);
 		if (ret == -2)
 			return(redir_error(cmd->right_child->content.redir.path, mode));
+		if (ret == -4)
+			return (1);
 		if (ret < 0)
 			return (ret);
 	}
@@ -232,6 +234,8 @@ static int	exec_child(t_node *cmd, t_data *data, int mode)
 			return(redir_error(cmd->right_child->content.redir.path, 0));
 		if (res == -3)
 			return (redir_error("heredoc", 0));
+		if (res == -4)
+			exit(1);
 		if (res < 0)
 			exit(res);
 	}

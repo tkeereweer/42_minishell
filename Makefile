@@ -44,7 +44,7 @@ CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-LINKS = $(LIBFT) -L/opt/homebrew/opt/readline/lib -lreadline
+LINKS = $(LIBFT) -lreadline
 
 all: $(NAME)
 
@@ -56,19 +56,19 @@ $(LIBFT):
 	make -C $(LIBFT_DIR)
 
 $(OBJ_DIR)/%.o: parsing/%.c | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -I/opt/homebrew/opt/readline/include -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/%.o: parsing/variable_expansion/%.c | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -I/opt/homebrew/opt/readline/include -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/%.o: execution/%.c | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -I/opt/homebrew/opt/readline/include -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/%.o: execution/builtins/%.c | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -I/opt/homebrew/opt/readline/include -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -I/opt/homebrew/opt/readline/include -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
