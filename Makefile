@@ -9,6 +9,7 @@ SRCS = parsing/logic_tree.c \
 	parsing/parsing_utils4.c \
 	parsing/parsing_utils5.c \
 	parsing/parsing_utils6.c \
+	parsing/parsing_utils7.c \
 	parsing/token_redir.c \
 	parsing/token.c \
 	parsing/token2.c \
@@ -31,7 +32,7 @@ SRCS = parsing/logic_tree.c \
 	execution/get_exe_path.c \
 	execution/configure_redir.c \
 	parsing/get_args.c \
-	parsing/heredoc_function.c \
+	parsing/write_heredoc.c \
 	parsing/heredoc_command.c \
 	execution/exec_tree.c \
 	execution/exec_cmd.c \

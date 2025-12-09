@@ -6,53 +6,12 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 10:39:11 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/04 17:25:39 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 14:28:24 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int  valid_char(char *str)
-{
-	if (!*str)
-		return (0);
-	if (*str == '|')
-		return (0);
-	if (is_logic(str))
-		return (0);
-	if (is_redir(str))
-		return (0);
-	if (ft_is_whitespace(*str))
-		return (0);
-	return (1);
-}
-
-int	iterate_over_quotes(char *line, int *j)
-{
-	int	small_quote;
-	int	big_quote;
-
-	small_quote = 0;
-	big_quote = 0;
-	if (line[*j] == '\'' || line[*j] == '"')
-	{
-		if (line[*j] == '\'')
-			small_quote++;
-		if (line[*j] == '"')
-			big_quote++;
-		while (((small_quote % 2 != 0) || (big_quote % 2 != 0)) || valid_char(&line[*j + 1]))
-		{
-			*j += 1;
-			if (!line[*j])
-				return (0);
-			if (line[*j] == '\'' && (big_quote % 2 == 0))
-				small_quote++;
-			if (line[*j] == '"' && (small_quote % 2 == 0))
-				big_quote++;
-		}
-	}
-	return (1);
-}
 //for redir small and big, i != 1 bc there must be a non empty filename behind
 // we can use it as check for if we exec'd inside the function or not
 static int  redir_big(t_list **lst, char *line, int *i)
@@ -121,16 +80,6 @@ int redir_token(t_list **lst, char *line, int *i)
 	if (res <= 0 || res > 1)
 		return (res);
 	return (*i);
-}
-
-int return_1_subpipe(char ***subpipe, char *line)
-{
-	*subpipe = tab_realloc(*subpipe, 1);
-	if (!*subpipe)
-		return (-1);
-	(*subpipe)[0] = ft_strdup(line);
-	(*subpipe)[1] = NULL;
-	return (1);
 }
 
 static int	isolate_pipes(char ***subpipe, char *line, int *i, int *k)

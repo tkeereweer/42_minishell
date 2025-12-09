@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 14:29:27 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/08 20:51:51 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 14:19:58 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,20 +84,17 @@ int set_heredoc(char **line, int *j, char ***tab)
 	char    *temp;
 	int     path_num;
 	int     quoted_heredoc;
+    int     err_flag;
 
 	start = 0;
 	quoted_heredoc = 0;
-	if (handle_signals_parent(2) == 1)
-		return (-1);
 	limiter = set_limiter(line, j, &start, &quoted_heredoc);
 	if (!limiter)
 		return (quoted_heredoc_error(quoted_heredoc));
-	*tab = heredoc(*tab, limiter, quoted_heredoc);
-	if (!tab)
-		return (free(limiter), -1);
+	*tab = heredoc(*tab, limiter, quoted_heredoc, &err_flag);
+	if (!*tab)
+		return (free(limiter), err_flag);
 	path_num = heredoc_tab_len(tab);
-	if (handle_signals_parent(0) == 1)
-		return (-1);
 	temp = replace_with_path(*line, (*tab)[path_num - 1], start, *j);
 	if (!temp)
 		return (free(limiter), -1);

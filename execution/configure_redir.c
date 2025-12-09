@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 21:17:25 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/08 21:17:48 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 10:53:04 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ static int  open_redir(int *fd, t_redir_type kind, t_node *redir, t_data *data)
 			return (res);
 		}
 	}
+    if (*fd == -1)
+		return(*fd);
 	return (1);
 }
 

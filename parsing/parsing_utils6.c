@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 20:51:31 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/08 21:05:04 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 14:03:13 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,9 @@ t_list	*clean_node_list(char **line, char ***path_tab)
 	if (result == -2)
 		return (list_error(&list, "minishell: dangling logical operator\n", NULL));
 	if (result == -3)
-		return (syntax_error(&list)); 
+		return (syntax_error(&list));
+	if (result == -4)
+		return (list_error(&list, NULL, NULL));
 	if (check_unclosed_par(&list) == -1)
 		return (list_error(&list, "minishell: unclosed parenthesis\n", NULL));
 	temp = list;

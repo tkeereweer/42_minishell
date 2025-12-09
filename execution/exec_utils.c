@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 21:21:16 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/08 21:24:16 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 11:18:56 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,10 @@ int	exec_child(t_node *cmd, t_data *data, int mode)
 			return(redir_error(cmd->right_child->content.redir.path, 0));
 		if (res == -3)
 			return (redir_error("heredoc", 0));
+        if (res == -1 && errno == EACCES)
+            permission_error_fd(cmd, mode);
 		if (res < 0)
-			exit(res);
+			exit(res); //permission error
 	}
 	if (mode != 4)
 		config_pipes_modes_123(data, in, out, mode);

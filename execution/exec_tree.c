@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tree.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:46:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 19:28:51 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/09 10:40:36 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,16 +113,15 @@ int	exec_tree(t_node *node, t_data *data)
 		ret = exec_pipeline(node, data, node);
 		if (mode == 4 && is_builtin(node->left_child->left_child->content.tab[0]))
 			exit_status = ret;
-		else if (ret != 0)
+		else if (ret != 0)//cases like malloc fail
 		{
 			exit_status = wait_for_pids(data);
 			clean_data(data);
 			return (-1);
 		}
-		else
+		else//cases w/return status
 		{
 			exit_status = wait_for_pids(data);
-			
 			if (WIFSIGNALED(exit_status))
 			{
 				exit_status = WTERMSIG(exit_status) + 128;

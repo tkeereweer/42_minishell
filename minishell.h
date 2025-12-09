@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/09 10:30:16 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/09 14:31:11 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,9 +201,12 @@ char	*my_realloc(char *ptr, size_t size);
 int		ft_strcmp(const char *s1, const char *s2);
 char	*str_realloc(char *ptr, size_t size);
 //heredoc
-char	**heredoc(char **path_tab, char *limiter, int quoted_heredoc);
+char	**heredoc(char **path_tab, char *limiter, int quoted_heredoc, int *err_flag);
 int		set_heredoc(char **line, int *j, char ***tab);
 void	clean_path_tab(char **path_tab);
+int     write_heredoc(char *limiter, int fd);
+char	**temp_filepath(char **tmp_name, int count, int quoted_heredoc);
+char	**try_filepath(char **filepath, int count);
 // execution
 int		exec_tree(t_node *node, t_data *data);
 int		exec_cmd(t_node *cmd, t_data *data, int mode);
@@ -215,6 +218,7 @@ char	*find_path(char **paths, char *cmd);
 char	*get_exe_path(t_data *data, char *cmd);
 void	cmd_not_found(char *cmd, t_data *data);
 void	permission_error(char *path, t_data *data);
+int		permission_error_fd(t_node *cmd, int mode);
 void	exec_fail(char *path, char *cmd, t_data *data);
 int		configure_redir(t_node *redir, t_data *data, int *in_redir,
 			int *out_redir);

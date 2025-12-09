@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals_parent.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 11:56:55 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 18:30:36 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/09 13:32:59 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ void	sigint_heredoc(int signal)
 	if (signal == SIGINT)
 	{
 		g_signum = SIGINT;
-		ft_printf("%c", '\n');
+        close(STDIN_FILENO);
+		printf("%c", '\n');
 	}
 }
 

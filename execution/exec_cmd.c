@@ -3,14 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/09 10:38:19 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/09 11:19:25 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	permission_error_fd(t_node *cmd, int mode)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(cmd->right_child->content.redir.path, 2);
+	ft_putstr_fd(": Permission denied\n", 2);
+	if (mode == 4 && is_builtin(cmd->left_child->content.tab[0]))
+		return (1);
+	exit(1);
+}
 
 //need read end of previous for stdin and write end of current for stdout
 static int	exec_builtin(t_node *cmd, t_data *data, int mode)
@@ -34,8 +44,8 @@ static int	exec_builtin(t_node *cmd, t_data *data, int mode)
 		ret = configure_redir(cmd->right_child, data, &in, &out);
 		if (ret == -2)
 			return (redir_error(cmd->right_child->content.redir.path, mode));
-		if (ret == -1)
-			return (permission_error_fd(cmd->right_child->content.redir.path, mode));
+		if (ret == -1 && errno == EACCES)
+			return (permission_error_fd(cmd, mode));
 		if (ret < 0)
 			return (1);
 	}

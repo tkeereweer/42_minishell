@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/09 10:37:49 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/09 14:29:56 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,17 +56,14 @@ int	run_line(char **line, t_data *data, char **temp)
 			return (0);
 		list = clean_node_list(line, &temp);
 		if (list == NULL)
-			return (0);
+			return (0);// shouldn't we return 1 ??
 		data->tree = create_logic_tree(list);
 		res = create_cmd_trees(data->tree);
 		if (res == 1)
 			return (free_tree(data->tree), clean_path_tab(temp), 1);
 		if (res == 2)
 			return (0);
-		// if (g_signum == 0)
 		exec_tree(data->tree, data);
-		// else
-		// 	data->exit_status = 128 + g_signum;
 		free_tree(data->tree);
 		clean_path_tab(temp);
 	}
@@ -129,8 +126,7 @@ void	handle_next_cmd(t_data *data, char **envp)
 	g_signum = 0;
 	if (handle_signals_parent(0) == 1)
 		clean_exit(data, data->line, data->prompt);
-	if (g_signum != SIGINT)
-		data->line = readline(data->prompt);
+	data->line = readline(data->prompt);
 	if (g_signum != 0)
 		data->exit_status = 128 + g_signum;
 	free(data->prompt);
