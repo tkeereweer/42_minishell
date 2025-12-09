@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 16:07:57 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/09 10:32:09 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/09 10:32:35 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,8 @@ void	handle_next_cmd(t_data *data, char **envp)
 		clean_exit(data, data->line, data->prompt);
 	if (g_signum != SIGINT)
 		data->line = readline(data->prompt);
+	if (g_signum != 0)
+		data->exit_status = 128 + g_signum;
 	free(data->prompt);
 	if (handle_signals_parent(1) == 1)
 		clean_exit(data, data->line, NULL);

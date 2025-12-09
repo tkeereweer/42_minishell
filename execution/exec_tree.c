@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:46:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 18:25:57 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/08 19:28:51 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,8 @@ int	exec_tree(t_node *node, t_data *data)
 			if (WIFSIGNALED(exit_status))
 			{
 				exit_status = WTERMSIG(exit_status) + 128;
-				ft_printf("\n");
+				if (exit_status == 131)
+					ft_printf("Quit (core dumped)\n");
 			}
 			else if (WIFEXITED(exit_status))
 				exit_status = WEXITSTATUS(exit_status);
