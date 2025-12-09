@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 17:43:10 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/05 14:16:02 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/09 13:39:19 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@ void	ft_exit(char **argv, t_data *data, int fd1, int fd2)
 	free(data->pid_tab);
 	free_tree(data->tree);
 	rl_clear_history();
-    if (fd1 != -2 && fd2 != -2)
-    {
-        close(fd1);
-        close(fd2);
-        ft_printf("exit\n");
-    }
+	if (fd1 != -2 && fd2 != -2)
+	{
+		close(fd1);
+		close(fd2);
+		ft_printf("exit\n");
+	}
 	exit(n);
 }

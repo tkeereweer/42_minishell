@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_exe_path.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 21:11:28 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/08 21:12:16 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 11:08:07 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,10 @@ char	*find_path(char **paths, char *cmd)
 }
 
 //the + 1 in the substr is to include a / before the join
-static char *find_local_path(t_data *data, char *cmd)
+static char	*find_local_path(t_data *data, char *cmd)
 {
-	char    *ret;
-	char    *pwd;
+	char	*ret;
+	char	*pwd;
 
 	pwd = ft_getenv("$PWD", data->env);
 	if (!pwd)
@@ -65,13 +65,13 @@ static char *find_local_path(t_data *data, char *cmd)
 	return (ret);
 }
 
-static char *find_relative_path(char *cmd)
+static char	*find_relative_path(char *cmd)
 {
-	int     i;
-	char    *pwd;
-	char    *curr_wd;
-	char    *ret;
-	
+	int		i;
+	char	*pwd;
+	char	*curr_wd;
+	char	*ret;
+
 	i = 1;
 	while (cmd[ft_strlen(cmd) - i] != '/')
 		i++;
@@ -93,7 +93,7 @@ static char *find_relative_path(char *cmd)
 
 char	*get_exe_path(t_data *data, char *cmd)
 {
-	char 	*env_path;
+	char	*env_path;
 	char	**paths;
 
 	if (!ft_strncmp(cmd, "./", 2))

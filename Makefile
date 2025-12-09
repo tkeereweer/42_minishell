@@ -39,6 +39,7 @@ SRCS = parsing/logic_tree.c \
 	execution/create_pipe_and_fork.c \
 	execution/int_tab_realloc.c \
 	execution/exec_utils.c \
+	execution/exec_tree_utils.c \
 	main_utils.c \
 	main.c
 

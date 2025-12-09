@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 21:07:31 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/08 21:10:27 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 13:39:59 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	valid_key(char *key, int key_len)
 	int	i;
 
 	i = 0;
-	if (key[0] == '=' || (!ft_isalpha(key[0]) &&  key[0] != '_'))
+	if (key[0] == '=' || (!ft_isalpha(key[0]) && key[0] != '_'))
 		return (0);
 	while (key[i] != '\0' && i < key_len)
 	{

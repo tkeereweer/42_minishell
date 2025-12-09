@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 16:59:37 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 21:16:44 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 11:04:27 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,14 @@ int	redir_error(char *path, int mode)
 	perror(path);
 	if (mode == 4)
 		return (1);
-	exit(1); // clean everything??
+	exit(1);
 }
 
 int	ambig_redirect(void)
 {
 	write(STDERR_FILENO, "minishell: ", ft_strlen("minishell: "));
-	write(STDERR_FILENO, "ambiguous redirect\n", ft_strlen(" ambiguous redirect\n"));
+	write(STDERR_FILENO, "ambiguous redirect\n",
+		ft_strlen(" ambiguous redirect\n"));
 	return (-4);
 }
 
