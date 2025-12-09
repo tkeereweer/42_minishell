@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 14:51:33 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 08:15:33 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <dirent.h>
-# include <linux/limits.h>
-// # include <sys/syslimits.h>
+// # include <linux/limits.h>
+# include <sys/syslimits.h>
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <errno.h>

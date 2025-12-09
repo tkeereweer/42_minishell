@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 12:16:15 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/05 11:48:50 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/09 08:16:30 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,18 +125,15 @@ char	**tab_cpy(char **tab)
 
 int	ft_strcmp(const char *s1, const char *s2)
 {
-	size_t			i;
 	unsigned char	*str1;
 	unsigned char	*str2;
 
 	str1 = (unsigned char *) s1;
 	str2 = (unsigned char *) s2;
-	i = 0;
 	while (*str1 && *str2 && *str1 == *str2)
 	{
 		str1++;
 		str2++;
-		i++;
 	}
 	return (*str1 - *str2);
 }

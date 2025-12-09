@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 15:24:33 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 11:15:36 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 08:40:40 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,13 @@ int	add_to_redir_path(char **path, int first, char *filename)
 		new_path = (char *) my_realloc(*path, (ft_strlen(filename) + ft_strlen(*path) + 1) * sizeof(char));
 	if (new_path == NULL)
 		return (1);
-	ft_strcat(new_path, filename);
+	if (first == 1)
+		ft_strlcpy(new_path, filename, ft_strlen(filename) + 1);
+	else
+	{
+		ft_strcat(new_path, " ");
+		ft_strcat(new_path, filename);
+	}
 	*path = new_path;
 	return (0);
 }
