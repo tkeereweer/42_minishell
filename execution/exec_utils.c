@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 21:21:16 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/09 11:18:56 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 19:16:35 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,14 @@ static void exec_builtin_in_child(t_data *data, t_node *cmd)
 static void exec_non_builtin(t_data *data, t_node *cmd)
 {
 	char    *exec_path;
+	int     err_flag;
 	
-	exec_path = get_exe_path(data, cmd->left_child->content.tab[0]);
+	err_flag = 0;
+	exec_path = get_exe_path(data, cmd->left_child->content.tab[0], &err_flag);
 	if (exec_path == NULL)
 		cmd_not_found(cmd->left_child->content.tab[0], data);
+	if (err_flag == 1)
+		exec_fail(exec_path, cmd->left_child->content.tab[0], data);
 	if (exec_path[0] == '\0')
 		exit(0);
 	if (execve(exec_path, cmd->left_child->content.tab, data->env) == -1)
@@ -85,8 +89,8 @@ int	exec_child(t_node *cmd, t_data *data, int mode)
 			return(redir_error(cmd->right_child->content.redir.path, 0));
 		if (res == -3)
 			return (redir_error("heredoc", 0));
-        if (res == -1 && errno == EACCES)
-            permission_error_fd(cmd, mode);
+		if (res == -1 && errno == EACCES)
+			permission_error_fd(cmd, mode);
 		if (res < 0)
 			exit(res); //permission error
 	}

@@ -41,6 +41,7 @@ SRCS = parsing/logic_tree.c \
 	execution/int_tab_realloc.c \
 	execution/exec_utils.c \
 	main_utils.c \
+	main_utils2.c \
 	main.c
 
 OBJ_DIR = objects

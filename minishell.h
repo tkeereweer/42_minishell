@@ -6,12 +6,14 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/09 14:31:11 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 19:29:18 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+# define _DEFAULT_SOURCE
 
 # include <unistd.h>
 # include <stdlib.h>
@@ -25,6 +27,7 @@
 # include <linux/limits.h>
 // # include <sys/syslimits.h>
 # include <sys/types.h>
+# include <sys/stat.h>
 # include <sys/wait.h>
 # include <errno.h>
 # include "libft/src/libft.h"
@@ -108,7 +111,7 @@ t_node	*create_logic_tree(t_list *list);
 int		create_cmd_trees(t_node *node);
 void	free_tree(t_node *tree);
 //parsing
-t_list	*clean_node_list(char **line, char ***path_tab);
+t_list	*clean_node_list(char **line, char ***path_tab, t_data *data);
 int		open_par_token(t_list **list);
 int		close_par_token(t_list **list);
 int		pipeline_token(char *str, t_list **list);
@@ -215,7 +218,7 @@ void	clean_exit(t_data *data, char *line, char *prompt);
 void	clean_data(t_data *data);
 int		populate_cmd_tree(t_list **pipeline, t_node *node);
 char	*find_path(char **paths, char *cmd);
-char	*get_exe_path(t_data *data, char *cmd);
+char	*get_exe_path(t_data *data, char *cmd, int *err_flag);
 void	cmd_not_found(char *cmd, t_data *data);
 void	permission_error(char *path, t_data *data);
 int		permission_error_fd(t_node *cmd, int mode);
@@ -232,8 +235,13 @@ int		ambig_redirect(void);
 int		exec_child(t_node *cmd, t_data *data, int mode);
 void	dup_old_streams(int old_stdin, int old_stdout);
 //main
-int	only_whitespace(char *line);
+int     only_whitespace(char *line);
 void	clean_exit(t_data *data, char *line, char *prompt);
 char	*empty_env_prompt();
-int	set_minimal_env(t_data *data);
+int     set_minimal_env(t_data *data);
+void	handle_next_cmd(t_data *data, char **envp);
+char	*build_prompt(t_data *data, char **envp);
+t_data	init_data(char **envp);
+int     run_line(char **line, t_data *data, char **temp);
+int     copy_env(t_data *data, char **envp);
 #endif

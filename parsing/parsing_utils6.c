@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 20:51:31 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/09 14:03:13 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 14:49:26 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ static int  check_par_usage(t_list **temp)
 	return (1);
 }
 
-t_list	*clean_node_list(char **line, char ***path_tab)
+t_list	*clean_node_list(char **line, char ***path_tab, t_data *data)
 {
 	int     result;
 	t_list	*list;
@@ -103,7 +103,10 @@ t_list	*clean_node_list(char **line, char ***path_tab)
 	if (result == -3)
 		return (syntax_error(&list));
 	if (result == -4)
+	{
+		data->exit_status = 130;
 		return (list_error(&list, NULL, NULL));
+	}
 	if (check_unclosed_par(&list) == -1)
 		return (list_error(&list, "minishell: unclosed parenthesis\n", NULL));
 	temp = list;

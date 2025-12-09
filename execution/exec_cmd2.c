@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 16:59:37 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 21:16:44 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 18:17:33 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,14 @@ void	permission_error(char *path, t_data *data)
 
 void	exec_fail(char *path, char *cmd, t_data *data)
 {
-	if (errno == EACCES || errno == EISDIR)
+    if (errno == EISDIR)
+        perror(path);
+	else if (errno == EACCES)
 	{
 		permission_error(path, data);
 	}
-	perror(cmd);
+    else
+	    perror(cmd);
 	free_tree(data->tree);
 	free_split(data->env);
 	if (data->default_path != NULL)
