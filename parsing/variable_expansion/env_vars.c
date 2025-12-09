@@ -3,37 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   env_vars.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 10:14:03 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/09 09:07:26 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 13:45:49 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-static int build_new_str(char **expanded, char **str, char *envvar, int env_pos)
+static int	build_new_str(char **expand, char **str, char *envvar, int env_pos)
 {
 	char	*new_str;
 
-	if (!*expanded)
-		*expanded = ft_strdup("");
-	new_str = (char *) malloc((ft_strlen(*str) + ft_strlen_gnl(*expanded) - envvar_len(&(*str)[env_pos]) + 1) * sizeof(char));
+	if (!*expand)
+		*expand = ft_strdup("");
+	new_str = (char *) malloc((ft_strlen(*str) + ft_strlen_gnl(*expand)
+				- envvar_len(&(*str)[env_pos]) + 1) * sizeof(char));
 	if (new_str == NULL)
 		return (1);
 	new_str[0] = '\0';
 	ft_strncpy(new_str, *str, env_pos);
-	ft_strcat(new_str, *expanded);
+	ft_strcat(new_str, *expand);
 	ft_strcat(new_str, &(*str)[env_pos + envvar_len(&(*str)[env_pos])]);
 	if (envvar[1] == '?' && ft_strlen(envvar) == 2)
-		free(*expanded);
+		free(*expand);
 	free(envvar);
 	free(*str);
 	*str = new_str;
 	return (0);
 }
 
-static int return_variable(char **expanded, char *envvar, t_data *data)
+static int	return_variable(char **expanded, char *envvar, t_data *data)
 {
 	char	*itoa;
 
@@ -81,12 +82,12 @@ int	expand_envvars(char **str, t_data *data)
 	while ((*str)[i] != '\0')
 	{
 		if ((*str)[i] == '\'')
-            if_small_quote(&i, str);
+			if_small_quote(&i, str);
 		else if ((*str)[i] == '"')
-        {
-            if (expand_env_in_big_quotes(str, &i, data) == -1)
-                return (-1);
-        }
+		{
+			if (expand_env_in_big_quotes(str, &i, data) == -1)
+				return (-1);
+		}
 		else if ((*str)[i] == '$')
 		{
 			if (expand_envvar_str(str, i, data, 0) == 1)
@@ -108,11 +109,11 @@ int	expand_envvars_redir(char **str, t_data *data)
 	while ((*str)[i] != '\0')
 	{
 		if ((*str)[i] == '\'')
-            if_small_quote(&i, str);
+			if_small_quote(&i, str);
 		else if ((*str)[i] == '"')
 		{
-            if (expand_env_in_big_quotes(str, &i, data) == -1)
-                return (-1);
+			if (expand_env_in_big_quotes(str, &i, data) == -1)
+				return (-1);
 		}
 		else if ((*str)[i] == '$')
 		{

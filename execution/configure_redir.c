@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 21:17:25 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/09 11:01:02 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/09 17:27:51 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static int	expand_heredoc(int *fd, char *path, t_data *data)
 		free(temp);
 		temp = get_next_line(*fd);
 	}
-	if (expand_envvar_str(&file, 0, data, 1) == -1)
+	if (expand_envvar_str(&file, 0, data, 2) == -1)
 		return (free(temp), free(file), -1);
 	close(*fd);
 	*fd = open(path, O_WRONLY | O_TRUNC);
