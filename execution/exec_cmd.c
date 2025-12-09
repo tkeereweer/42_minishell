@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/08 21:24:32 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 10:28:04 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ static int	exec_builtin(t_node *cmd, t_data *data, int mode)
 		ret = configure_redir(cmd->right_child, data, &in, &out);
 		if (ret == -2)
 			return(redir_error(cmd->right_child->content.redir.path, mode));
+		if (ret == -4)
+			return (1);
 		if (ret < 0)
 			return (ret);
 	}
