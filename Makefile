@@ -31,7 +31,6 @@ SRCS = parsing/logic_tree.c \
 	execution/exec_cmd2.c \
 	execution/create_pipe_and_fork.c \
 	execution/int_tab_realloc.c \
-	tree_visualiser.c \
 	main.c
 
 OBJ_DIR = objects

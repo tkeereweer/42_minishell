@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/08 16:36:14 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/08 19:26:06 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,8 @@ static int  open_redir(int *fd, t_redir_type kind, t_node *redir, t_data *data)
 			return (res);
 		}
 	}
+	if (*fd == -1)
+		return(*fd);
 	return (1);
 }
 
@@ -157,6 +159,16 @@ static void dup_old_streams(int old_stdin, int old_stdout)
 	close(old_stdout);
 }
 
+static int	permission_error_fd(char *path, int mode)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(path, 2);
+	ft_putstr_fd(": Permission denied\n", 2);
+	if (mode == 4)
+		return (1);
+	exit(1);
+}
+
 //need read end of previous for stdin and write end of current for stdout
 static int	exec_builtin(t_node *cmd, t_data *data, int mode)
 {
@@ -178,9 +190,11 @@ static int	exec_builtin(t_node *cmd, t_data *data, int mode)
 	{
 		ret = configure_redir(cmd->right_child, data, &in, &out);
 		if (ret == -2)
-			return(redir_error(cmd->right_child->content.redir.path, mode));
+			return (redir_error(cmd->right_child->content.redir.path, mode));
+		if (ret == -1)
+			return (permission_error_fd(cmd->right_child->content.redir.path, mode));
 		if (ret < 0)
-			return (ret);
+			return (1);
 	}
 	ret = run_builtins(cmd->left_child->content.tab, data, old_stdin, old_stdout);
 	dup_old_streams(old_stdin, old_stdout);
@@ -229,11 +243,13 @@ static int	exec_child(t_node *cmd, t_data *data, int mode)
 	{
 		res = configure_redir(cmd->right_child, data, &in, &out);
 		if (res == -2)
-			return(redir_error(cmd->right_child->content.redir.path, 0));
+			return (redir_error(cmd->right_child->content.redir.path, 0));
 		if (res == -3)
 			return (redir_error("heredoc", 0));
+		if (res == -1)
+			return (permission_error_fd(cmd->right_child->content.redir.path, mode));
 		if (res < 0)
-			exit(res);
+			exit(1);
 	}
 	if (mode != 4)
 		config_pipes_modes_123(data, in, out, mode);
