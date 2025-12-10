@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:59:32 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/10 10:36:03 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/10 12:10:12 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <stdlib.h>
 # include "ft_printf.h"
 
-typedef struct s_node t_node;
+typedef struct s_node	t_node;
 
 typedef struct s_list
 {
@@ -33,7 +33,7 @@ int		ft_isalnum(int c);
 int		ft_isprint(int c);
 int		ft_toupper(int c);
 int		ft_tolower(int c);
-int	    ft_is_whitespace(int c);
+int		ft_is_whitespace(int c);
 int		ft_isnum(int c);
 size_t	ft_strlen(const char *s);
 int		ft_atoi(const char *str);

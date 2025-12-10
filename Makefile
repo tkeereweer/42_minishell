@@ -10,6 +10,8 @@ SRCS = parsing/tree/logic_tree.c \
 	parsing/separator_logic.c \
 	parsing/clean_node_list.c \
 	parsing/heredoc/heredoc_filepath.c \
+	parsing/heredoc/heredoc_write.c \
+	parsing/heredoc/heredoc_command.c \
 	parsing/tokenizers/token_redir.c \
 	parsing/tokenizers/token.c \
 	parsing/tokenizers/tokenize_word.c \
@@ -36,8 +38,6 @@ SRCS = parsing/tree/logic_tree.c \
 	execution/get_exe_path_utils.c \
 	execution/configure_redir.c \
 	parsing/get_args.c \
-	parsing/heredoc/heredoc_write.c \
-	parsing/heredoc/heredoc_command.c \
 	execution/exec_tree.c \
 	execution/exec_cmd.c \
 	execution/exec_cmd_builtin.c \
@@ -47,7 +47,7 @@ SRCS = parsing/tree/logic_tree.c \
 	execution/exec_tree_utils.c \
 	execution/exec_errors.c \
 	main_utils.c \
-	main_utils2.c \
+	main_min_env.c \
 	main.c
 
 OBJ_DIR = objects
@@ -56,7 +56,7 @@ OBJS = $(addprefix $(OBJ_DIR)/, $(notdir $(SRCS:.c=.o)))
 NAME = minishell
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror
 
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
@@ -67,7 +67,6 @@ all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LINKS) -o $(NAME)
-# 	dsymutil $@
 
 $(LIBFT):
 	make -C $(LIBFT_DIR)
