@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals_child.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 11:56:55 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/10 10:28:05 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/10 13:15:22 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static void	signal_handler_child(int signal)
 	if (signal == SIGINT || signal == SIGQUIT)
 	{
 		if (signal == SIGQUIT)
-			ft_printf("Quit (core dumped)");
+			printf("Quit (core dumped)");
 		exit(signal);
 	}
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_cmd2.c                                        :+:      :+:    :+:   */
+/*   exec_errors.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 16:59:37 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/10 09:51:53 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/10 12:37:47 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,5 +75,9 @@ void	exec_fail(char *path, char *cmd, t_data *data)
 	rl_clear_history();
 	free(path);
 	clean_data(data);
+	if (errno == EISDIR)
+		exit (126);
+	if (errno == ENOENT)
+		exit (127);
 	exit(1);
 }

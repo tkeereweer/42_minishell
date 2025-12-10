@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/10 12:17:07 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 13:14:57 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,6 +236,7 @@ void		config_pipes_modes_123(t_data *data, int in, int out, int mode);
 int			exec_builtin(t_node *cmd, t_data *data, int mode);
 void		exec_builtin_in_child(t_data *data, t_node *cmd);
 int			setup_oldstds(int *old_stdin, int *old_stdout);
+void		set_errno_isdir(int *err_flag);
 //main
 int			only_whitespace(char *line);
 void		clean_exit(t_data *data, char *line, char *prompt);

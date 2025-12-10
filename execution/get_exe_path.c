@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_exe_path.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 21:11:28 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/10 10:26:27 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/10 13:14:22 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,20 @@ static char	*find_path(char **paths, char *cmd)
 	return (free(temp1), free_split(paths), ret);
 }
 
-static void	set_errno_isdir(int *err_flag)
+static char	*keep_cwd(char **wd, char *cmd, int *i)
 {
-	errno = EISDIR;
-	*err_flag = 1;
+	char	*pwd;
+
+	*wd = getcwd(NULL, 0);
+	if (!*wd)
+		return (NULL);
+	*i = 1;
+	while (cmd[ft_strlen(cmd) - *i] != '/')
+		*i += 1;
+	pwd = ft_substr(cmd, 0, ft_strlen(cmd) - *i + 1);
+	if (!pwd)
+		return (NULL);
+	return (pwd);
 }
 
 static char	*find_relative_path(char *cmd, int *err_flag)
@@ -52,27 +62,26 @@ static char	*find_relative_path(char *cmd, int *err_flag)
 	char	*pwd;
 	char	*curr_wd;
 	char	*ret;
+	char	*wd;
 
-	i = 1;
-	while (cmd[ft_strlen(cmd) - i] != '/')
-		i++;
-	pwd = ft_substr(cmd, 0, ft_strlen(cmd) - i + 1);
+	pwd = keep_cwd(&wd, cmd, &i);
 	if (!pwd)
 		return (NULL);
 	if (chdir(pwd) == -1)
 		return (pwd);
 	curr_wd = getcwd(NULL, 0);
-	free(pwd);
 	if (!curr_wd)
-		return (NULL);
+		return (free(pwd), NULL);
+	if (chdir(wd) == -1)
+		return (free(pwd), free(curr_wd), free(wd), NULL);
 	ret = ft_strjoin(curr_wd, "/");
 	if (!ret)
-		return (NULL);
+		return (free(wd), free(pwd), NULL);
 	free(curr_wd);
 	curr_wd = ft_strjoin(ret, &cmd[ft_strlen(cmd) - i + 1]);
 	if (is_directory(curr_wd) == 1)
 		set_errno_isdir(err_flag);
-	return (free(ret), curr_wd);
+	return (free(wd), free(pwd), free(ret), curr_wd);
 }
 
 char	*get_exe_path(t_data *data, char *cmd, int *err_flag)

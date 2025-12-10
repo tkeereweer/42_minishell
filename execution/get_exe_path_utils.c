@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_exe_path_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 10:07:48 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/10 10:09:00 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/10 13:14:41 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,10 @@ int	has_a_slash(char *cmd)
 		i++;
 	}
 	return (0);
+}
+
+void	set_errno_isdir(int *err_flag)
+{
+	errno = EISDIR;
+	*err_flag = 1;
 }
