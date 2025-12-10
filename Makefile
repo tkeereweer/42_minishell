@@ -1,18 +1,18 @@
-SRCS = parsing/logic_tree.c \
-	parsing/logic_tree_utils.c \
-	parsing/command_tree.c \
+SRCS = parsing/tree/logic_tree.c \
+	parsing/tree/logic_tree_utils.c \
+	parsing/tree/command_tree.c \
 	parsing/build_node_list.c \
 	parsing/parse_pipeline.c \
 	parsing/parsing_error.c \
-	parsing/parsing_utils2.c \
+	parsing/iterate_over_quotes.c \
 	parsing/build_subpipe.c \
-	parsing/parsing_utils4.c \
-	parsing/parsing_utils5.c \
+	parsing/tokenizers/sep_tokenizer.c \
+	parsing/separator_logic.c \
 	parsing/clean_node_list.c \
-	parsing/parsing_utils7.c \
-	parsing/token_redir.c \
-	parsing/token.c \
-	parsing/token2.c \
+	parsing/heredoc/heredoc_filepath.c \
+	parsing/tokenizers/token_redir.c \
+	parsing/tokenizers/token.c \
+	parsing/tokenizers/tokenize_word.c \
 	parsing/variable_expansion/env_vars.c \
 	parsing/variable_expansion/env_vars_redir.c \
 	parsing/variable_expansion/env_vars_utils.c \
@@ -36,8 +36,8 @@ SRCS = parsing/logic_tree.c \
 	execution/get_exe_path_utils.c \
 	execution/configure_redir.c \
 	parsing/get_args.c \
-	parsing/write_heredoc.c \
-	parsing/heredoc_command.c \
+	parsing/heredoc/heredoc_write.c \
+	parsing/heredoc/heredoc_command.c \
 	execution/exec_tree.c \
 	execution/exec_cmd.c \
 	execution/exec_cmd_builtin.c \
@@ -73,6 +73,15 @@ $(LIBFT):
 	make -C $(LIBFT_DIR)
 
 $(OBJ_DIR)/%.o: parsing/%.c | $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/%.o: parsing/tree/%.c | $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/%.o: parsing/tokenizers/%.c | $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/%.o: parsing/heredoc/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/%.o: parsing/variable_expansion/%.c | $(OBJ_DIR)

@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 14:40:54 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/09 14:50:01 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 11:50:57 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	run_line(char **line, t_data *data, char **temp)
 			return (0);
 		list = clean_node_list(line, &temp, data);
 		if (list == NULL)
-			return (0);// shouldn't we return 1 ??
+			return (0);
 		data->tree = create_logic_tree(list);
 		res = create_cmd_trees(data->tree);
 		if (res == 1)
@@ -79,8 +79,8 @@ t_data	init_data(char **envp)
 	data.cmd_cnt = 0;
 	data.pid_tab = NULL;
 	data.pipe_tab = NULL;
-    data.line = NULL;
-    data.prompt = NULL;
+	data.line = NULL;
+	data.prompt = NULL;
 	data.exit_status = 0;
 	return (data);
 }
@@ -92,14 +92,14 @@ char	*build_prompt(t_data *data, char **envp)
 	char	*prompt;
 
 	if (!*envp)
-        return (empty_env_prompt());
+		return (empty_env_prompt());
 	user = ft_getenv("$USER", data->env);
 	if (user == NULL)
-    {
+	{
 		user = ft_strdup("");
-        if (!user)
-            return (NULL);
-    }
+		if (!user)
+			return (NULL);
+	}
 	if (getcwd(buf, PATH_MAX) == NULL)
 		return (NULL);
 	prompt = (char *) malloc((ft_strlen(user) + ft_strlen(buf) + 4)
@@ -115,9 +115,9 @@ char	*build_prompt(t_data *data, char **envp)
 
 void	handle_next_cmd(t_data *data, char **envp)
 {
-    char    **temp;
+	char	**temp;
 
-    temp = NULL;
+	temp = NULL;
 	data->prompt = build_prompt(data, envp);
 	if (data->prompt == NULL)
 		clean_exit(data, NULL, NULL);

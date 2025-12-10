@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 16:39:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/09 20:37:33 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 10:26:23 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static char	**tab_1_string(char **tab, char *str)
 {
 	char	*temp;
-	
+
 	tab = tab_realloc(tab, 1);
 	if (!tab)
 		return (NULL);
@@ -26,12 +26,12 @@ static char	**tab_1_string(char **tab, char *str)
 	if (!tab[0])
 		return (free(temp), NULL);
 	free(temp);
-    free(str);
+	free(str);
 	tab[1] = NULL;
 	return (tab);
 }
 
-static char **make_tab(char **tab, char *temp, int *word_count)
+static char	**make_tab(char **tab, char *temp, int *word_count)
 {
 	if (!temp)
 		return (free_split(tab), NULL);
@@ -46,13 +46,13 @@ static char **make_tab(char **tab, char *temp, int *word_count)
 	return (tab);
 }
 
-static char **make_last_tab(char **tab, char *temp, int word_count)
+static char	**make_last_tab(char **tab, char *temp, int word_count)
 {
 	if (!temp)
 		return (free_split(tab), NULL);
 	tab = tab_realloc(tab, word_count + 1);
 	if (!tab)
-		return(free_split(tab), NULL);
+		return (free_split(tab), NULL);
 	if (temp[0] == '\0')
 	{
 		free(temp);
@@ -66,10 +66,10 @@ static char **make_last_tab(char **tab, char *temp, int word_count)
 	return (tab);
 }
 
-int clean_args_nodes(t_list **head)
+int	clean_args_nodes(t_list **head)
 {
 	t_list	*temp;
-	char 	**temp_tab;
+	char	**temp_tab;
 	char	*temp_str;
 
 	temp = *head;
@@ -91,10 +91,10 @@ int clean_args_nodes(t_list **head)
 char	**args_tab(char *str)
 {
 	t_make_tab	s;
-	char    *temp;
+	char		*temp;
 
 	s = init_struct(str);
-	while(str[s.i])
+	while (str[s.i])
 	{
 		if (!iterate_over_quotes(str, &(s.i)))
 			return (NULL);
@@ -107,7 +107,7 @@ char	**args_tab(char *str)
 			while (ft_is_whitespace(str[s.i]))
 				s.i++;
 			s.j = s.i;
-			continue;
+			continue ;
 		}
 		s.i++;
 	}

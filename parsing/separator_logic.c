@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing_utils5.c                                   :+:      :+:    :+:   */
+/*   separator_logic.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 10:25:28 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/09 20:40:05 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 11:30:44 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,30 @@ t_list	*set_temp(t_list **list, t_list *temp)
 	return (temp);
 }
 
-static int	sep_logical_tokenizer(char *line, int *i, t_list **list/*, t_list **temp*/)
+int	tab_len(char **tab)
 {
-	int j; 
+	int	i;
+
+	i = 0;
+	while (tab[i])
+		i++;
+	return (i);
+}
+
+int	is_last_pipe(t_list *pipeline)
+{
+	while (pipeline != NULL)
+	{
+		if (pipeline->content->type == PIPE)
+			return (0);
+		pipeline = pipeline->next;
+	}
+	return (1);
+}
+
+static int	sep_logical_tokenizer(char *line, int *i, t_list **list)
+{
+	int	j;
 
 	j = 0;
 	if (is_logic(&line[*i]))
@@ -43,7 +64,7 @@ static int	sep_logical_tokenizer(char *line, int *i, t_list **list/*, t_list **t
 			j++;
 		if (line[*i + j] && (is_logic(&line[*i + j]) || line[*i + j] == ')'))
 			if (sep_tokenizer(line, i, list) == -1)
-				return (-1);	
+				return (-1);
 	}
 	else
 		*i += 1;
@@ -57,7 +78,7 @@ int	separator_logic(char *line, int *i, t_list *temp, t_list **list)
 		if (sep_logical_tokenizer(line, i, list) == -1)
 			return (-1);
 		if (temp && temp->content->type == LOGIC)
-		    return (-3);	
+			return (-3);
 	}
 	else if (sep_logical_tokenizer(line, i, list) == -1)
 		return (-1);
@@ -66,25 +87,3 @@ int	separator_logic(char *line, int *i, t_list *temp, t_list **list)
 		*i += 1;
 	return (1);
 }
-
-int	tab_len(char **tab)
-{
-	int i;
-
-	i = 0;
-	while (tab[i])
-		i++;
-	return (i);
-}
-
-int	is_last_pipe(t_list *pipeline)
-{
-	while (pipeline != NULL)
-	{
-		if (pipeline->content->type == PIPE)
-			return (0);
-		pipeline = pipeline->next;
-	}
-	return (1);
-}
-

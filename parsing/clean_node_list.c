@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 20:51:31 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/09 20:39:35 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 10:23:38 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 void	clean_path_tab(char **path_tab)
 {
-	int i;
+	int	i;
 
 	if (!path_tab)
-		return;
+		return ;
 	i = 0;
-	while(path_tab[i])
+	while (path_tab[i])
 	{
 		if (unlink(path_tab[i]) == -1)
 		{
@@ -32,60 +32,49 @@ void	clean_path_tab(char **path_tab)
 		i++;
 	}
 	free(path_tab);
-	return;
+	return ;
 }
 
-//start and end are indexes in the main line
-//remove end - start + 1 and add ft_strlen(path)
-char	*replace_with_path(char *dest, char *path, int start, int end)
+int	check_unclosed_par(t_list **list)
 {
-	char    *temp;
-	size_t  new_len;
-
-	new_len = ft_strlen(dest) - ( end - start + 1) + ft_strlen(path) + 1;
-	temp = (char *)ft_calloc(sizeof(char), new_len + 1);
-	if (!temp)
-		return (NULL);
-	ft_strncat(temp, dest, start);
-	ft_strncat(temp, path, ft_strlen(path));
-	ft_strncat(temp, &dest[end], ft_strlen(&dest[end]));
-	return (temp);
-}
-
-int check_unclosed_par(t_list **list)
-{
-	t_list  *temp;
-	int     par_count;
+	t_list	*temp;
+	int		par_count;
 
 	temp = *list;
 	par_count = 0;
 	while (temp)
 	{
-		if (temp->content->type == PAR && temp->content->content.parenthesis == '(')
+		if (temp->content->type == PAR
+			&& temp->content->content.parenthesis == '(')
 			par_count++;
-		if (temp->content->type == PAR && temp->content->content.parenthesis == ')')
+		if (temp->content->type == PAR
+			&& temp->content->content.parenthesis == ')')
 			par_count--;
 		temp = temp->next;
 	}
 	if (par_count != 0)
-		return (-1);//unclosed parenthesis
+		return (-1);
 	return (1);
 }
 
-static int  check_par_usage(t_list **temp)
+static int	check_par_usage(t_list **temp)
 {
 	while ((*temp))
 	{
-		if ((*temp)->content->type == PAR && (*temp)->content->content.parenthesis == '(')
+		if ((*temp)->content->type == PAR
+			&& (*temp)->content->content.parenthesis == '(')
 		{
-			if ((*temp)->next && (*temp)->next->content->content.parenthesis == ')')
+			if ((*temp)->next
+				&& (*temp)->next->content->content.parenthesis == ')')
 				return (-3);
 			if ((*temp)->prev && (*temp)->prev->content->type == PIPELINE)
 				return (-1);
 		}
-		if ((*temp)->content->type == PAR && (*temp)->content->content.parenthesis == ')')
+		if ((*temp)->content->type == PAR
+			&& (*temp)->content->content.parenthesis == ')')
 		{
-			if ((*temp)->next && (*temp)->next->content->content.parenthesis == '(')
+			if ((*temp)->next
+				&& (*temp)->next->content->content.parenthesis == '(')
 				return (-3);
 			if ((*temp)->next && (*temp)->next->content->type == PIPELINE)
 				return (-2);
@@ -95,20 +84,40 @@ static int  check_par_usage(t_list **temp)
 	return (1);
 }
 
+static t_list	*par_usage(t_list *list)
+{
+	t_list	*tmp;
+	int		result;
+
+	tmp = list;
+	result = check_par_usage(&tmp);
+	if (result == -1)
+		return (list_error(&list,
+				"minishell: wrong parentheses usage\n", NULL));
+	if (result == -2)
+		return (list_error(&list,
+				"minishell: syntax error\n", &tmp));
+	if (result == -3)
+		return (list_error(&list,
+				"minishell: syntax error near unexpected token: ')'\n", &tmp));
+	return (list);
+}
+
 t_list	*clean_node_list(char **line, char ***path_tab, t_data *data)
 {
-	int     result;
+	int		result;
 	t_list	*list;
-	t_list	*temp;
 
 	list = NULL;
 	result = build_node_list(line, &list, path_tab);
 	if (result == 0)
 		return (list_error(&list, "minishell: unclosed quotes\n", NULL));
 	if (result == -1)
-		return (list_error(&list, "minishell: malloc fail somewhere\n", NULL));
+		return (list_error(&list,
+				"minishell: malloc fail somewhere\n", NULL));
 	if (result == -2)
-		return (list_error(&list, "minishell: dangling logical operator\n", NULL));
+		return (list_error(&list,
+				"minishell: dangling logical operator\n", NULL));
 	if (result == -3)
 		return (syntax_error(&list));
 	if (result == -4)
@@ -118,13 +127,5 @@ t_list	*clean_node_list(char **line, char ***path_tab, t_data *data)
 	}
 	if (check_unclosed_par(&list) == -1)
 		return (list_error(&list, "minishell: unclosed parenthesis\n", NULL));
-	temp = list;
-	result = check_par_usage(&temp);
-	if (result == -1)
-		return (list_error(&list, "minishell: wrong parentheses usage\n", NULL));
-	if (result == -2)
-		return (list_error(&list, "minishell: syntax error\n", &temp));
-	if (result == -3)
-		return (list_error(&list, "minishell: syntax error near unexpected token: ')'\n", &temp));
-	return (list);
+	return (par_usage(list));
 }

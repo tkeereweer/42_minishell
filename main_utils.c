@@ -6,24 +6,14 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 09:28:23 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/09 09:31:30 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 11:49:36 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void min_env_shlvl(t_data *data, char **temp, char *buf)
+static int	min_env_shlvl_pwd(t_data *data, char **temp, char *buf)
 {
-	ft_strcat(*temp, "PWD=");
-	ft_strcat(*temp, buf);
-	data->env[0] = *temp;
-	data->env[1] = ft_strdup("SHLVL=1");
-	return ;
-}
-int	set_minimal_env(t_data *data)
-{
-	char	buf[PATH_MAX];
-	char	*temp;
 	ssize_t	len;
 
 	if (!getcwd(buf, PATH_MAX))
@@ -32,25 +22,40 @@ int	set_minimal_env(t_data *data)
 	if (!data->env)
 		return (1);
 	len = ft_strlen(buf) + ft_strlen("PWD=") + 1;
-	temp = (char *)malloc(len);
+	*temp = (char *)malloc(len);
 	if (!temp)
 		return (free(data->env), 1);
-	min_env_shlvl(data, &temp, buf);
+	ft_strcat(*temp, "PWD=");
+	ft_strcat(*temp, buf);
+	data->env[0] = *temp;
+	data->env[1] = ft_strdup("SHLVL=1");
+	return (0);
+}
+
+int	set_minimal_env(t_data *data)
+{
+	char	buf[PATH_MAX];
+	char	*temp;
+	char	*str;
+
+	if (min_env_shlvl_pwd(data, &temp, buf))
+		return (1);
 	if (!data->env[1])
 		return (free_split(data->env), 1);
 	data->env[2] = ft_strdup("_=/usr/bin/env");
 	if (!data->env[2])
 		return (free_split(data->env), 1);
 	data->env[3] = NULL;
-	data->default_path = ft_strdup("/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:.");
+	str = "/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:.";
+	data->default_path = ft_strdup(str);
 	if (data->default_path == NULL)
 		return (free_split(data->env), 1);
 	return (0);
 }
 
-char	*empty_env_prompt()
+char	*empty_env_prompt(void)
 {
-	char    *prompt;
+	char	*prompt;
 	char	buf[PATH_MAX];
 
 	getcwd(buf, PATH_MAX);
