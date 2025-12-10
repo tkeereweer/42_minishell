@@ -6,13 +6,14 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 14:29:27 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/09 14:19:58 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 11:58:12 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
-static char *is_heredoc_quoted(char **line, int *j, int *quoted_heredoc, int *end)
+static char	*is_heredoc_quoted(char **line, int *j,
+		int *quoted_heredoc, int *end)
 {
 	while (1)
 	{
@@ -26,12 +27,12 @@ static char *is_heredoc_quoted(char **line, int *j, int *quoted_heredoc, int *en
 			}
 			*j += 1;
 			*end = *j - 1;
-			break;
+			break ;
 		}
 		if (!valid_char(&(*line)[*j]))
 		{
 			*end = *j - 1;
-			break;
+			break ;
 		}
 		*j += 1;
 	}
@@ -44,7 +45,7 @@ static char	*set_limiter(char **line, int *j, int *start, int *quoted_heredoc)
 {
 	char	*limiter;
 	int		end;
-	
+
 	*j += 2;
 	while (ft_is_whitespace((*line)[*j]))
 		*j += 1;
@@ -56,20 +57,13 @@ static char	*set_limiter(char **line, int *j, int *start, int *quoted_heredoc)
 		return (NULL);
 	if (*quoted_heredoc)
 		if (remove_quotes(&limiter) == -1)
-			return (NULL);//cleans up if needed but substr removes quotes
+			return (NULL);
 	return (limiter);
 }
 
-static int quoted_heredoc_error(int quoted_heredoc)
+static int	heredoc_tab_len(char ***tab)
 {
-	if (quoted_heredoc == -1)
-		return (0);
-	return (-1);   
-}
-
-static int  heredoc_tab_len(char ***tab)
-{
-	int i;
+	int	i;
 
 	i = 0;
 	while ((*tab)[i])
@@ -77,14 +71,26 @@ static int  heredoc_tab_len(char ***tab)
 	return (i);
 }
 
-int set_heredoc(char **line, int *j, char ***tab)
+static int	overwrite_path(char **line, int *j, char ***tab, int start)
 {
-	int     start;
-	char    *limiter;
-	char    *temp;
-	int     path_num;
-	int     quoted_heredoc;
-    int     err_flag;
+	int		path_num;
+	char	*temp;
+
+	path_num = heredoc_tab_len(tab);
+	temp = replace_with_path(*line, (*tab)[path_num - 1], start, *j);
+	if (!temp)
+		return (-1);
+	free(*line);
+	*line = temp;
+	return (1);
+}
+
+int	set_heredoc(char **line, int *j, char ***tab)
+{
+	int		start;
+	char	*limiter;
+	int		quoted_heredoc;
+	int		err_flag;
 
 	start = 0;
 	quoted_heredoc = 0;
@@ -94,11 +100,5 @@ int set_heredoc(char **line, int *j, char ***tab)
 	*tab = heredoc(*tab, limiter, quoted_heredoc, &err_flag);
 	if (!*tab)
 		return (free(limiter), err_flag);
-	path_num = heredoc_tab_len(tab);
-	temp = replace_with_path(*line, (*tab)[path_num - 1], start, *j);
-	if (!temp)
-		return (free(limiter), -1);
-	free(*line);
-	*line = temp;
-	return (free(limiter), 1);
+	return (free(limiter), overwrite_path(line, j, tab, start));
 }

@@ -6,11 +6,11 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:21:39 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 20:56:22 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 11:58:47 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 void	clean_par(t_list **list)
 {
@@ -23,9 +23,11 @@ void	clean_par(t_list **list)
 	while (par_cnt != 0 && tmp->next != NULL)
 	{
 		tmp = tmp->next;
-		if (tmp->content->type == PAR && tmp->content->content.parenthesis == '(')
+		if (tmp->content->type == PAR
+			&& tmp->content->content.parenthesis == '(')
 			par_cnt++;
-		else if (tmp->content->type == PAR && tmp->content->content.parenthesis == ')')
+		else if (tmp->content->type == PAR
+			&& tmp->content->content.parenthesis == ')')
 			par_cnt--;
 	}
 	tmp->prev->next = tmp->next;
@@ -43,9 +45,11 @@ static void	cut_at_eob(t_list **list)
 	*list = (*list)->next;
 	while (par_cnt != 0 && list != NULL)
 	{
-		if ((*list)->content->type == PAR && (*list)->content->content.parenthesis == '(')
+		if ((*list)->content->type == PAR
+			&& (*list)->content->content.parenthesis == '(')
 			par_cnt++;
-		else if ((*list)->content->type == PAR && (*list)->content->content.parenthesis == ')')
+		else if ((*list)->content->type == PAR
+			&& (*list)->content->content.parenthesis == ')')
 			par_cnt--;
 		*list = (*list)->next;
 	}
@@ -56,7 +60,7 @@ static void	cut_at_eob(t_list **list)
 	}
 }
 
-static void move_list(t_node **node, t_list **list)
+static void	move_list(t_node **node, t_list **list)
 {
 	(*node)->right_child = (*list)->content;
 	(*list) = (*list)->next;
@@ -100,7 +104,8 @@ t_node	*create_logic_tree(t_list *list)
 	{
 		tmp = list;
 		list = list->next;
-		if (tmp->content->type == PAR && tmp->content->content.parenthesis == '(')
+		if (tmp->content->type == PAR
+			&& tmp->content->content.parenthesis == '(')
 			free(tmp->content);
 		free(tmp);
 	}

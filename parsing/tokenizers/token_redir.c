@@ -6,11 +6,11 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 20:38:45 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/18 15:48:16 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 11:58:27 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 int	pipe_token(t_list **lst)
 {
@@ -43,7 +43,7 @@ int	write_token(t_list **lst, char *filepath)
 	t_node		*temp_node;
 
 	temp_cont.redir.kind = WRITE;
-    temp_cont.redir.path = filepath;
+	temp_cont.redir.path = filepath;
 	temp_type = REDIR;
 	temp_node = node_new(temp_cont, temp_type);
 	if (!temp_node)
@@ -66,7 +66,7 @@ int	read_token(t_list **lst, char *filepath)
 	t_node		*temp_node;
 
 	temp_cont.redir.kind = READ;
-    temp_cont.redir.path = filepath;
+	temp_cont.redir.path = filepath;
 	temp_type = REDIR;
 	temp_node = node_new(temp_cont, temp_type);
 	if (!temp_node)
@@ -89,7 +89,7 @@ int	append_token(t_list **lst, char *filepath)
 	t_node		*temp_node;
 
 	temp_cont.redir.kind = APPEND;
-    temp_cont.redir.path = filepath;
+	temp_cont.redir.path = filepath;
 	temp_type = REDIR;
 	temp_node = node_new(temp_cont, temp_type);
 	if (!temp_node)
@@ -103,6 +103,7 @@ int	append_token(t_list **lst, char *filepath)
 	ft_lstadd_back(lst, temp);
 	return (1);
 }
+
 //free limiter after exec
 int	heredoc_token(t_list **lst, char *limiter)
 {
@@ -112,7 +113,7 @@ int	heredoc_token(t_list **lst, char *limiter)
 	t_node		*temp_node;
 
 	temp_cont.redir.kind = HEREDOC;
-    temp_cont.redir.path = limiter;
+	temp_cont.redir.path = limiter;
 	temp_type = REDIR;
 	temp_node = node_new(temp_cont, temp_type);
 	if (!temp_node)

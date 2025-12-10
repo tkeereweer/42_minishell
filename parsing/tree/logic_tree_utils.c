@@ -6,11 +6,11 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 20:54:05 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/08 21:06:36 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 11:58:43 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 // free malloced pointers in tree->content
 void	free_tree(t_node *tree)
@@ -25,6 +25,7 @@ void	free_tree(t_node *tree)
 		free(tree->content.redir.path);
 	free(tree);
 }
+
 t_node	*node_new(t_content content, t_type type)
 {
 	t_node	*new;
@@ -50,6 +51,7 @@ t_node	*node_new(t_content content, t_type type)
 	new->parent = NULL;
 	return (new);
 }
+
 void	free_pipeline_list(t_list *pipeline)
 {
 	t_list	*next;
@@ -66,15 +68,21 @@ void	free_pipeline_list(t_list *pipeline)
 
 void	handle_error_pipeline_list(t_node *node)
 {
+	char	*str;
+
+	str = "minishell: syntax error near unexpected token: ";
 	if (node->parent == NULL || node->parent->right_child == node)
-		ft_putstr_fd("minishell: syntax error near unexpected token: 'newline'\n", STDERR_FILENO);
+	{
+		ft_putstr_fd(str, STDERR_FILENO);
+		ft_putstr_fd("'newline'\n", STDERR_FILENO);
+	}
 	else
 	{
-		ft_putstr_fd("minishell: syntax error near unexpected token: '", STDERR_FILENO);
+		ft_putstr_fd(str, STDERR_FILENO);
 		if (node->parent->content.logic == AND)
-			ft_putstr_fd("&&'\n", STDERR_FILENO);
+			ft_putstr_fd("'&&'\n", STDERR_FILENO);
 		else
-			ft_putstr_fd("||'\n", STDERR_FILENO);
+			ft_putstr_fd("'||'\n", STDERR_FILENO);
 	}
 }
 

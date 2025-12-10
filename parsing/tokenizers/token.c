@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 14:20:12 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/14 16:55:33 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/10 11:58:31 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
-int open_par_token(t_list **list)
+int	open_par_token(t_list **list)
 {
-	t_content   temp_cont;
-	t_type      temp_type;
-	t_list      *temp;
+	t_content	temp_cont;
+	t_type		temp_type;
+	t_list		*temp;
 	t_node		*temp_node;
 
-	temp_type = PAR; 
+	temp_type = PAR;
 	temp_cont.parenthesis = '(';
 	temp_node = node_new(temp_cont, temp_type);
 	if (!temp_node)
@@ -34,14 +34,14 @@ int open_par_token(t_list **list)
 	return (1);
 }
 
-int close_par_token(t_list **list)
+int	close_par_token(t_list **list)
 {
-	t_content   temp_cont;
-	t_type      temp_type;
+	t_content	temp_cont;
+	t_type		temp_type;
 	t_list		*temp;
 	t_node		*temp_node;
 
-	temp_type = PAR; 
+	temp_type = PAR;
 	temp_cont.parenthesis = ')';
 	temp_node = node_new(temp_cont, temp_type);
 	if (!temp_node)
@@ -58,12 +58,12 @@ int close_par_token(t_list **list)
 
 int	pipeline_token(char *str, t_list **list)
 {
-	t_content   temp_cont;
-	t_type      temp_type;
+	t_content	temp_cont;
+	t_type		temp_type;
 	t_list		*temp;
 	t_node		*temp_node;
 
-	temp_type = PIPELINE; 
+	temp_type = PIPELINE;
 	temp_cont.str = str;
 	temp_node = node_new(temp_cont, temp_type);
 	if (!temp_node)
@@ -80,8 +80,8 @@ int	pipeline_token(char *str, t_list **list)
 
 int	and_token(t_list **list)
 {
-	t_content   temp_cont;
-	t_type      temp_type;
+	t_content	temp_cont;
+	t_type		temp_type;
 	t_list		*temp;
 	t_node		*temp_node;
 
@@ -102,8 +102,8 @@ int	and_token(t_list **list)
 
 int	or_token(t_list **list)
 {
-	t_content   temp_cont;
-	t_type      temp_type;
+	t_content	temp_cont;
+	t_type		temp_type;
 	t_list		*temp;
 	t_node		*temp_node;
 

@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token2.c                                           :+:      :+:    :+:   */
+/*   tokenize_word.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 21:04:31 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/08 16:20:14 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 11:58:35 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 int	arg_token(char *word, t_list **lst)
 {
-	t_node      *temp_node;
+	t_node		*temp_node;
 	t_content	temp_cont;
 	t_type		temp_type;
 	t_list		*temp;
@@ -31,7 +31,27 @@ int	arg_token(char *word, t_list **lst)
 		return (0);
 	}
 	ft_lstadd_back(lst, temp);
-	return (1);	
+	return (1);
+}
+
+char	is_redir(char *str)
+{
+	int		j;
+	char	*token[8];
+
+	token[0] = ">";
+	token[1] = "<";
+	token[2] = ">>";
+	token[3] = "<<";
+	token[4] = NULL;
+	j = 0;
+	while (token[j])
+	{
+		if (!ft_strncmp(str, token[j], ft_strlen(token[j])))
+			return (*token[j]);
+		j++;
+	}
+	return (0);
 }
 
 static int	iterate_over_word(char *line, int *j)
@@ -43,7 +63,7 @@ static int	iterate_over_word(char *line, int *j)
 	}
 	else
 	{
-		while (line[*j] && valid_char(&line[*j]))    
+		while (line[*j] && valid_char(&line[*j]))
 			*j += 1;
 	}
 	return (1);
@@ -61,10 +81,10 @@ int	tokenize_word(char *line, int *i, char **str, int space)
 
 	*i += space;
 	if (empty_end(line, &j, i) == -1)
-		return (-1);//eol after redir --> syntax error near NEXT TOKEN !! ie newline or |, etc
+		return (-1);
 	if (!iterate_over_word(line, &j))
 		return (tokenizer_error("unclosed quotes\n"));
-	if (line[j] != '\'' && line[j] !='"')
+	if (line[j] != '\'' && line[j] != '"')
 		j--;
 	*str = ft_substr(&line[*i], 0, j - *i + 1);
 	if (!*str)
@@ -76,4 +96,10 @@ int	tokenize_word(char *line, int *i, char **str, int space)
 	*str = temp;
 	*i = j;
 	return (1);
+}
+
+int	tokenizer_error(char *str)
+{
+	write(STDERR_FILENO, str, ft_strlen(str));
+	return (-1);
 }

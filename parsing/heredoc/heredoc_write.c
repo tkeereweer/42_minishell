@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   write_heredoc.c                                    :+:      :+:    :+:   */
+/*   heredoc_write.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 08:25:50 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/09 14:31:26 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 11:58:19 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 extern volatile sig_atomic_t	g_signum;
 
@@ -37,7 +37,7 @@ char	**temp_filepath(char **tmp_name, int count, int quoted_heredoc)
 	ft_strncat(tmp_name[count - 1], tmp_num, ft_strlen(tmp_num));
 	if (quoted_heredoc)
 		ft_strncat(tmp_name[count - 1], "Q", 1);
-	return (free(tmp_num), tmp_name);	
+	return (free(tmp_num), tmp_name);
 }
 
 char	**try_filepath(char **filepath, int count)
@@ -50,7 +50,7 @@ char	**try_filepath(char **filepath, int count)
 			return (NULL);
 		}
 	}
-	return (filepath);	
+	return (filepath);
 }
 
 int	write_heredoc_error(char *line, int fd, int stdin_backup)
@@ -66,15 +66,15 @@ int	write_heredoc_error(char *line, int fd, int stdin_backup)
 int	write_heredoc(char *limiter, int fd)
 {
 	char	*line;
-	int     stdin_backup;
-	
+	int		stdin_backup;
+
 	stdin_backup = dup(STDIN_FILENO);
 	if (handle_signals_parent(2) == 1)
 		return (-1);
 	line = readline(">");
 	if (!line || g_signum == SIGINT)
 		return (write_heredoc_error(line, fd, stdin_backup));
-	while (line && ft_strncmp(line, limiter, ft_strlen(limiter)))//line != eof sent by ctrl D
+	while (line && ft_strncmp(line, limiter, ft_strlen(limiter)))
 	{
 		ft_putstr_fd(line, fd);
 		ft_putstr_fd("\n", fd);
