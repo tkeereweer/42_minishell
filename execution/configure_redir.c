@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 21:17:25 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/09 10:53:04 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 08:38:16 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static int	dup_fds(int fd, t_redir_type kind, int *in_redir, int *out_redir)
 {
 	if (fd == -1)
-		return (-1);//exit code 1
+		return (-1);
 	if (kind == WRITE || kind == APPEND)
 	{
 		dup2(fd, STDOUT_FILENO);
@@ -42,7 +42,7 @@ static int	expand_heredoc(int *fd, char *path, t_data *data)
 		return (1);
 	temp = get_next_line(*fd);
 	if (!temp)
-		return (1);//empty file
+		return (1);
 	while (temp)
 	{
 		file = my_realloc(file, ft_strlen_gnl(file) + ft_strlen(temp) + 1);
@@ -52,7 +52,7 @@ static int	expand_heredoc(int *fd, char *path, t_data *data)
 		free(temp);
 		temp = get_next_line(*fd);
 	}
-	if (expand_envvar_str(&file, 0, data, 1) == -1)
+	if (expand_envvar_str(&file, 0, data, 2) == -1)
 		return (free(temp), free(file), -1);
 	close(*fd);
 	*fd = open(path, O_WRONLY | O_TRUNC);
@@ -63,14 +63,16 @@ static int	expand_heredoc(int *fd, char *path, t_data *data)
 	return (free(temp), free(file), 1);
 }
 
-static int  open_redir(int *fd, t_redir_type kind, t_node *redir, t_data *data)
+static int	open_redir(int *fd, t_redir_type kind, t_node *redir, t_data *data)
 {
-	int res;
+	int	res;
 
 	if (kind == WRITE)
-		*fd = open(redir->content.redir.path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		*fd = open(redir->content.redir.path,
+				O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else if (kind == APPEND)
-		*fd = open(redir->content.redir.path, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		*fd = open(redir->content.redir.path,
+				O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else if (kind == READ)
 		*fd = open(redir->content.redir.path, O_RDONLY);
 	else if (kind == HEREDOC)

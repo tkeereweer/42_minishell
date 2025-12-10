@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 21:11:28 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/09 19:39:02 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 08:42:50 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,11 @@ char	*find_path(char **paths, char *cmd)
 
 static char *find_relative_path(char *cmd, int *err_flag)
 {
-	int     i;
-	char    *pwd;
-	char    *curr_wd;
-	char    *ret;
-	
+	int		i;
+	char	*pwd;
+	char	*curr_wd;
+	char	*ret;
+
 	i = 1;
 	while (cmd[ft_strlen(cmd) - i] != '/')
 		i++;
@@ -111,7 +111,7 @@ int has_a_slash(char *cmd)
 
 char	*get_exe_path(t_data *data, char *cmd, int *err_flag)
 {
-	char 	*env_path;
+	char	*env_path;
 	char	**paths;
 
 	if (has_a_slash(cmd))

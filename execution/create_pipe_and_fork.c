@@ -3,26 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   create_pipe_and_fork.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:48:21 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/05 14:30:41 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 10:59:21 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 //initializes pipe tab
-static int new_pipe_tab(t_data *data)
+static int	new_pipe_tab(t_data *data)
 {
-	int **temp;
+	int	**temp;
 
 	temp = int_tab_realloc(data->pipe_tab, 1);
 	if (!temp)
 		return (-1);
 	data->pipe_tab = temp;
 	if (pipe(data->pipe_tab[0]) == -1)
-		return (-2);//pipe error
+		return (-2);
 	return (1);
 }
 
@@ -32,18 +32,18 @@ static int new_pipe_tab(t_data *data)
 //mode == 3 means last cmd hence no new pipe
 int	create_pipe(t_data *data, int mode)
 {
-	int **temp;
+	int	**temp;
 
 	if (mode > 2)
 		return (1);
 	if (!data->pipe_tab)
-		return (new_pipe_tab(data));//should we decrement cmd_cnt if pipe creation error ?
+		return (new_pipe_tab(data));
 	temp = int_tab_realloc(data->pipe_tab, data->cmd_cnt);
 	if (!temp)
 		return (-1);
 	data->pipe_tab = temp;
 	if (pipe(data->pipe_tab[data->cmd_cnt - 1]) == -1)
-		return (-2);//pipe error
+		return (-2);
 	return (1);
 }
 
@@ -73,7 +73,7 @@ int	is_builtin(char *name)
 static pid_t	*pid_arr_realloc(pid_t *arr, int size)
 {
 	pid_t	*dst;
-    int     i;
+	int		i;
 
 	if (!arr)
 		dst = (pid_t *)ft_calloc(1, sizeof(pid_t));
@@ -83,12 +83,12 @@ static pid_t	*pid_arr_realloc(pid_t *arr, int size)
 		return (NULL);
 	if (!arr)
 		return (dst);
-    i = 0;
-    while (i < size - 1) 
-    {
-        dst[i] = arr[i];
-        i++;
-    }
+	i = 0;
+	while (i < size - 1)
+	{
+		dst[i] = arr[i];
+		i++;
+	}
 	free(arr);
 	return (dst);
 }
@@ -100,7 +100,7 @@ int	create_pid(t_node *arg, t_data *data)
 	pid_t	*temp;
 
 	if (arg->type != ARGS)
-		return (-3);//tree build error ?
+		return (-3);
 	temp = pid_arr_realloc(data->pid_tab, data->cmd_cnt);
 	if (temp == NULL)
 		return (-5);

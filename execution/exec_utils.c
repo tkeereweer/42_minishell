@@ -6,14 +6,13 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 21:21:16 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/09 19:16:35 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 08:41:53 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-
-void dup_old_streams(int old_stdin, int old_stdout)
+void	dup_old_streams(int old_stdin, int old_stdout)
 {
 	dup2(old_stdin, STDIN_FILENO);
 	close(old_stdin);
@@ -21,9 +20,9 @@ void dup_old_streams(int old_stdin, int old_stdout)
 	close(old_stdout);
 }
 
-static void exec_builtin_in_child(t_data *data, t_node *cmd)
+static void	exec_builtin_in_child(t_data *data, t_node *cmd)
 {
-	int res;
+	int	res;
 
 	res = run_builtins(cmd->left_child->content.tab, data, -2, -2);
 	free_tree(data->tree);
@@ -37,7 +36,7 @@ static void exec_builtin_in_child(t_data *data, t_node *cmd)
 	exit(res);
 }
 
-static void exec_non_builtin(t_data *data, t_node *cmd)
+static void	exec_non_builtin(t_data *data, t_node *cmd)
 {
 	char    *exec_path;
 	int     err_flag;
@@ -54,7 +53,7 @@ static void exec_non_builtin(t_data *data, t_node *cmd)
 		exec_fail(exec_path, cmd->left_child->content.tab[0], data);
 }
 
-static void config_pipes_modes_123(t_data *data, int in, int out, int mode)
+static void	config_pipes_modes_123(t_data *data, int in, int out, int mode)
 {
 	if (mode > 1)
 	{
@@ -86,7 +85,7 @@ int	exec_child(t_node *cmd, t_data *data, int mode)
 	{
 		res = configure_redir(cmd->right_child, data, &in, &out);
 		if (res == -2)
-			return(redir_error(cmd->right_child->content.redir.path, 0));
+			return (redir_error(cmd->right_child->content.redir.path, 0));
 		if (res == -3)
 			return (redir_error("heredoc", 0));
 		if (res == -1 && errno == EACCES)

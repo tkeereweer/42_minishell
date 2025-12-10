@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/09 20:38:26 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 08:43:05 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,6 +213,7 @@ char	**temp_filepath(char **tmp_name, int count, int quoted_heredoc);
 char	**try_filepath(char **filepath, int count);
 // execution
 int		exec_tree(t_node *node, t_data *data);
+int		set_exit_status(t_node *node, t_data *data, int mode, int ret);
 int		exec_cmd(t_node *cmd, t_data *data, int mode);
 int		is_builtin(char *name);
 void	clean_exit(t_data *data, char *line, char *prompt);

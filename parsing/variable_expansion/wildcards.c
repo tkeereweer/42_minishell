@@ -6,13 +6,13 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 15:24:33 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/09 10:29:50 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/09 13:52:04 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-static void in_quotes_increment(char *str, int i, int *small, int *big)
+static void	in_quotes_increment(char *str, int i, int *small, int *big)
 {
 	if (str[i] == '\'' && *small == 0 && *big == 0)
 		*small += 1;
@@ -48,7 +48,7 @@ int	in_quotes(char *str, int idx)
 	return (0);
 }
 
-static void increment_i_and_j(size_t *i, size_t *j)
+static void	increment_i_and_j(size_t *i, size_t *j)
 {
 	*i += 1;
 	*j += 1;
@@ -100,7 +100,7 @@ int	match_pat(char *str, char *pat)
 	return (j == ft_strlen(pat));
 }
 
-static int  when_first_not_1(int *len, char ***tab)
+static int	when_first_not_1(int *len, char ***tab)
 {
 	while ((*tab)[*len] != NULL)
 		*len += 1;
@@ -174,9 +174,11 @@ int	add_to_redir_path(char **path, int first, char *filename)
 	char	*new_path;
 
 	if (first == 1)
-		new_path = (char *) my_realloc(*path, (ft_strlen(filename) + 1) * sizeof(char));
+		new_path = (char *) my_realloc(*path,
+				(ft_strlen(filename) + 1) * sizeof(char));
 	else
-		new_path = (char *) my_realloc(*path, (ft_strlen(filename) + ft_strlen(*path) + 1) * sizeof(char));
+		new_path = (char *) my_realloc(*path,
+				(ft_strlen(filename) + ft_strlen(*path) + 1) * sizeof(char));
 	if (new_path == NULL)
 		return (1);
 	if (first == 1)
@@ -194,7 +196,7 @@ static int	when_first_neg(DIR *dir_stream)
 {
 	if (closedir(dir_stream) == -1)
 		return (-1);
-	return (-4); 
+	return (-4);
 }
 
 // static int	iterate_dir_redir(DIR *dir_stream, struct dirent *dir_entry,

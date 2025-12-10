@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_vars.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 10:50:02 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 17:50:36 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 13:44:34 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 int	clean_quotes(char *str, int i, char type)
 {
-    if (str[i + 1] == type)
-    {
-        ft_strncpy(&str[i], &str[i + 2], ft_strlen(&str[i + 2]));
-        return (i - 1);
-    }
+	if (str[i + 1] == type)
+	{
+		ft_strncpy(&str[i], &str[i + 2], ft_strlen(&str[i + 2]));
+		return (i - 1);
+	}
 	ft_strncpy(&str[i], &str[i + 1], ft_strlen(&str[i + 1]));
 	if (str[i + 1] != '\0')
 		i++;
@@ -65,13 +65,13 @@ int	expand_vars(char ***tab, t_data *data)
 
 int	expand_vars_redir(char **path, t_data *data)
 {
-    int res;
-    
+	int	res;
+
 	res = expand_envvars_redir(path, data);
-    if (res < 0)
+	if (res < 0)
 		return (res);
 	res = expand_wildcards_redir(path, *path);
-    if (res < 0)
+	if (res < 0)
 		return (res);
 	if (remove_quotes(path) == 1)
 		return (-1);
@@ -95,4 +95,3 @@ char	*ft_strcat(char *dst, char *src)
 	dst[i + j] = '\0';
 	return (dst);
 }
-

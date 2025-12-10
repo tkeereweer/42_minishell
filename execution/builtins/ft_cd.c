@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 09:21:20 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 21:06:27 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 13:42:24 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,20 @@ int	update_env(char *old_pwd, t_data *data)
 	return (0);
 }
 
-static int tilde_case(char **home, int *ret, char *path)
+static int	tilde_case(char **home, int *ret, char *path)
 {
-	char    *new_str;
+	char	*new_str;
 
 	*home = getenv("HOME");
 	if (*home != NULL)
 	{
-		new_str = (char *) malloc((ft_strlen(*home) + ft_strlen(&path[1]) + 1) * sizeof(char));
+		new_str = (char *) malloc((ft_strlen(*home)
+					+ ft_strlen(&path[1]) + 1) * sizeof(char));
 		if (new_str == NULL)
 			return (-1);
 		ft_strlcpy(new_str, *home, ft_strlen(*home) + ft_strlen(&path[1]) + 1);
-		ft_strlcat(new_str, &path[1], ft_strlen(*home) + ft_strlen(&path[1]) + 1);
+		ft_strlcat(new_str, &path[1], ft_strlen(*home)
+			+ ft_strlen(&path[1]) + 1);
 		*ret = chdir(new_str);
 		free(new_str);
 	}
@@ -61,7 +63,7 @@ static int tilde_case(char **home, int *ret, char *path)
 	return (1);
 }
 
-static int set_home(char **home, char *path, int *ret)
+static int	set_home(char **home, char *path, int *ret)
 {
 	if (path == NULL)
 	{
@@ -83,7 +85,6 @@ int	ft_cd(char *path, t_data *data)
 {
 	int		ret;
 	char	*home;
-	// char	*new_str;
 	char	buf[PATH_MAX];
 
 	ret = -1;

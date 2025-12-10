@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   int_tab_realloc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 14:22:48 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/01 13:29:36 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 11:31:09 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	**new_int_tab(int size)
 {
 	int	**dst;
 	int	i;
-	
+
 	dst = (int **)ft_calloc(size + 1, sizeof(int *));
 	if (!dst)
 		return (NULL);
@@ -60,7 +60,7 @@ int	**int_tab_realloc(int **tab, int size)
 {
 	int	**dst;
 	int	old_len;
-    int i;
+	int	i;
 
 	if (!tab)
 		return (new_int_tab(size));
@@ -69,18 +69,18 @@ int	**int_tab_realloc(int **tab, int size)
 		return (NULL);
 	old_len = int_tab_len(tab);
 	i = 0;
-    while (i < old_len && i < size)
-    {
-        dst[i] = tab[i];
-        i++;
-    }
-    while (i < size)
-    {
-        dst[i] = (int *)ft_calloc(2, sizeof(int));
-        if (!dst[i])
-            return(free_int_tab(dst), NULL);
-        i++;
-    }
+	while (i < old_len && i < size)
+	{
+		dst[i] = tab[i];
+		i++;
+	}
+	while (i < size)
+	{
+		dst[i] = (int *)ft_calloc(2, sizeof(int));
+		if (!dst[i])
+			return (free_int_tab(dst), NULL);
+		i++;
+	}
 	free(tab);
 	return (dst);
 }

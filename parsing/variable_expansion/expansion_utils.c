@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 21:25:43 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/09 09:02:14 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 17:35:30 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,32 +20,33 @@ char	*ft_getenv(char *var, char **env)
 	var++;
 	while (env[i] != NULL)
 	{
-		if (ft_strncmp(var, env[i], ft_strlen(var)) == 0 && env[i][ft_strlen(var)] == '=')
+		if (ft_strncmp(var, env[i], ft_strlen(var)) == 0
+			&& env[i][ft_strlen(var)] == '=')
 			return (&env[i][ft_strlen(var) + 1]);
 		i++;
 	}
 	return (NULL);
 }
 
+static int	do_continue(char c, int mode)
+{
+	if (mode == 0 && (c != '\0' && c != '"' && c != '\''))
+		return (1);
+	else if (mode == 1 && (c != '\0' && c != '"'))
+		return (1);
+	else if (mode == 2 && c != '\0')
+		return (1);
+	else
+		return (0);
+}
+
 int	has_envvar(char *str, int i, int mode)
 {
-	if (mode == 0)
+	while (do_continue(str[i], mode) == 1)
 	{
-		while (str[i] != '\0' && str[i] != '"')
-		{
-			if (str[i] == '$')
-				return (i);
-			i++;
-		}
-	}
-	else
-	{
-		while (str[i] != '\0')
-		{
-			if (str[i] == '$')
-				return (i);
-			i++;
-		}		
+		if (str[i] == '$')
+			return (i);
+		i++;
 	}
 	return (-1);
 }
@@ -61,9 +62,10 @@ int	envvar_len(char *str)
 		i++;
 	return (i);
 }
-int is_ambiguous(char *str)
+
+int	is_ambiguous(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i] && str[i] != '\'' && str[i] != '"')
@@ -74,7 +76,6 @@ int is_ambiguous(char *str)
 	}
 	return (0);
 }
-
 
 int	has_wc(char *str)
 {
