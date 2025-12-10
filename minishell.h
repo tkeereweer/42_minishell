@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/10 12:07:16 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 12:17:07 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,8 +127,6 @@ int			write_token(t_list **lst, char *filepath);
 int			read_token(t_list **lst, char *filepath);
 int			append_token(t_list **lst, char *filepath);
 int			heredoc_token(t_list **lst, char *limiter);
-int			word_token(char *word, t_list **lst);
-int			cmd_token(char *word, t_list **lst);
 int			arg_token(char *word, t_list **lst);
 int			tokenizer_error(char *str);
 int			empty_end(char *line, int *j, int *i);
@@ -172,12 +170,6 @@ int			expand_env_in_big_quotes(char **str, int *i, t_data *data);
 int			in_quotes(char *str, int idx);
 void		if_small_quote(int *i, char **str);
 int			match_pat(char *str, char *pat);
-//testing
-void		draw_tree(t_node *root);
-void		free_split(char **tab);
-int			subpipe_error(int code, char **subpipe);
-char		**tab_realloc(char **tab, int n);
-char		*remove_redir(char *str, int start, int end);
 //builtins
 int			ft_cd(char *path, t_data *data);
 int			ft_pwd(void);
@@ -203,6 +195,10 @@ char		**get_envvar_pointer(char *var, char **env);
 char		*my_realloc(char *ptr, size_t size);
 int			ft_strcmp(const char *s1, const char *s2);
 char		*str_realloc(char *ptr, size_t size);
+void		free_split(char **tab);
+int			subpipe_error(int code, char **subpipe);
+char		**tab_realloc(char **tab, int n);
+char		*remove_redir(char *str, int start, int end);
 //heredoc
 char		**heredoc(char **path_tab, char *limiter,
 				int quoted_heredoc, int *err_flag);
