@@ -6,13 +6,13 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 12:16:15 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/09 10:27:34 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/10 10:21:27 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-char	**tab_cpy(char **tab)
+static char	**tab_cpy(char **tab)
 {
 	int		i;
 	char	**tab_cpy;
@@ -38,7 +38,7 @@ char	**tab_cpy(char **tab)
 	return (tab_cpy);
 }
 
-void	sort_tab(char **tab)
+static void	sort_tab(char **tab)
 {
 	int		i;
 	int		j;
@@ -67,7 +67,7 @@ void	sort_tab(char **tab)
 	}
 }
 
-int	print_sort_env(t_data *data)
+static int	print_sort_env(t_data *data)
 {
 	char	**env_cpy;
 	int		i;

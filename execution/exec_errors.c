@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 16:59:37 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/10 08:40:38 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 09:51:53 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,14 +60,14 @@ void	permission_error(char *path, t_data *data)
 
 void	exec_fail(char *path, char *cmd, t_data *data)
 {
-    if (errno == EISDIR)
-        perror(path);
+	if (errno == EISDIR)
+		perror(path);
 	else if (errno == EACCES)
 	{
 		permission_error(path, data);
 	}
-    else
-	    perror(cmd);
+	else
+		perror(cmd);
 	free_tree(data->tree);
 	free_split(data->env);
 	if (data->default_path != NULL)

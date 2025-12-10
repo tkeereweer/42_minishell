@@ -6,13 +6,13 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 11:56:55 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/08 18:45:59 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/10 10:28:05 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	signal_handler_child(int signal)
+static void	signal_handler_child(int signal)
 {
 	if (signal == SIGINT || signal == SIGQUIT)
 	{
@@ -22,7 +22,7 @@ void	signal_handler_child(int signal)
 	}
 }
 
-int	set_signal_child(void)
+static int	set_signal_child(void)
 {
 	struct sigaction	sigint;
 	struct sigaction	sigquit;

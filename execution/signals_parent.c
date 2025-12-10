@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals_parent.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 11:56:55 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/09 13:32:59 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 10:28:21 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 extern volatile sig_atomic_t	g_signum;
 
-void	sigint_parent(int signal)
+static void	sigint_parent(int signal)
 {
 	if (signal == SIGINT)
 	{
@@ -26,17 +26,17 @@ void	sigint_parent(int signal)
 	}
 }
 
-void	sigint_heredoc(int signal)
+static void	sigint_heredoc(int signal)
 {
 	if (signal == SIGINT)
 	{
 		g_signum = SIGINT;
-        close(STDIN_FILENO);
+		close(STDIN_FILENO);
 		printf("%c", '\n');
 	}
 }
 
-int	set_signal_parent(int mode)
+static int	set_signal_parent(int mode)
 {
 	struct sigaction	sigint;
 	struct sigaction	sigquit;

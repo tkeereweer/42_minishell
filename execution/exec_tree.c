@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tree.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:46:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/10 08:41:25 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 10:26:01 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,21 @@
 
 extern volatile sig_atomic_t	g_signum;
 
-t_node	*first_cmd(t_node *node)
+static t_node	*first_cmd(t_node *node)
 {
 	while (node->left_child != NULL && node->left_child->type != ARGS)
 		node = node->left_child;
 	return (node);
 }
 
-t_node	*last_cmd(t_node *node)
+static t_node	*last_cmd(t_node *node)
 {
 	while (node->right_child != NULL && node->right_child->type != REDIR)
 		node = node->right_child;
 	return (node);
 }
 
-int	find_cmd_mode(t_node *node, t_node *root)
+static int	find_cmd_mode(t_node *node, t_node *root)
 {
 	if (node->parent->left_child == node && node->parent->right_child == NULL)
 		return (4);
@@ -40,7 +40,7 @@ int	find_cmd_mode(t_node *node, t_node *root)
 		return (2);
 }
 
-int	exec_pipeline(t_node *node, t_data *data, t_node *pipeline_root)
+static int	exec_pipeline(t_node *node, t_data *data, t_node *pipeline_root)
 {
 	int	ret;
 

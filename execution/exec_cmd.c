@@ -3,63 +3,60 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:44:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/10 08:40:33 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 10:24:52 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	permission_error_fd(t_node *cmd, int mode)
+static void	exec_non_builtin(t_data *data, t_node *cmd)
 {
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(cmd->right_child->content.redir.path, 2);
-	ft_putstr_fd(": Permission denied\n", 2);
-	if (mode == 4 && is_builtin(cmd->left_child->content.tab[0]))
-		return (1);
-	exit(1);
+	char	*exec_path;
+	int		err_flag;
+
+	err_flag = 0;
+	exec_path = get_exe_path(data, cmd->left_child->content.tab[0], &err_flag);
+	if (exec_path == NULL)
+		cmd_not_found(cmd->left_child->content.tab[0], data);
+	if (err_flag == 1)
+		exec_fail(exec_path, cmd->left_child->content.tab[0], data);
+	if (exec_path[0] == '\0')
+		exit(0);
+	if (execve(exec_path, cmd->left_child->content.tab, data->env) == -1)
+		exec_fail(exec_path, cmd->left_child->content.tab[0], data);
 }
 
-static int	setup_oldstds(int *old_stdin, int *old_stdout)
+//this function is in a child process
+static int	exec_child(t_node *cmd, t_data *data, int mode)
 {
-	*old_stdin = -1;
-	*old_stdout = -1;
-	*old_stdin = dup(STDIN_FILENO);
-	*old_stdout = dup(STDOUT_FILENO);
-	if (*old_stdin == -1 || *old_stdout == -1)
-		return (-1);
-	return (0);
-}
-
-//need read end of previous for stdin and write end of current for stdout
-static int	exec_builtin(t_node *cmd, t_data *data, int mode)
-{
-	int	out;
-	int	in;
-	int	old_stdin;
-	int	old_stdout;
-	int	ret;
+	int		out;
+	int		in;
+	int		res;
 
 	out = 0;
 	in = 0;
-	if (setup_oldstds(&old_stdin, &old_stdout) == -1)
-		return (-1);
 	if (cmd->right_child)
 	{
-		ret = configure_redir(cmd->right_child, data, &in, &out);
-		if (ret == -2)
-			return (redir_error(cmd->right_child->content.redir.path, mode));
-		if (ret == -1 && errno == EACCES)
-			return (permission_error_fd(cmd, mode));
-		if (ret < 0)
-			return (1);
+		res = configure_redir(cmd->right_child, data, &in, &out);
+		if (res == -2)
+			return (redir_error(cmd->right_child->content.redir.path, 0));
+		if (res == -3)
+			return (redir_error("heredoc", 0));
+		if (res == -1 && errno == EACCES)
+			permission_error_fd(cmd, mode);
+		if (res < 0)
+			exit(res);
 	}
-	ret = run_builtins(cmd->left_child->content.tab, data,
-			old_stdin, old_stdout);
-	dup_old_streams(old_stdin, old_stdout);
-	return (ret);
+	if (mode != 4)
+		config_pipes_modes_123(data, in, out, mode);
+	if (!is_builtin(cmd->left_child->content.tab[0]))
+		exec_non_builtin(data, cmd);
+	else
+		exec_builtin_in_child(data, cmd);
+	exit(0);
 }
 
 static int	exec_mode_4(t_data *data, t_node *cmd, int mode)

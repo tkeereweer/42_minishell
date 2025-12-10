@@ -6,13 +6,13 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 09:21:20 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/09 13:42:24 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/10 10:20:09 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-int	update_env(char *old_pwd, t_data *data)
+static int	update_env(char *old_pwd, t_data *data)
 {
 	char	*key_val;
 	char	buf[PATH_MAX];

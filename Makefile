@@ -26,21 +26,23 @@ SRCS = parsing/logic_tree.c \
 	execution/builtins/ft_exit.c \
 	execution/builtins/ft_echo.c \
 	execution/builtins/run_builtins.c \
-	execution/builtins/builtin_utils.c \
+	execution/builtins/ft_export_utils.c \
 	execution/signals_parent.c \
 	execution/signals_child.c \
 	execution/get_exe_path.c \
+	execution/get_exe_path_utils.c \
 	execution/configure_redir.c \
 	parsing/get_args.c \
 	parsing/write_heredoc.c \
 	parsing/heredoc_command.c \
 	execution/exec_tree.c \
 	execution/exec_cmd.c \
-	execution/exec_cmd2.c \
+	execution/exec_cmd_builtin.c \
 	execution/create_pipe_and_fork.c \
 	execution/int_tab_realloc.c \
-	execution/exec_utils.c \
+	execution/exec_cmd_utils.c \
 	execution/exec_tree_utils.c \
+	execution/exec_errors.c \
 	main_utils.c \
 	main_utils2.c \
 	main.c

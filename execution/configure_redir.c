@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   configure_redir.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 21:17:25 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/10 08:38:16 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 09:51:33 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,17 @@ static int	dup_fds(int fd, t_redir_type kind, int *in_redir, int *out_redir)
 	}
 	close (fd);
 	return (1);
+}
+
+static int	prepare_fd_for_exec(int *fd, char *path, char *temp, char *file)
+{
+	close(*fd);
+	*fd = open(path, O_WRONLY | O_TRUNC);
+	if (write(*fd, file, ft_strlen(file)) == -1)
+		return (free(temp), free(file), -3);
+	close(*fd);
+	*fd = open(path, O_RDONLY);
+	return (0);
 }
 
 //check for env variable expansion in heredoc
@@ -54,12 +65,8 @@ static int	expand_heredoc(int *fd, char *path, t_data *data)
 	}
 	if (expand_envvar_str(&file, 0, data, 2) == -1)
 		return (free(temp), free(file), -1);
-	close(*fd);
-	*fd = open(path, O_WRONLY | O_TRUNC);
-	if (write(*fd, file, ft_strlen(file)) == -1)
-		return (free(temp), free(file), -3);
-	close(*fd);
-	*fd = open(path, O_RDONLY);
+	if (prepare_fd_for_exec(fd, path, temp, file) == -3)
+		return (-3);
 	return (free(temp), free(file), 1);
 }
 
@@ -85,8 +92,8 @@ static int	open_redir(int *fd, t_redir_type kind, t_node *redir, t_data *data)
 			return (res);
 		}
 	}
-    if (*fd == -1)
-		return(*fd);
+	if (*fd == -1)
+		return (*fd);
 	return (1);
 }
 

@@ -6,13 +6,13 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 14:22:48 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/09 11:31:09 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/10 10:27:43 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	free_int_tab(int **tab)
+static void	free_int_tab(int **tab)
 {
 	int	i;
 
@@ -36,7 +36,7 @@ static int	int_tab_len(int **tab)
 	return (i);
 }
 
-int	**new_int_tab(int size)
+static int	**new_int_tab(int size)
 {
 	int	**dst;
 	int	i;
