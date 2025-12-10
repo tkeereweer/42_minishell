@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+         #
+#    By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/20 09:47:13 by mturgeon          #+#    #+#              #
-#    Updated: 2025/11/12 15:55:50 by mturgeon         ###   ########.fr        #
+#    Updated: 2025/12/10 10:36:14 by mkeerewe         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,6 +65,8 @@ SRCS= src/ft_atoi.c \
 	src/ft_lstsize.c \
 	src/get_next_line.c \
 	src/get_next_line_utils.c \
+	src/ft_strcat.c \
+	src/ft_strcmp.c
 
 INCLUDE_PATH= src/libft.h
 

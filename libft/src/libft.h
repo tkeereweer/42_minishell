@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
+/*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:59:32 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/12 15:41:38 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/10 10:36:03 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ void	ft_lstdelone(t_list *lst, void (*del)(t_node *));
 void	ft_lstclear(t_list **lst, void (*del)(t_node *));
 void	ft_lstiter(t_list *lst, void (*f)(t_node *));
 t_list	*ft_lstmap(t_list *lst, t_node *(*f)(t_node *), void (*del)(t_node *));
+char	*ft_strcat(char *dst, char *src);
+int		ft_strcmp(const char *s1, const char *s2);
 //gnl
 char	*extend_out(char *out, char *line);
 char	*output_line(char *out, char *line);

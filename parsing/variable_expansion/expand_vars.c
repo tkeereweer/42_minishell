@@ -6,13 +6,13 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 10:50:02 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/09 13:44:34 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/10 11:46:11 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-int	clean_quotes(char *str, int i, char type)
+static int	clean_quotes(char *str, int i, char type)
 {
 	if (str[i + 1] == type)
 	{
@@ -76,22 +76,4 @@ int	expand_vars_redir(char **path, t_data *data)
 	if (remove_quotes(path) == 1)
 		return (-1);
 	return (0);
-}
-
-char	*ft_strcat(char *dst, char *src)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (dst[i] != '\0')
-		i++;
-	while (src[j] != '\0')
-	{
-		dst[i + j] = src[j];
-		j++;
-	}
-	dst[i + j] = '\0';
-	return (dst);
 }

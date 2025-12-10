@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/10 10:27:41 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/10 11:50:45 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,10 +169,10 @@ int		remove_quotes(char **str);
 char	*ft_getenv(char *var, char **env);
 int		has_envvar(char *str, int i, int mode);
 int		envvar_len(char *str);
-int		is_ambiguous(char *str);
+int		expand_env_in_big_quotes(char **str, int *i, t_data *data);
 int		in_quotes(char *str, int idx);
 void	if_small_quote(int *i, char **str);
-int		expand_env_in_big_quotes(char **str, int *i, t_data *data);
+int		match_pat(char *str, char *pat);
 //testing
 void	draw_tree(t_node *root);
 void	free_split(char **tab);

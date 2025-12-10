@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expansion_utils.c                                  :+:      :+:    :+:   */
+/*   env_vars_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 21:25:43 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/09 17:35:30 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/10 11:44:15 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,30 +63,10 @@ int	envvar_len(char *str)
 	return (i);
 }
 
-int	is_ambiguous(char *str)
+void	if_small_quote(int *i, char **str)
 {
-	int	i;
-
-	i = 0;
-	while (str[i] && str[i] != '\'' && str[i] != '"')
-	{
-		if (ft_is_whitespace(str[i]))
-			return (-1);
-		i++;
-	}
-	return (0);
-}
-
-int	has_wc(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		if (str[i] == '*' && in_quotes(str, i) == 0)
-			return (i);
-		i++;
-	}
-	return (-1);
+	*i += 1;
+	while ((*str)[*i] != '\'')
+		*i += 1;
+	return ;
 }

@@ -6,7 +6,7 @@
 /*   By: mkeerewe <mkeerewe@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 10:14:03 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/09 13:45:49 by mkeerewe         ###   ########.fr       */
+/*   Updated: 2025/12/10 11:50:26 by mkeerewe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,16 @@ int	expand_envvar_str(char **str, int i, t_data *data, int mode)
 	return (expand_envvar_str(str, i, data, mode));
 }
 
+int	expand_env_in_big_quotes(char **str, int *i, t_data *data)
+{
+	*i += 1;
+	if (expand_envvar_str(str, *i, data, 1) == 1)
+		return (-1);
+	while ((*str)[*i] != '"')
+		*i += 1;
+	return (1);
+}
+
 int	expand_envvars(char **str, t_data *data)
 {
 	int		i;
@@ -92,35 +102,6 @@ int	expand_envvars(char **str, t_data *data)
 		{
 			if (expand_envvar_str(str, i, data, 0) == 1)
 				return (-1);
-			if ((*str)[0] != '\0' && envvar_len(&(*str)[i]) == 1)
-				i++;
-			continue ;
-		}
-		i++;
-	}
-	return (0);
-}
-
-int	expand_envvars_redir(char **str, t_data *data)
-{
-	int		i;
-
-	i = 0;
-	while ((*str)[i] != '\0')
-	{
-		if ((*str)[i] == '\'')
-			if_small_quote(&i, str);
-		else if ((*str)[i] == '"')
-		{
-			if (expand_env_in_big_quotes(str, &i, data) == -1)
-				return (-1);
-		}
-		else if ((*str)[i] == '$')
-		{
-			if (expand_envvar_str(str, i, data, 0) == 1)
-				return (-1);
-			if (is_ambiguous(&(*str)[i]) < 0)
-				return (-4);
 			if ((*str)[0] != '\0' && envvar_len(&(*str)[i]) == 1)
 				i++;
 			continue ;

@@ -14,10 +14,13 @@ SRCS = parsing/logic_tree.c \
 	parsing/token.c \
 	parsing/token2.c \
 	parsing/variable_expansion/env_vars.c \
+	parsing/variable_expansion/env_vars_redir.c \
+	parsing/variable_expansion/env_vars_utils.c \
 	parsing/variable_expansion/wildcards.c \
+	parsing/variable_expansion/wildcards_redir.c \
+	parsing/variable_expansion/wildcards_utils.c \
 	parsing/variable_expansion/expand_vars.c \
-	parsing/variable_expansion/expansion_utils.c \
-	parsing/variable_expansion/expansion_utils2.c \
+	parsing/variable_expansion/match_pattern.c \
 	execution/builtins/ft_export.c \
 	execution/builtins/ft_unset.c \
 	execution/builtins/ft_env.c \
