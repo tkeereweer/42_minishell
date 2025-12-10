@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing_utils6.c                                   :+:      :+:    :+:   */
+/*   clean_node_list.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 20:51:31 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/09 14:49:26 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 20:39:35 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,23 @@ char	*replace_with_path(char *dest, char *path, int start, int end)
 	return (temp);
 }
 
-int	is_last_pipe(t_list *pipeline)
+int check_unclosed_par(t_list **list)
 {
-	while (pipeline != NULL)
+	t_list  *temp;
+	int     par_count;
+
+	temp = *list;
+	par_count = 0;
+	while (temp)
 	{
-		if (pipeline->content->type == PIPE)
-			return (0);
-		pipeline = pipeline->next;
+		if (temp->content->type == PAR && temp->content->content.parenthesis == '(')
+			par_count++;
+		if (temp->content->type == PAR && temp->content->content.parenthesis == ')')
+			par_count--;
+		temp = temp->next;
 	}
+	if (par_count != 0)
+		return (-1);//unclosed parenthesis
 	return (1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 14:36:14 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/05 09:01:56 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 20:31:06 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,26 @@ char	**  tab_realloc(char **tab, int n)
 	return (tab);
 }
 
+char	is_sep(char *str)
+{
+	int	j;
+	char *token[5];
+
+	token[0] = "(";
+	token[1] = ")";
+	token[2] = "&&";
+	token[3] = "||";
+	token[4] = NULL;
+	j = 0;
+	while (token[j])
+	{
+		if (!ft_strncmp(str, token[j], ft_strlen(token[j])))
+			return (*token[j]);
+		j++;
+	}
+	return (0);
+}
+
 //deletes chars from start to end INCLUDED 
 //overwrites them with the end
 //start and end are relative to the position of the redir in the original string
@@ -92,19 +112,4 @@ char	*remove_redir(char *str, int start, int end)
 	dest[j] = '\0';
     free(str);
 	return (dest);
-}
-
-t_list	*syntax_error(t_list **lst)
-{
-	int		temp;
-	t_list *last;
-
-	last = ft_lstlast(*lst);
-	temp = last->content->content.logic;
-	write(STDERR_FILENO, "minishell: syntax error near unexpected token: ", ft_strlen("minishell: syntax error near unexpected token: "));
-	if (temp == 0)
-		write(STDERR_FILENO, "'&&'\n", ft_strlen("'&&'\n"));
-	else
-		write(STDERR_FILENO, "'||'\n", ft_strlen("'||'\n"));
-	return (NULL);
 }

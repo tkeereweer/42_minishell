@@ -3,12 +3,12 @@ SRCS = parsing/logic_tree.c \
 	parsing/command_tree.c \
 	parsing/build_node_list.c \
 	parsing/parse_pipeline.c \
-	parsing/parsing_utils.c \
+	parsing/parsing_error.c \
 	parsing/parsing_utils2.c \
-	parsing/parsing_utils3.c \
+	parsing/build_subpipe.c \
 	parsing/parsing_utils4.c \
 	parsing/parsing_utils5.c \
-	parsing/parsing_utils6.c \
+	parsing/clean_node_list.c \
 	parsing/parsing_utils7.c \
 	parsing/token_redir.c \
 	parsing/token.c \

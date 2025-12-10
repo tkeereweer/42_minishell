@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 10:10:32 by mkeerewe          #+#    #+#             */
-/*   Updated: 2025/12/09 19:29:18 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 20:38:26 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,7 @@ char	*replace_with_path(char *dest, char *path, int start, int end);
 void	free_pipeline_list(t_list *pipeline);
 void	handle_error_pipeline_list(t_node *node);
 int		is_last_pipe(t_list *pipeline);
+t_make_tab	init_struct(char *str);
 //parsing end
 // variable expansion
 int		expand_envvars(char **str, t_data *data);

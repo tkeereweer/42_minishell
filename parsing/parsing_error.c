@@ -1,54 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing_utils.c                                    :+:      :+:    :+:   */
+/*   parsing_error.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 18:38:12 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/24 16:06:57 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 20:34:03 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-char	is_sep(char *str)
-{
-	int	j;
-	char *token[5];
-
-	token[0] = "(";
-	token[1] = ")";
-	token[2] = "&&";
-	token[3] = "||";
-	token[4] = NULL;
-	j = 0;
-	while (token[j])
-	{
-		if (!ft_strncmp(str, token[j], ft_strlen(token[j])))
-			return (*token[j]);
-		j++;
-	}
-	return (0);
-}
-
-char	is_logic(char *str)
-{
-	int	j;
-	char *token[3];
-
-	token[0] = "&&";
-	token[1] = "||";
-	token[2] = NULL;
-	j = 0;
-	while (token[j])
-	{
-		if (!ft_strncmp(str, token[j], ft_strlen(token[j])))
-			return (*token[j]);
-		j++;
-	}
-	return (0);
-}
 
 char	is_redir(char *str)
 {
@@ -122,4 +84,25 @@ int tokenizer_error(char *str)
 {
 	write(STDERR_FILENO, str, ft_strlen(str));
 	return (-1);
+}
+
+t_list	*syntax_error(t_list **lst)
+{
+	int		temp;
+	t_list *last;
+
+	last = ft_lstlast(*lst);
+	temp = last->content->content.logic;
+	write(STDERR_FILENO, "minishell: syntax error near unexpected token: ", ft_strlen("minishell: syntax error near unexpected token: "));
+	if (temp == 0)
+		write(STDERR_FILENO, "'&&'\n", ft_strlen("'&&'\n"));
+	else
+		write(STDERR_FILENO, "'||'\n", ft_strlen("'||'\n"));
+	return (NULL);
+}
+int	subpipe_error(int code, char **subpipe)
+{
+	if (subpipe)
+		free_split(subpipe);
+	return (code);
 }

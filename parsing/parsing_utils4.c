@@ -6,32 +6,24 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 09:56:21 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/04 16:47:17 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 20:37:23 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int clean_args_nodes(t_list **head)
+t_make_tab	init_struct(char *str)
 {
-	t_list	*temp;
-	char 	**temp_tab;
-	char	*temp_str;
+	t_make_tab	utils;
 
-	temp = *head;
-	while (temp)
-	{
-		if (temp->content->type == ARGS)
-		{
-			temp_str = temp->content->content.str;
-			temp_tab = args_tab(temp_str);
-			if (!temp_tab)
-				return (0);
-			temp->content->content.tab = temp_tab;
-		}
-		temp = temp->next;
-	}
-	return (1);
+	utils.i = 0;
+	utils.j = 0;
+	utils.word_count = 0;
+	utils.str = str;
+	utils.tab = NULL;
+	while (ft_is_whitespace(str[utils.i]))
+		utils.i++;
+	return (utils);
 }
 
 int increment_subpipe(char ***subpipe, char *line, int *i, int *j)
@@ -92,10 +84,20 @@ void del_linked(t_node *lst)
 {
 	(void)lst;
 }
-
-int	subpipe_error(int code, char **subpipe)
+char	is_logic(char *str)
 {
-	if (subpipe)
-		free_split(subpipe);
-	return (code);
+	int	j;
+	char *token[3];
+
+	token[0] = "&&";
+	token[1] = "||";
+	token[2] = NULL;
+	j = 0;
+	while (token[j])
+	{
+		if (!ft_strncmp(str, token[j], ft_strlen(token[j])))
+			return (*token[j]);
+		j++;
+	}
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 16:39:41 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/12/08 10:54:54 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 20:37:33 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,19 +65,29 @@ static char **make_last_tab(char **tab, char *temp, int word_count)
 	free(temp);
 	return (tab);
 }
-t_make_tab	init_struct(char *str)
-{
-	t_make_tab	utils;
 
-	utils.i = 0;
-	utils.j = 0;
-	utils.word_count = 0;
-	utils.str = str;
-	utils.tab = NULL;
-	while (ft_is_whitespace(str[utils.i]))
-		utils.i++;
-	return (utils);
+int clean_args_nodes(t_list **head)
+{
+	t_list	*temp;
+	char 	**temp_tab;
+	char	*temp_str;
+
+	temp = *head;
+	while (temp)
+	{
+		if (temp->content->type == ARGS)
+		{
+			temp_str = temp->content->content.str;
+			temp_tab = args_tab(temp_str);
+			if (!temp_tab)
+				return (0);
+			temp->content->content.tab = temp_tab;
+		}
+		temp = temp->next;
+	}
+	return (1);
 }
+
 char	**args_tab(char *str)
 {
 	t_make_tab	s;

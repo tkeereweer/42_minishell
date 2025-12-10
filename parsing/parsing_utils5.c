@@ -6,7 +6,7 @@
 /*   By: mturgeon <maxime.p.turgeon@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 10:25:28 by mturgeon          #+#    #+#             */
-/*   Updated: 2025/11/25 10:24:40 by mturgeon         ###   ########.fr       */
+/*   Updated: 2025/12/09 20:40:05 by mturgeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,26 +67,6 @@ int	separator_logic(char *line, int *i, t_list *temp, t_list **list)
 	return (1);
 }
 
-int check_unclosed_par(t_list **list)
-{
-	t_list  *temp;
-	int     par_count;
-
-	temp = *list;
-	par_count = 0;
-	while (temp)
-	{
-		if (temp->content->type == PAR && temp->content->content.parenthesis == '(')
-			par_count++;
-		if (temp->content->type == PAR && temp->content->content.parenthesis == ')')
-			par_count--;
-		temp = temp->next;
-	}
-	if (par_count != 0)
-		return (-1);//unclosed parenthesis
-	return (1);
-}
-
 int	tab_len(char **tab)
 {
 	int i;
@@ -95,5 +75,16 @@ int	tab_len(char **tab)
 	while (tab[i])
 		i++;
 	return (i);
+}
+
+int	is_last_pipe(t_list *pipeline)
+{
+	while (pipeline != NULL)
+	{
+		if (pipeline->content->type == PIPE)
+			return (0);
+		pipeline = pipeline->next;
+	}
+	return (1);
 }
 
